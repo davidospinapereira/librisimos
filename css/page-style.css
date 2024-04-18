@@ -1,0 +1,267 @@
+/* Comienzan estilos específicos del header */
+.header
+{
+    background: #1d1d1d;
+}
+
+.header .navbar
+{
+    display: inline-flex;
+    align-items: center;
+}
+
+.header .user-pic
+{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+/* Comienzan estilos para el submenú "mi perfil" */
+.profile-wrap
+{
+    position: fixed;
+    top: 80px;
+    right: 50px;
+    width: 300px;
+    max-height: 0px;
+    overflow: hidden;
+    transition: 0.7s ease-in-out;
+}
+
+.profile-wrap.open-menu
+{
+    max-height: 400px;
+}
+
+.profile-wrap .sub-menu
+{
+    background: #505050;
+    padding: 20px;
+    margin: 10px;
+}
+
+.profile-wrap .sub-menu .user-info
+{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-wrap .sub-menu .user-info img
+{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.profile-wrap .sub-menu .user-info h4 
+{
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.profile-wrap .sub-menu .sub-menu-link
+{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #f4f4f4;
+    margin: 12px 0;
+}
+
+.profile-wrap .sub-menu .sub-menu-link i
+{
+    font-size: 25px;
+    margin-right: 19px;
+}
+
+.profile-wrap .sub-menu .sub-menu-link p
+{
+    width: 100%;
+    font-weight: 400;
+}
+
+.profile-wrap .sub-menu .sub-menu-link:hover p 
+{
+    font-weight: 500;
+}
+/* Terminan estilos para el submenú "mi perfil" */
+/* Terminan estilos específicos del header */
+
+/* Comienzan estilos generales de página */
+.contenido
+{
+    min-height: 100vh;
+    padding: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /*background: #282828;*/
+    background: url('../img/background-principal.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.contenido .fila
+{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.fila .col
+{
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.fila .w100
+{
+    width: 100%;
+}
+
+.fila .w90
+{
+    width: 90%;
+}
+
+.fila .w80
+{
+    width: 80%;
+}
+
+.fila .w70
+{
+    width: 70%;
+}
+
+.fila .w60
+{
+    width: 60%;
+}
+
+.fila .w50
+{
+    width: 50%;
+}
+
+.fila .w40
+{
+    width: 40%;
+}
+
+.fila .w30
+{
+    width: 30%;
+}
+
+.fila .w20
+{
+    width: 20%;
+}
+
+.fila .w10
+{
+    width: 10%;
+}
+/* Terminan estilos generales de página */
+
+/* Comienzan estilos específicos de componentes */
+#main-data
+{
+    min-height: 300px;
+    color: #f4f4f4;
+}
+
+#main-data #nombre-usuario, 
+#functions h3,
+#continue-reading h3
+{
+    font-size: 25px;
+    font-weight: 500;
+}
+
+#main-data #nombre-usuario span 
+{
+    font-size: 35px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+#main-data #tipo-usuario
+{
+    font-size: 19px;
+    font-weight: 400;
+}
+
+#main-data #id-usuario
+{
+    font-size: 15px;
+    font-weight: 400;
+    margin-top: 25px;
+}
+
+#statistics
+{
+    color: #fff;
+}
+
+#functions
+{
+    min-height: 100px;
+    color: #f4f4f4;
+    background: #333;
+    padding: 25px;
+}
+
+#functions h3
+{
+    padding-bottom: 15px;
+}
+
+#functions #listado-funciones
+{
+    width: 100%;
+    min-height: 30px;
+}
+
+#functions #listado-funciones .btn
+{
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+    padding: 7px 15px;
+    background-color: red;
+    border-radius: 3px;
+    transition: 0.3s ease-in-out;
+}
+
+#functions #listado-funciones .btn:hover
+{
+    background: rgb(199, 0, 0);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
+}
+
+#continue-reading
+{
+    min-height: 150px;
+    color: #f4f4f4;
+    padding: 25px;
+    background: #1d1d1d;
+}
+
+#continue-reading h3
+{
+    padding-bottom: 15px;
+}
+/* Terminan estilos específicos de componentes */
