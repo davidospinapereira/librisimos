@@ -43,7 +43,11 @@
 
 .header.sticky
 {
+<<<<<<< HEAD
     background: #000;
+=======
+    background: rgba(0, 0, 0, 0.51);
+>>>>>>> 74575eac1e993cb56d6bb282d5b01428c1f8fdd8
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
