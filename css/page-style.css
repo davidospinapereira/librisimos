@@ -276,19 +276,41 @@
     font-weight: 500;
 }
 
+.continue-table th,
+.continue-table td
+{
+    padding: 7px 13px;
+}
+
 .continue-table th
 {
     text-align: left;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 500;
     text-transform: uppercase;
     background: rgba(0, 0, 0, 0.5);
 }
 
-.continue-table th,
 .continue-table td
 {
-    padding: 7px 13px;
+    font-size: 13px;
+}
+
+.continue-table td span.button
+{
+    padding: 5px 7px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.continue-table td span.continue
+{
+    background: green;
+}
+
+.continue-table td span.quit
+{
+    background: red;
 }
 
 .continue-table tr:nth-of-type(2n)
