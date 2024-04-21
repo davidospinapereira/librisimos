@@ -1,0 +1,461 @@
+/* Comienza botón de acceso */
+.navbar .btnLogin
+{
+    font-size: 17px;
+    text-decoration: none;
+    font-weight: 400;
+    margin-right: 35px;
+}
+
+.navbar .btnLogin
+{
+    color: #fff;
+    position: relative;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.navbar .btnLogin::before
+{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #fff;
+    left: 0;
+    bottom: -3px;
+    opacity: 0.85;
+}
+/* Termina botón de acceso */
+
+/* Comienza contenedor general */
+.contenido
+{
+    min-height: 100vh;
+    background: #282828;
+}
+/* Termina contenedor general */
+
+/* Comienza popup de login y registro */
+.contenido .login-popup
+{
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 450px;
+    height: 100%;
+    background: transparent;
+    backdrop-filter: blur(15px);
+    box-shadow: -1px 0 10px rgba(0, 0, 0, 0.21);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s ease-in-out;
+}
+
+.contenido .login-popup.active-popup
+{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.login-popup .icon-close
+{
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+.icon-close i
+{
+    font-size: 32px;
+    color: #282828;
+    transition: 0.3s ease-in-out;
+}
+
+.icon-close:hover i
+{
+    color: #000;
+}
+
+.login-popup .logreg-box
+{
+    width: 100%;
+}
+
+/* Comienza Control para el intercambio de formularios */
+.login-popup .form-box.login
+{
+    display: block;
+}
+
+.login-popup.active .form-box.login
+{
+    display: none;
+}
+
+.login-popup .form-box.register
+{
+    display: none;
+}
+
+.login-popup.active .form-box.register
+{
+    display: block;
+}
+/* Termina Control para el intercambio de formularios */
+
+.logreg-box .logreg-title
+{
+    text-align: center;
+    margin-bottom: 40px;
+    color: #fff;
+}
+
+.logreg-title h2
+{
+    font-size: 29px;
+    font-weight: 700;
+}
+
+.logreg-title p
+{
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.logreg-box .input-box
+{
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin: 30px 0;
+    border-bottom: 2px solid #fff;
+}
+
+.input-box input 
+{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 17px;
+    color: #fff;
+    font-weight: 400;
+    padding-right: 25px;
+}
+
+.input-box label 
+{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.61);
+    font-weight: 400;
+    pointer-events: none;
+    transition: 0.3s ease-in-out;
+}
+
+.input-box input:focus~label,
+.input-box input:valid~label
+{
+    top: 0;
+    color: #fff;
+    font-size: 13px;
+}
+
+.input-box .icon
+{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 19px;
+    color: #fff;
+}
+
+.logreg-box .forgot
+{
+    font-size: 14.5px;
+    color: #fff;
+    font-weight: 500;
+    margin: -15px 0 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.forgot label input 
+{
+    accent-color: #fff;
+    margin-right: 3px;
+}
+
+.forgot a
+{
+    color: #fff;
+    text-decoration: none;
+}
+
+.forgot a:hover
+{
+    text-decoration: underline;
+}
+
+.logreg-box .btn
+{
+    width: 100%;
+    height: 45px;
+    background: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 40px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.21);
+    font-size: 16px;
+    color: #282828;
+    font-weight: 500;
+}
+
+.logreg-box .btn:active
+{
+    box-shadow: none;
+}
+
+.logreg-box .logreg-link
+{
+    font-size: 14.5px;
+    color: #fff;
+    text-align: center;
+    font-weight: 400;
+    margin-top: 23px;
+}
+
+.logreg-link p a 
+{
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.logreg-link p a:hover
+{
+    text-decoration: underline;
+}
+/* Termina popup de login y registro */
+
+/* Comienza Contenido de la página */
+.section
+{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section .fila
+{
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.section .encabezado
+{
+    display: block;
+    text-align: center;
+    padding-bottom: 50px;
+}
+
+/* Comienza sección inicio */
+#inicio .imagen
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url('../img/background-inicio.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(40%);
+}
+
+#inicio .fila
+{
+    position: absolute;
+    width: 100%;
+}
+
+.fila h2
+{
+    color: #f4f4f4;
+    font-size: 3em;
+    font-weight: 500;
+    line-height: 1.3em;
+}
+
+#inicio .fila h2 span
+{
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #fff;
+}
+
+#inicio .fila h3 
+{
+    font-size: 1.5em;
+    color: #f4f4f4;
+    font-weight: 400;
+    line-height: 1.1em;
+}
+
+#inicio .fila .btn
+{
+    background: red;
+    display: inline-block;
+    color: #fff;
+    margin-top: 20px;
+    padding: 10px 30px;
+    font-size: 18px;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+    transition: 0.3s ease-in-out;
+}
+
+#inicio .fila .btn:hover
+{
+    background: rgb(209, 0, 0);
+}
+/* Termina sección inicio */
+
+/* Comienza sección Nosotros */
+#nosotros
+{
+    padding: 100px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#nosotros .fila
+{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+#nosotros .fila .col50
+{
+    width: 50%;
+}
+
+#nosotros .fila .col50 h3
+{
+    color: #fff;
+    font-size: 27px;
+    font-weight: 500;
+    line-height: 25px;
+    padding-bottom: 15px;
+}
+
+#nosotros .fila .col50 p 
+{
+    color: #f4f4f4;
+    font-size: 19px;
+    font-weight: 300;
+    line-height: 19px;
+    padding-bottom: 10px;
+}
+
+#nosotros .fila .col50 .image
+{
+    max-width: 100%;
+}
+/* Termina sección Nosotros */
+
+/* Comienza sección Servicios */
+#servicios
+{
+    padding: 100px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #333;
+}
+
+#servicios .services-container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#servicios .services-container .service-box
+{
+    flex: 1 1 20rem;
+    background: #323946;
+    padding: 30px 15px;
+    border-radius: 35px;
+    text-align: center;
+    border: .2rem solid #1f242d;
+    transition: 0.3s ease-in-out;
+}
+
+#servicios .services-container .service-box:hover 
+{
+    border-color: #f4f4f4;
+    transform: scale(1.01);
+}
+
+#servicios .service-box i 
+{
+    font-size: 5rem;
+    color: #f4f4f4;
+    padding-bottom: 15px;
+}
+
+#servicios .service-box h3 
+{
+    font-size: 1.7rem;
+    color: #fff;
+    font-weight: 600;
+}
+
+#servicios .service-box p 
+{
+    font-size: 1.1rem;
+    padding: 10px 0;
+    color: #f4f4f4;
+}
+/* Termina sección Servicios */
+
+/* Comienza sección contacto */
+#contacto
+{
+    padding: 100px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+/* Termina sección contacto */
+/* Termina Contenido de la página */
+
