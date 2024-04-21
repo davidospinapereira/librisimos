@@ -296,21 +296,32 @@
     font-size: 13px;
 }
 
+.continue-table .acciones
+{
+    display: flex;
+    justify-content: space-between;
+}
+
 .continue-table td span.button
 {
-    padding: 5px 7px;
-    margin-right: 10px;
+    padding: 5px 10px;
     cursor: pointer;
+    border-radius: 5px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .continue-table td span.continue
 {
     background: green;
+    font-size: 15px;
 }
 
 .continue-table td span.quit
 {
     background: red;
+    font-size: 17px;
 }
 
 .continue-table tr:nth-of-type(2n)
@@ -320,3 +331,61 @@
 
 /* Terminan estilos de tabla de continuar leyendo */
 /* Terminan estilos específicos de componentes */
+
+/* Comienzan estilos responsivos */
+/* Comienzan estilos para tamaño tableta */
+@media (max-width: 650px)
+{
+    .contenido
+    {
+        padding: 100px 20px 30px 20px;
+    }
+    /* Comienzan estilos para tabla de continuar leyendo */
+    .continue-table tr:nth-of-type(2n)
+    {
+        background: rgba(0, 0, 0, 0.15);
+    }
+
+    .continue-table th
+    {
+        display: none;
+    }
+
+    .continue-table td
+    {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: 15ch auto;
+        padding: 0.5rem 1rem;
+    }
+
+    .continue-table td::before
+    {
+        content: attr(data-cell) ": ";
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+
+    .continue-table .acciones
+    {
+        padding: 20px 0;
+        justify-content: left;
+        gap: 9px;
+    }
+
+    .continue-table .acciones::before
+    {
+        content: '';
+    }    
+
+    .continue-table .acciones .button
+    {
+        width: 45%;
+    }
+    /* Terminan estilos para tabla de continuar leyendo*/
+}
+    
+/* Terminan estilos para tamaño tableta */
+/* Comienzan estilos para tamaño celular */
+/* Terminan estilos para tamaño celular */
+/* Terminan estilos responsivos */
