@@ -312,6 +312,61 @@
     align-items: center;
 }
 
+/* Estilos de tooltip para botones de la lista*/
+.button .tooltip
+{
+    position: absolute;
+    margin-bottom: 90px;
+    background: #202020;
+    padding: 10px;
+    color: #f4f4f4;
+    font-size: 15px;
+    text-align: center;
+    box-sizing: border-box;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s ease-in-out;
+}
+
+.button .tooltip::before
+{
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #202020;
+    bottom: -5px;
+    transform: rotate(45deg);
+}
+
+.button:hover .tooltip
+{
+    visibility: visible;
+    opacity: 1;
+}
+
+.continue .tooltip::before
+{    
+    left: 73px;
+}
+
+.quit .tooltip::before
+{    
+    left: 51px;
+}
+
+.continue .tooltip
+{    
+    width: 160px;
+}
+
+.quit .tooltip
+{    
+    width: 120px;
+}
+/* Terminan estilos de tooltip para botones de la lista*/
+
 .continue-table td span.continue
 {
     background: green;
@@ -340,6 +395,40 @@
     {
         padding: 100px 20px 30px 20px;
     }
+
+    .contenido .fila
+    {
+        flex-direction: column;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    #statistics
+    {
+        padding-bottom: 30px;
+    }
+
+    #functions #listado-funciones 
+    {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .fila .w100,
+    .fila .w90,
+    .fila .w80,
+    .fila .w70,
+    .fila .w60,
+    .fila .w50,
+    .fila .w40,
+    .fila .w30,
+    .fila .w20,
+    .fila .w10
+    {
+        width: 100%;
+    }
+
     /* Comienzan estilos para tabla de continuar leyendo */
     .continue-table tr:nth-of-type(2n)
     {
@@ -355,7 +444,7 @@
     {
         display: grid;
         gap: 0.5rem;
-        grid-template-columns: 15ch auto;
+        grid-template-columns: 10ch auto;
         padding: 0.5rem 1rem;
     }
 
@@ -381,6 +470,22 @@
     .continue-table .acciones .button
     {
         width: 45%;
+    }
+
+    .continue-table td span.button::after
+    {
+        font-size: 13px;
+        padding-left: 5px;
+    }
+
+    .continue-table td span.continue::after
+    {
+        content: 'CONTINUAR';
+    }
+
+    .continue-table td span.quit::after
+    {
+        content: 'CANCELAR';
     }
     /* Terminan estilos para tabla de continuar leyendo*/
 }
