@@ -9,7 +9,7 @@
         <!-- Inicialización de responsividad -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Título de la página en específico -->
-        <title>Usuario - Librísimos</title>
+        <title>Administrador - Librísimos</title>
         <!-- Archivos CSS -->
         <!-- CSS de estilos generales -->
         <link rel="stylesheet" href="./css/general-style.css">
@@ -29,15 +29,105 @@
             <a href="#" class="logo">Libr<span class="red-logo">ísimos</span></a>
             <!-- Menú de navegación a la derecha, en enlaces formateados -->
             <nav class="navbar">
-                <a href="#inicio" class="nav-active">Inicio</a>
-                <a href="#nosotros">Nosotros</a>
-                <a href="#servicios">Servicios</a>
-                <!-- Botón de acceso para login o registro -->
-                <button class="btnLogin">ACCESO</button>
+                <a href="#" class="nav-active">Inicio</a>
+                <a href="#">Biblioteca</a>
+                <a href="#">Mis Libros</a>
+                <!-- Enlace para "mi perfil" -->
+                <img src="./img/user-avatar.jpg" class="user-pic">
             </nav>
         </header>
         <!-- Termina Header -->
+        <!-- Comienza submenú "mi perfil" -->
+        <div class="profile-wrap">
+            <div class="sub-menu">
+                <div class="user-info">
+                    <img src="./img/user-avatar.jpg">
+                    <h4>DAVID ALBERTO OSPINA</h4>
+                </div>
+                <a href="#" class="sub-menu-link">
+                    <i class='bx bx-user-circle'></i>
+                    <p>Editar perfil</p>
+                </a>
+                <a href="#" class="sub-menu-link">
+                    <i class='bx bxs-help-circle' ></i>
+                    <p>Ayuda</p>
+                </a>                
+                <a href="./index.html" class="sub-menu-link">
+                    <i class='bx bx-log-out-circle' ></i>
+                    <p>Cerrar sesión</p>
+                </a>
+            </div>
+        </div>
+        <!-- Termina submenú "mi perfil" -->
         <!-- Comienza contenido -->
+        <section class="contenido" id="inicio">
+            <div class="fila">
+                <div class="col w70" id="main-data">
+                    <h3 id="nombre-usuario">Bienvenido(a),<br/><span>DAVID ALBERTO OSPINA</span></h3>
+                    <h5 id="tipo-usuario">Suscriptor</h5>
+                    <h6 id="id-usuario">ID: <span>001</span></h6>
+                </div>
+                <div class="col w30" id="statistics">
+                    Aquí van tarjetas para recomendar libros con base en los libros leídos.
+                </div>
+            </div>
+            <div class="fila">
+                <div class="col w100" id="functions">
+                    <h3>Funciones rápidas</h3>
+                    <div id="listado-funciones">
+                        <a href="" class="btn">Buscar libros</a>
+                    </div>
+                </div>
+            </div>
+            <div class="fila">
+                <div class="col w100" id="continue-reading">
+                    <!--<h3>Continúa leyendo...</h3>-->
+                    <table class="continue-table">
+                        <caption>Continúa leyendo</caption>
+                            <!-- Encabezado de la tabla -->
+                            <tr>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Género</th>
+                                <th>Capítulo/Sección actual</th>
+                                <th>Acciones</th>
+                            </tr>
+    
+                            <!-- Contenido de la tabla -->
+                            <tr>
+                                <td data-cell="titulo">Cosmos</td>
+                                <td data-cell="autor">Carl Sagan</td>
+                                <td data-cell="genero">Divulgación Científica</td>
+                                <td data-cell="seccion">12 - ¿Quién hablará en nombre de la Tierra?</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="titulo">Ojos de Serpiente</td>
+                                <td data-cell="autor">David Ospina</td>
+                                <td data-cell="genero">Suspenso</td>
+                                <td data-cell="seccion">Antídoto - Parte 1</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="titulo">20 poemas de amor y una canción desesperada</td>
+                                <td data-cell="autor">Pablo Neruda</td>
+                                <td data-cell="genero">Poemas</td>
+                                <td data-cell="seccion">4 - Me gustas cuando callas</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
         <!-- Termina contenido -->
         <!-- Comienza footer -->
         <footer class="footer">
