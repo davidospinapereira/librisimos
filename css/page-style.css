@@ -182,7 +182,7 @@
     color: #f4f4f4;
 }
 
-#main-data #nombre-usuario, 
+#main-data h3, 
 #functions h3,
 #continue-reading h3
 {
@@ -190,7 +190,7 @@
     font-weight: 500;
 }
 
-#main-data #nombre-usuario span 
+#main-data h3 span 
 {
     font-size: 35px;
     font-weight: 600;
@@ -198,7 +198,7 @@
     text-transform: uppercase;
 }
 
-#main-data #tipo-usuario
+#main-data h5
 {
     font-size: 19px;
     font-weight: 400;
