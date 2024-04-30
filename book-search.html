@@ -14,7 +14,9 @@
         <!-- CSS de estilos generales -->
         <link rel="stylesheet" href="./css/general-style.css">
         <!-- CSS de página específica -->
-        <link rel="stylesheet" href="./css/page-style.css">
+        <link rel="stylesheet" href="./css/page-style.css">        
+        <!-- CSS de página específica -->
+        <link rel="stylesheet" href="./css/search-style.css">
         <!-- CSS de BoxIcons -->
         <link rel="stylesheet" href="./css/boxicons-2.1.4/css/boxicons.min.css">
         <!-- CSS de SweetAlert2 -->
@@ -63,11 +65,30 @@
         <section class="contenido" id="inicio">
             <div class="fila">
                 <div class="col w70" id="main-data">
-                    <h3>Bienvenido(a),<br/><span>BUSCADOR DE LIBROS EN LÍNEA</span></h3>
-                    <h5>Suscriptor</h5>
+                    <h3>Este es nuestro <br/><span>BUSCADOR DE LIBROS EN LÍNEA</span></h3>
+                    <h5>Por favor escribe el nombre o usa los filtros disponibles.</h5>
                 </div>
             </div>
-            Página de biblioteca, hay que colocar los datos aquí.
+            <!-- Comienza sección de búsqueda -->
+            <div class="fila">
+                <!-- Comienza sección de filtros de búsqueda -->
+                <div class="col w100" id="functions">
+                    <h3>Filtros de búsqueda</h3>
+                    <div id="listado-filtros">
+                        <input type="search" placeholder="Buscar..." class="card-filter">
+                    </div>
+                </div>
+                <!-- Termina sección de filtros de búsqueda -->
+            </div>                
+            <!-- Comienza la sección de continuar leyendo -->
+            <div class="fila">
+                <div class="col w100" id="cards">
+                    Aquí van las tarjetas, una para cada libro. Debo pensar en cómo hacer este diseño...                    
+                </div>
+            </div>
+            <!-- Termina la sección de continuar leyendo -->
+            </div>
+            <!-- Termina sección de búsqueda -->
         </section>
         <!-- Termina contenido -->
         <!-- Comienza footer -->

@@ -229,7 +229,8 @@
     padding-bottom: 15px;
 }
 
-#functions #listado-funciones
+#functions #listado-funciones,
+#functions #listado-filtros
 {
     width: 100%;
     min-height: 30px;
@@ -252,7 +253,8 @@
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
 }
 
-#continue-reading
+#continue-reading,
+#cards
 {
     min-height: 150px;
     color: #f4f4f4;
