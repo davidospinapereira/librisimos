@@ -385,8 +385,15 @@
 {
     background: rgba(0, 0, 0, 0.05);
 }
-
 /* Terminan estilos de tabla de continuar leyendo */
+
+/* Comienzan estilos de grid de tarjetas */
+#cards
+{
+    display: flex;
+    flex-wrap: wrap;
+}
+/* Terminan estilos de grid de tarjetas */
 /* Terminan estilos específicos de componentes */
 
 /* Comienzan estilos responsivos */
