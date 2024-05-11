@@ -57,9 +57,13 @@ $("#login-form").submit(function(e)
         // Primero, que cargue el mensaje. Dura 3000 ms
         mensaje('success', 'Bienvenido, ADMIN. Serás redirigido a la página principal.');
         // Segundo, que redirija a la página de admin luego de 3000 ms. Esto sucede con setTimeOut
+        
+        //let espera = setInterval(()=>{console.log(Date())},500)
+        
         setTimeout(function() 
         { 
-            window.location.href = "../admin-page.html";
+            //clearInterval(espera)
+            window.location.href = "admin-page.html";
         }, 3000);
     }
     else if (user == 'david' && pass == 'david')
@@ -69,7 +73,7 @@ $("#login-form").submit(function(e)
         // Segundo, que redirija a la página de admin luego de 3000 ms. Esto sucede con setTimeOut
         setTimeout(function() 
         { 
-            window.location.href = "../user-page.html";
+            window.location.href = "user-page.html";
         }, 3000);
     }
     // Si no, da mensaje de error  
