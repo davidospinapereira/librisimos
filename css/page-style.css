@@ -211,7 +211,7 @@
     margin-top: 25px;
 }
 
-#statistics
+#statistics, #side-cards
 {
     color: #fff;
 }
@@ -386,14 +386,6 @@
     background: rgba(0, 0, 0, 0.05);
 }
 /* Terminan estilos de tabla de continuar leyendo */
-
-/* Comienzan estilos de grid de tarjetas */
-#cards
-{
-    display: flex;
-    flex-wrap: wrap;
-}
-/* Terminan estilos de grid de tarjetas */
 /* Terminan estilos específicos de componentes */
 
 /* Comienzan estilos responsivos */
@@ -412,7 +404,7 @@
         padding-right: 10px;
     }
 
-    #statistics
+    #statistics, #side-cards
     {
         padding-bottom: 30px;
     }
@@ -500,6 +492,60 @@
 }
     
 /* Terminan estilos para tamaño tableta */
+
 /* Comienzan estilos para tamaño celular */
 /* Terminan estilos para tamaño celular */
+
 /* Terminan estilos responsivos */
+
+/* Comienzan estilos para spinners */
+.spinner
+{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner .loader
+{
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    position: relative;
+}
+
+.loader::after,
+.loader::before {
+  content: '';  
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #FFF;
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: animloader 2s linear infinite;
+}
+.loader::after {
+  animation-delay: 1s;
+}
+/* Terminan estilos para spinners */
+
+/* Comienzan animaciones */
+@keyframes animloader 
+{
+  0% 
+  {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% 
+  {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+/* Terminan animaciones */
