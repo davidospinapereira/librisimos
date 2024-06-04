@@ -69,7 +69,20 @@
                     <h6 id="id-usuario">ID: <span>001</span></h6>
                 </div>
                 <div class="col w30" id="statistics">
-                    Aquí van las estadísticas del sistema en su totalidad, como número de usuarios inscritos, número de usuarios en línea, etc. ¿Cómo averiguo eso, con Big Data?
+                    <h2>Estadísticas</h2>
+                    <!-- Spinner, cuando este se activa las estadísticas se desactivan -->
+                    <div class="spinner">
+                        <span class="loader"></span>
+                    </div>
+                    <!-- Termina Spinner -->
+                    <!-- Comienzan estadísticas, cuando estas se activan el Spinner se desactiva -->
+                    <div class="data active">
+                        <h3>Usuarios registrados: <b>25</b></h3>
+                        <h3>Libros publicados: <b>22</b></h3>
+                        <h3>Libros sin publicar: <b>5</b></h3>
+                        <h3>Libros leídos: <b>12</b></h3>
+                    </div>
+                    <!-- Terminan estadísticas -->
                 </div>
             </div>
             <div class="fila">
