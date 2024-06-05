@@ -479,6 +479,29 @@
     background: rgba(0, 0, 0, 0.05);
 }
 /* Terminan estilos de tabla de continuar leyendo */
+/* Comienzan estilos de página de libro específico */
+#main-info
+{
+    display: flex;
+    justify-content: start;
+    min-height: 350px;
+}
+
+#main-info #image
+{
+    margin-right: 20px;
+}
+
+#image .book-cover
+{
+    width: 100%;
+}
+
+#main-data
+{
+    justify-content: start;
+}
+/* Terminan estilos de página de libro específico */
 /* Terminan estilos específicos de componentes */
 
 /* Comienzan estilos responsivos */
