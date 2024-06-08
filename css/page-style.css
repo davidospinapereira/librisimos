@@ -34,6 +34,7 @@
 .profile-wrap.open-menu
 {
     max-height: 400px;
+    z-index: 2;
 }
 
 .profile-wrap .sub-menu
@@ -739,6 +740,42 @@ span.button:hover .tooltip
 }
 /* Terminan estilos para grid de libros */
 /* Terminan estilos de página de libro específico */
+
+/* Comienzan estilos de página de buscador de libros y de mis libros */
+#functions #listado-filtros
+{
+    display: grid;
+    grid-gap: 15px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+}
+
+#listado-filtros .search-filter
+{
+    outline: none;
+    padding: 5px 10px;
+    color: #fff;
+    background: #1d1d1d;
+    border: 1px solid #1d1d1d;
+}
+
+#listado-filtros select
+{
+    outline: none;
+    padding: 5px 10px;
+    color: #FFF;
+    background: #1d1d1d;
+    border: 1px solid #1d1d1d;
+}
+
+.fila #cards
+{
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 450px;
+}
+/* Terminan estilos de página de buscador de libros y de mis libros */
 /* Terminan estilos específicos de componentes */
 
 /* Comienzan estilos responsivos */
@@ -879,6 +916,12 @@ span.button:hover .tooltip
         margin-left: 3px;
     }
     /* Terminan estilos para grid de libros */
+    /* Comienzan estilos de página de buscador de libros y de mis libros */
+    .fila #cards
+    {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    /* Terminan estilos de página de buscador de libros y de mis libros */
 }
     
 /* Terminan estilos para tamaño tableta */
