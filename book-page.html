@@ -64,19 +64,205 @@
         <section class="contenido" id="inicio">
             <!-- Comienza Información principal del libro -->
             <div class="fila" id="main-info">
-                <div class="col w30" id="image">
+                <div class="col w20" id="image">
                     <img src="./img/book-cover-dummy.jpg" alt="Carátula del libro" class="book-cover">
                 </div>
-                <div class="col w70" id="main-data">
-                    Aquí van los datos principales
+                <div class="col w80" id="main-data">
+                    <h3 id="author">Carl Sagan</h3>
+                    <h2 id="title">Cosmos</h2>
+                    <div class="genres">
+                        <span class="genre" style="background-color: #1d1d1d;">Divulgación Científica</span>
+                        <span class="genre" style="background-color: blue;">Aventura</span>
+                        <span class="genre" style="background-color: red;">Novela</span>
+                        <span class="genre" style="background-color: black;">Acción</span>
+                        <span class="genre" style="background-color: green;">Ciencia ficción</span>
+                    </div>
+                    <div class="sinopsis">
+                        <h4>Sinopsis:</h4><br/>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error non soluta aspernatur quam doloremque sint nemo eveniet qui cumque ex id, accusamus, nisi nulla veniam velit itaque sunt voluptates debitis porro reiciendis perferendis similique? Dolore commodi omnis, magnam architecto in nulla autem delectus! Non at iste debitis ab cumque voluptatibus repellendus aut. Illum, qui. Est dolorem commodi neque quae facere dicta a nam explicabo ab?</p>
+                    </div>
                 </div>
-            </div>
+            </div>            
             <!-- Termina Información principal del libro -->
             <!-- Comienza listado de secciones -->
-            <div class="fila"></div>
+            <div class="fila" id="listado-secciones">
+                <div class="col w100">
+                    <table class="section-table">
+                        <caption>Secciones</caption>
+                            <!-- Encabezado de la tabla -->
+                            <tr>
+                                <th>Sección</th>
+                                <th>Acciones</th>
+                            </tr>
+    
+                            <!-- Contenido de la tabla -->
+                            <tr>
+                                <td data-cell="seccion">1 - A la orilla del océano cósmico</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">2 - Una voz en la fuga cósmica</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">3 - La armonía de los mundos</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">4 - Cielo e infierno</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">5 - Blues para un planeta rojo</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">6 - Historias de viajeros</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">7 - El espinazo de la noche</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">8 - Viaje a través del espacio y el tiempo</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">9 - Las vidas de las estrellas</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">10 - El filo de la eternidad</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Leer sección</div><i class='bx bx-book-reader'></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">11 - La persistencia de la memoria</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Leer sección</div><i class='bx bx-book-reader'></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">12 - Enciclopedia galáctica</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Leer sección</div><i class='bx bx-book-reader'></i></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-cell="seccion">13 - ¿Quién habla en nombre de la Tierra?</td>
+                                <td data-cell="acciones" class="acciones">
+                                    <span class="button continue"><div class="tooltip">Leer sección</div><i class='bx bx-book-reader'></i></span>
+                                </td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
             <!-- Termina listado de secciones -->
             <!-- Comienza grid de libros semejantes -->
-            <div class="fila"></div>
+            <div class="fila" id="libros-semejantes">
+                <h3 class="section-title">Recomendados</h3>
+                <div class="card card-1">
+                    <a href="/book-page.html">
+                        <div class="poster">
+                            <img src="./img/book-cover-dummy.jpg" alt="Carátula del libro">
+                        </div>
+                        <div class="details">
+                            <h3>Cosmos</h3>
+                            <h4>Por Carl Sagan</h4>
+                            <div class="genres">
+                                <!-- Sólo un género por tarjeta, es mejor así -->
+                                <span class="genre" style="background-color: #1d1d1d;">Divulgación Científica</span>
+                            </div>
+                            <div class="info">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque animi iure.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="card card-2">
+                    <a href="/book-page.html">
+                        <div class="poster">
+                            <img src="./img/book-cover-dummy.jpg" alt="Carátula del libro">
+                        </div>
+                        <div class="details">
+                            <h3>Cosmos</h3>
+                            <h4>Por Carl Sagan</h4>
+                            <div class="genres">
+                                <!-- Sólo un género por tarjeta, es mejor así -->
+                                <span class="genre" style="background-color: #1d1d1d;">Divulgación Científica</span>
+                            </div>
+                            <div class="info">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque animi iure.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="card card-3">
+                    <a href="/book-page.html">
+                        <div class="poster">
+                            <img src="./img/book-cover-dummy.jpg" alt="Carátula del libro">
+                        </div>
+                        <div class="details">
+                            <h3>Cosmos</h3>
+                            <h4>Por Carl Sagan</h4>
+                            <div class="genres">
+                                <!-- Sólo un género por tarjeta, es mejor así -->
+                                <span class="genre" style="background-color: #1d1d1d;">Divulgación Científica</span>
+                            </div>
+                            <div class="info">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque animi iure.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="card card-4">
+                    <a href="/book-page.html">
+                        <div class="poster">
+                            <img src="./img/book-cover-dummy.jpg" alt="Carátula del libro">
+                        </div>
+                        <div class="details">
+                            <h3>Cosmos</h3>
+                            <h4>Por Carl Sagan</h4>
+                            <div class="genres">
+                                <!-- Sólo un género por tarjeta, es mejor así -->
+                                <span class="genre" style="background-color: #1d1d1d;">Divulgación Científica</span>
+                            </div>
+                            <div class="info">
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque animi iure.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
             <!-- Termina grid de libros semejantes -->
         </section>
         <!-- Termina contenido -->
