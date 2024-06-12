@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+    <html lang="es">
+    <!-- Comienza HTML -->
+    <head>
+        <!-- Comienza cabeza de archivo -->
+        <meta charset="UTF-8">
+        <!-- Adaptación para que se vea bien en IExplore y Microsoft Edge -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <!-- Inicialización de responsividad -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Título de la página en específico -->
+        <title>Usuario - Librísimos</title>
+        <!-- Archivos CSS -->
+        <!-- CSS de estilos generales -->
+        <link rel="stylesheet" href="./css/general-style.css">
+        <!-- CSS de página específica -->
+        <link rel="stylesheet" href="./css/page-style.css">
+        <!-- CSS de BoxIcons -->
+        <link rel="stylesheet" href="./css/boxicons-2.1.4/css/boxicons.min.css">
+        <!-- CSS de SweetAlert2 -->
+        <link rel="stylesheet" href="./css/sweetalert2.min.css">
+        <!-- Termina cabeza de archivo -->
+    </head>
+    <body>
+        <!-- Comienza cuerpo del archivo -->
+        <!-- Comienza Encabezado de página -->
+        <header class="header">
+            <!-- Logo a la izquierda, en texto formateado -->
+            <a href="#" class="logo">Libr<span class="red-logo">ísimos</span></a>
+            <!-- Menú de navegación a la derecha, en enlaces formateados -->
+            <nav class="navbar">
+                <a href="user-page.html" class="nav-active">Inicio</a>
+                <a href="book-search.html">Biblioteca</a>
+                <a href="my-books-page.html">Mis Libros</a>
+                <!-- Enlace para "mi perfil" -->
+                <img src="./img/user-avatar.jpg" class="user-pic">
+            </nav>
+        </header>
+        <!-- Comienza submenú "mi perfil" -->
+        <div class="profile-wrap">
+            <div class="sub-menu">
+                <div class="user-info">
+                    <img src="./img/user-avatar.jpg">
+                    <h4>DAVID ALBERTO OSPINA</h4>
+                </div>
+                <a href="profile-edit.html" class="sub-menu-link">
+                    <i class='bx bx-user-circle'></i>
+                    <p>Editar perfil</p>
+                </a>
+                <a href="#" class="sub-menu-link">
+                    <i class='bx bxs-help-circle' ></i>
+                    <p>Ayuda</p>
+                </a>                
+                <a href="./index.html" class="sub-menu-link">
+                    <i class='bx bx-log-out-circle' ></i>
+                    <p>Cerrar sesión</p>
+                </a>
+            </div>
+        </div>
+        <!-- Termina submenú "mi perfil" -->
+        <!-- Termina Encabezado de página -->
+        <!-- Comienza contenido -->
+        <section class="contenido" id="inicio">
+            <div class="fila">
+                <div class="col w70" id="main-data">
+                    <h3 id="nombre-usuario">Editor de perfil<br/><span>DAVID ALBERTO OSPINA</span></h3>
+                    <h5 id="tipo-usuario">Suscriptor</h5>
+                    <h6 id="id-usuario">ID: <span>001</span></h6>
+                </div>                
+            </div>
+            <!-- Comienza la sección de información general -->
+            <div class="fila">
+                <div class="col w100" id="general-info">
+                    <h4>Instrucciones</h4>
+                    <p>Por favor coloca los datos en las casillas correspondientes, y luego da clic en "Guardar datos".</p>
+                </div>
+            </div>
+            <!-- Termina la sección de información general -->
+            <!-- Comienza la sección de formulario -->
+             <div class="fila">
+                <div class="col w50">Columna 1</div>
+                <div class="col w50">Columna 2</div>
+             </div>
+            <!-- Termina la sección de formulario -->
+        </section>
+        <!-- Termina contenido -->
+        <!-- Comienza Pie de página -->
+        <footer class="footer">
+            <div class="footer-text">
+                <p>Copyright &copy; 2024, para el Servicio Nacional de Aprendizaje.</p>
+            </div>
+            <div class="footer-back-to-top">
+                <a href="#inicio"><i class="bx bx-up-arrow-alt"></i></a>
+            </div>
+        </footer>
+        <!-- Termina Pie de página -->
+        <!-- Termina cuerpo del archivo-->
+        <!-- Comienza Javascript -->
+        <!-- JQuery -->
+        <script src="./js/jquery-3.7.1.min.js"></script>
+        <!-- Javascript de SweetAlert2 -->
+        <script src="./js/sweetalert2.all.min.js"></script>
+        <!-- Javascript general -->
+        <script src="./js/general-scripts.js"></script>
+        <!-- Javascript de la página específica -->
+        <script src="./js/page-scripts.js"></script>
+        <!-- Termina Javascript -->
+    </body>
+</html>
