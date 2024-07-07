@@ -79,7 +79,7 @@ $("#login-form").submit(function(e)
     // Si no, da mensaje de error  
     else
     {
-        mensaje('error', 'Datos de acceso incorrectos, intente nuevamente.')
+        mensaje('error', 'Datos de acceso incorrectos, intente nuevamente.');
     }
 });
 

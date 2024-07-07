@@ -61,27 +61,56 @@
         <!-- Termina Encabezado de página -->
         <!-- Comienza contenido -->
         <section class="contenido" id="inicio">
-            <div class="fila">
-                <div class="col w70" id="main-data">
-                    <h3 id="nombre-usuario">Editor de perfil<br/><span>DAVID ALBERTO OSPINA</span></h3>
-                    <h5 id="tipo-usuario">Suscriptor</h5>
-                    <h6 id="id-usuario">ID: <span>001</span></h6>
-                </div>                
-            </div>
-            <!-- Comienza la sección de información general -->
-            <div class="fila">
-                <div class="col w100" id="general-info">
-                    <h4>Instrucciones</h4>
-                    <p>Por favor coloca los datos en las casillas correspondientes, y luego da clic en "Guardar datos".</p>
+            <div class="fila" id="presentacion-fotos">
+                <div class="col w20" id="foto">
+                    <input type="file" name="file-selector" id="file-selector" accept="image/png, image/jpeg" style="display: none;">
+                    <button onclick="$('#file-selector').click();" id="selector-archivo">Seleccionar foto</button>
+                </div>
+                <div class="col w80" id="main-data">
+                    <h6>ID: <span>001</span></h6>
+                    <h3><span>DAVID ALBERTO OSPINA</span></h3>
+                    <h5>EDITOR DE PERFIL</h5>
+                    <a href="#formulario" class="btn">Editar</a>
                 </div>
             </div>
-            <!-- Termina la sección de información general -->
-            <!-- Comienza la sección de formulario -->
-             <div class="fila">
-                <div class="col w50">Columna 1</div>
-                <div class="col w50">Columna 2</div>
-             </div>
-            <!-- Termina la sección de formulario -->
+            <div class="fila" id="formulario">
+                <div class="col w40">
+                    <div class="form-group">
+                        <span class="label">Nombre(s) del usuario</span>
+                        <input type="text" name="nombre-usuario" id="nombre-usuario">
+                    </div>
+                    <div class="form-group">
+                        <span class="label">Apellido(s) del usuario</span>
+                        <input type="text" name="apellido-usuario" id="apellido-usuario">
+                    </div>
+                    <div class="form-group">
+                        <span class="label">Fecha de nacimiento del usuario</span>
+                        <input type="date" name="fecha-nacimiento" id="fecha-nacimiento">
+                    </div>
+                </div>
+                <div class="col w40">
+                    <div class="form-group">
+                        <span class="label">Correo electrónico</span>
+                        <input type="email" name="email-usuario" id="email-usuario">
+                    </div>
+                    <div class="form-group">
+                        <span class="label">Nombre de usuario</span>
+                        <input type="text" name="login-usuario" id="login-usuario">
+                    </div>
+                    <div class="form-group">
+                        <span class="label">Contraseña</span>
+                        <input type="password" name="pass-usuario" id="pass-usuario">
+                    </div>
+                    <div class="form-group">
+                        <span class="label">Confirmar contraseña</span>
+                        <input type="password" name="conf-pass-usuario" id="conf-pass-usuario">
+                    </div>
+                </div>
+                <div class="col w20">
+                    <p style="color: transparent;">Texto falso</p>
+                    <button type="submit">Actualizar datos</button>
+                </div>
+            </div>
         </section>
         <!-- Termina contenido -->
         <!-- Comienza Pie de página -->
