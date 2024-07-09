@@ -32,9 +32,95 @@
         <!-- Termina Encabezado de página -->
         <!-- Comienza contenido -->
         <section class="contenido" id="inicio">
-            <div class="fila" id="presentacion">
-                
+            <!-- Comienza sección de mensajes -->
+            <div class="fila" id="seccion-mensajes">
+                <div class="col w100 mensaje exito">
+                    <div class="mensaje-interno">
+                        <div class="icono">
+                            <i class='bx bxs-check-circle'></i>
+                        </div>
+                        <div class="texto">
+                            <p>Este es un mensaje de exito. Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, consectetur?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col w100 mensaje error">
+                    <div class="mensaje-interno">
+                        <div class="icono">
+                            <i class='bx bxs-x-circle'></i>
+                        </div>
+                        <div class="texto">
+                            <p>Este es un mensaje de error. Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, consectetur?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col w100 mensaje info">
+                    <div class="mensaje-interno">
+                        <div class="icono">
+                            <i class='bx bxs-info-circle'></i>
+                        </div>
+                        <div class="texto">
+                            <p>Este es un mensaje informativo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, consectetur?</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- Termina sección de mensajes -->
+            <!-- Comienza sección de formularios -->
+             <div class="fila" id="info-formularios">
+                <div class="col w100">
+                    <h3>Instalador de base de datos "Librísimos"</h3>
+                    <p>Por favor ingresa los datos respectivos en las casillas correspondientes. Luego, da clic en "Probar base de datos". Luego, ingresa el nombre de usuario y contraseña del súper administrador y da clic en "Instalar".</p>
+                    <p style="font-size: 11px;">Los datos para el formulario de base de datos son provistos por tu servidor.</p>
+                </div>
+             </div>
+             <div class="fila" id="seccion-formularios">
+                <div class="col w50">
+                    <div id="parent">
+                        <div id="underlay">
+                            <div class="form-group">
+                                <span class="label">Nombre del servidor</span>
+                                <input type="text" name="db-server" id="db-server">
+                            </div>
+                            <div class="form-group">
+                                <span class="label">Nombre de la base de datos</span>
+                                <input type="text" name="db-name" id="db-name">
+                            </div>
+                            <div class="form-group">
+                                <span class="label">Nombre de usuario de la base de datos</span>
+                                <input type="text" name="db-user" id="db-user">
+                            </div>
+                            <div class="form-group">
+                                <span class="label">Contraseña de la base de datos</span>
+                                <input type="text" name="db-pass" id="db-pass">
+                            </div>
+                            <button type="submit" style="width: 45%;">Probar base de datos</button>
+                        </div>
+                        <div id="overlay"></div>
+                    </div>
+                </div>
+                <div class="col w50">
+                    <div id="parent">
+                        <div id="underlay">
+                            <div class="form-group">
+                                <span class="label">Nombre de usuario súper administrador</span>
+                                <input type="text" name="superadmin-login" id="superadmin-login">
+                            </div>
+                            <div class="form-group">
+                                <span class="label">Contraseña de súper administrador</span>
+                                <input type="password" name="superadmin-pass" id="superadmin-pass">
+                            </div>
+                            <div class="form-group">
+                                <span class="label">Confirmar Contraseña de súper administrador</span>
+                                <input type="password" name="superadmin-pass-confirm" id="superadmin-pass-confirm">
+                            </div>
+                            <button type="submit" style="width: 45%;">Instalar</button>
+                        </div>
+                        <div id="overlay"></div>
+                    </div>
+                </div>
+             </div>
+            <!-- Termina sección de formularios -->
         </section>
         <!-- Termina contenido -->
         <!-- Comienza Pie de página -->
