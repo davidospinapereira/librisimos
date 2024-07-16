@@ -1,0 +1,5 @@
+CARPETA "MODEL" - DESCRIPCIÓN
+
+La carpeta "Model" contiene los componentes del sistema que se encargan de la comunicación con los modelos de datos. Aquí se incluyen archivos SQL, JSON y PHP encargados de almacenar los datos necesarios para el correcto funcionamiento de la herramienta de software desde su base de datos. Así mismo, contiene herramientas que permiten conectar la aplicación a la base de datos.
+
+Esta carpeta corresponde, dentro del patrón de desarrollo de software "Modelo - Vista - Controlador" al MODELO.

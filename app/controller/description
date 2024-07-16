@@ -1,0 +1,5 @@
+CARPETA "CONTROLLER" - DESCRIPCIÓN
+
+La carpeta "Controller" contiene los componentes del sistema que se encargan de las funcionalidades internas del software, así como del procesamiento de datos en la base de datos. Las funciones manejadas en esta carpeta se comunican con las funciones de las carpetas de vista y de modelo y permite la interacción entre ellas, así como la interacción entre el usuario final y los modelos de datos y entre diferentes componentes.
+
+Esta carpeta corresponde, dentro del patrón de desarrollo de software "Modelo - Vista - Controlador" al CONTROLADOR.

@@ -1,0 +1,5 @@
+CARPETA "VIEW" - DESCRIPCIÓN
+
+La carpeta "View" contiene los componentes visuales del sistema. Estos incluyen, pero no se limitan, a archivos CSS, partes HTML del sistema, archivos de fuentes, imágenes y otros elementos gráficos.
+
+Esta carpeta corresponde, dentro del patrón de desarrollo de software "Modelo - Vista - Controlador" a la VISTA.
