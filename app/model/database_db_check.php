@@ -43,7 +43,9 @@
                 } 
                 catch (PDOException $e) 
                 {
-                    echo 'Error de conexión: ' . $e->getMessage();
+                    //echo 'Error de conexión: ' . $e->getMessage();
+                    return 'DB_CONNECTION_ERROR';
+                    exit;
                 }
                 // Verificar la estructura de la base de datos
                 $structure_valid = true;
@@ -53,7 +55,7 @@
                     $stmt = $pdo->query("SHOW TABLES LIKE '$table'");
                     if ($stmt->rowCount() === 0) 
                     {
-                        echo "La tabla '$table' no existe.<br>";
+                        //echo "La tabla '$table' no existe.<br>";
                         $structure_valid = false;
                         continue;
                     }
@@ -66,7 +68,7 @@
                     {
                         if (!in_array($column, $actual_columns)) 
                         {
-                            echo "La columna '$column' no existe en la tabla '$table'.<br>";
+                            //echo "La columna '$column' no existe en la tabla '$table'.<br>";
                             $structure_valid = false;
                         }
                     }
@@ -75,23 +77,24 @@
                 if ($structure_valid) 
                 {
                     // Si la estructura de la base de datos es la correcta, retornamos
-                    return "EXISTE_CORRECTA";
+                    return "DB_EXISTE_CORRECTA";
                 } 
                 else 
                 {
                     // Si la estructura de la base de datos es incorrecta, retornamos
-                    return "EXISTE_INCORRECTA";
+                    return "DB_EXISTE_INCORRECTA";
                 }
             } 
             else 
             {
                 // Si la base de datos no existe, retornamos
-                return "NO_EXISTE";
+                return "DB_NO_EXISTE";
             }
         } 
         catch (PDOException $e) 
         {
-            echo 'Error de conexión: ' . $e->getMessage();
+            //echo 'Error de conexión: ' . $e->getMessage();
+            return 'DB_CONNECTION_ERROR';
             exit;
         }
 

@@ -6,7 +6,7 @@
         if (!file_exists($json_file)) 
         {
             // Debemos retornar un valor que distinga
-            return "NO_EXISTE";
+            return "JSON_NO_EXISTE";
         }
         // Si el archivo sí existe
         else
@@ -20,7 +20,7 @@
             if (json_last_error() !== JSON_ERROR_NONE) 
             {
                 // Si no tiene la decodificación correcta debemos reportarlo
-                return "DECODE_ERROR";
+                return "JSON_DECODE_ERROR";
             }
             else
             {
@@ -40,12 +40,12 @@
                 if ($structure_valid) 
                 {
                     // Si el archivo JSON tiene la estructura correcta, reporta esto
-                    return "EXISTE_CORRECTO";
+                    return "JSON_EXISTE_CORRECTO";
                 }
                 else
                 {
                     // Si el archivo JSON no tiene la estructura correcta, reporta esto otro
-                    return "EXISTE_INCORRECTO";
+                    return "JSON_EXISTE_INCORRECTO";
                 }
             }
         }

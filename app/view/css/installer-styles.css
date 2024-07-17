@@ -1,0 +1,279 @@
+/* Importación de fuentes de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Comienza CSS General */
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;    
+    scroll-behavior: smooth;
+}
+
+body
+{
+    min-height: 100vh;
+}
+/* Termina CSS General */
+
+/* Comienza Header */
+.header
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    padding: 20px 100px;
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s ease-in-out;
+    z-index: 999;
+}
+
+.header.sticky
+{
+    background: #000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Como esta página no tiene navbar, no necesito agregarlo */
+
+.logo
+{
+    font-size: 29px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+.logo .red-logo
+{
+    color: red;
+}
+/* Termina Header */
+
+/* Comienza Contenido */
+.contenido
+{
+    min-height: 100vh;
+    padding: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: url('../img/background-principal.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #f4f4f4;
+}
+
+.contenido .fila
+{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.fila .col
+{
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.w100
+{
+    width: 100%;
+}
+
+.w50
+{
+    width: 50%;
+}
+
+#seccion-mensajes
+{
+    flex-direction: column;
+}
+
+#seccion-mensajes .mensaje
+{
+    background-color: #FFF;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 3px;
+}
+
+#seccion-mensajes .mensaje .mensaje-interno
+{
+    border-radius: 5px;
+    padding: 15px;
+    border: 2px solid black;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    min-height: 40px;
+    color: #282828;
+}
+
+#seccion-mensajes .mensaje .mensaje-interno .icono
+{
+    width: 5%;
+    display: inline-flex;
+    justify-content: center;
+    font-size: 29px;
+}
+
+#seccion-mensajes .mensaje .mensaje-interno .texto p
+{
+    margin: 0;
+}
+
+#seccion-mensajes .mensaje.exito .mensaje-interno
+{
+    border-color: green;
+}
+
+#seccion-mensajes .mensaje.exito .mensaje-interno .icono
+{
+    color: green;
+}
+
+#seccion-mensajes .mensaje.error .mensaje-interno
+{
+    border-color: red;
+}
+
+#seccion-mensajes .mensaje.error .mensaje-interno .icono
+{
+    color: red;
+}
+
+#seccion-mensajes .mensaje.info .mensaje-interno
+{
+    border-color: blue;
+}
+
+#seccion-mensajes .mensaje.info .mensaje-interno .icono
+{
+    color: blue;
+}
+
+#info-formularios
+{
+    margin-top: 25px;
+    margin-bottom: 15px;
+    color: #f4f4f4;
+}
+
+#info-formularios h3
+{
+    color: #ffffff;
+    font-size: 31px;
+    font-weight: 600;
+}
+
+#seccion-formularios
+{
+    gap: 35px;
+    color: #f4f4f4;
+    align-items: start;
+}
+
+.col .form-group
+{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.col .form-group .label,
+.col p 
+{
+    font-size: 15px;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.col .form-group input
+{
+    height: 35px;
+    padding: 5px 7px;
+    border-radius: 0;
+    outline: none;
+}
+
+.col button
+{
+    background-color: darkred;
+    color: #f4f4f4;
+    border: 1px solid darkred;
+    border-radius: 3px;
+    height: 35px;
+    padding: 5px 7px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.col button:hover
+{
+    color: #ffffff;
+    background-color: red;
+    border-color: red;
+    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.55);
+}
+/* Termina Contenido */
+
+/* Comienza Footer */
+.footer
+{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 2rem 9%;
+    background: #000;
+    color: #fff;
+}
+
+.footer-text p 
+{
+    font-size: 15px;
+}
+
+.footer-back-to-top a
+{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.4rem;
+    background: red;
+    border-radius: 0.8rem;
+    text-decoration: none;
+    transition: 0.3s ease-in-out;
+}
+
+.footer-back-to-top a:hover
+{
+    box-shadow: 0 0 1rem rgba(236, 36, 36, 0.45);
+}
+
+.footer-back-to-top a i 
+{
+    font-size: 2.4rem;
+    color: #fff;
+}
+/* Termina Footer */
+
+/* Comienza Responsive */
+/* Termina Responsive */
