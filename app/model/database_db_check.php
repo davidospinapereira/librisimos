@@ -14,6 +14,7 @@
         // Verificamos si la base de datos existe
         try 
         {
+            /* UNICA VEZ EN QUE USARÉ PDO EN ESTE SOFTWARE, CORTESÍA DE CHATGPT */
             $pdo = new PDO("mysql:host=$db_host", $db_user, $db_pass);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // Consultar las bases de datos

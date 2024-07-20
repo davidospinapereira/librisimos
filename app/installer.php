@@ -1,6 +1,16 @@
 <?php
     // Verifica si existe el dato POST
-    print_r($_POST);
+    // $_POST['error_code'] puede ser 'JSON_NO_EXISTE', 'JSON_DECODE_ERROR', 'JSON_EXISTE_INCORRECTO', 'DB_CONNECTION_ERROR', 'DB_NO_EXISTE', 'DB_CONNECTION_ERROR' y 'DB_EXISTE_INCORRECTA'
+    if(isset($_POST['error_code']))
+    {
+        // Si hay un código de error, asígnelo
+        $error_code = $_POST['error_code'];
+    }
+    else
+    {
+        // Si no hay un código de error recibido, es porque están tratando de entrar por las malas
+        $error_code = 'NO_ERROR_CODE';
+    }
 ?>
 
 <!DOCTYPE html>
@@ -38,36 +48,7 @@
         <section class="contenido" id="inicio">
             <!-- Comienza sección de mensajes -->
             <div class="fila" id="seccion-mensajes">
-                <div class="col w100 mensaje exito">
-                    <div class="mensaje-interno">
-                        <div class="icono">
-                            <i class='bx bxs-check-circle'></i>
-                        </div>
-                        <div class="texto">
-                            <p>Este es un mensaje de exito. Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, consectetur?</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col w100 mensaje error">
-                    <div class="mensaje-interno">
-                        <div class="icono">
-                            <i class='bx bxs-x-circle'></i>
-                        </div>
-                        <div class="texto">
-                            <p>Este es un mensaje de error. Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, consectetur?</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col w100 mensaje info">
-                    <div class="mensaje-interno">
-                        <div class="icono">
-                            <i class='bx bxs-info-circle'></i>
-                        </div>
-                        <div class="texto">
-                            <p>Este es un mensaje informativo. Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus, consectetur?</p>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
             <!-- Termina sección de mensajes -->
             <!-- Comienza sección de formularios -->
@@ -79,7 +60,7 @@
                 </div>
              </div>
              <div class="fila" id="seccion-formularios">
-                <div class="col w50">
+                <div class="col w50" id="formulario-json">
                     <div class="form-group">
                         <span class="label">Nombre del servidor</span>
                         <input type="text" name="db-server" id="db-server">
@@ -96,9 +77,10 @@
                         <span class="label">Contraseña de la base de datos</span>
                         <input type="text" name="db-pass" id="db-pass">
                     </div>
-                    <button type="submit" style="width: 45%;">Probar base de datos</button>
+                    <button type="submit" style="width: 45%;" id="btn-test-connection">Probar base de datos</button>
+                    <button type="submit" style="width: 55%;" id="btn-save-file">Instalar archivo de configuración</button>
                 </div>
-                <div class="col w50">
+                <div class="col w50" id="formulario-db">
                     <div class="form-group">
                         <span class="label">Nombre de usuario súper administrador</span>
                         <input type="text" name="superadmin-login" id="superadmin-login">
@@ -111,7 +93,7 @@
                         <span class="label">Confirmar Contraseña de súper administrador</span>
                         <input type="password" name="superadmin-pass-confirm" id="superadmin-pass-confirm">
                     </div>
-                    <button type="submit" style="width: 45%;">Instalar</button>
+                    <button type="submit" style="width: 45%;" id="btn-install-database">Instalar</button>
                 </div>
              </div>
             <!-- Termina sección de formularios -->
@@ -133,7 +115,12 @@
         <script src="./view/js/jquery-3.7.1.min.js"></script>
         <!-- Javascript de SweetAlert2 -->
         <script src="./view/js/sweetalert2.all.min.js"></script>
-        <!-- Javascript de la página -->
+        <!-- Javascript interno para manejo de datos POST -->
+        <script>
+            // Insertar los datos en el DOM como variables de JavaScript
+            var error = '<?php echo $error_code; ?>';
+        </script>
+        <!-- Archivo JS que manejará este error. -->
         <script src="./view/js/installer-scripts.js"></script>
         <!-- Termina Javascript -->
     </body>

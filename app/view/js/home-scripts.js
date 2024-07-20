@@ -1,5 +1,13 @@
+// Comienza definición de variables
+const loginPopup = $('.login-popup');
+const registerLink = $('.register-link');
+const loginLink = $('.login-link');
+const btnPopup = $('.btnLogin');
+const closeIcon = $('.icon-close');
 let sections = document.querySelectorAll('.section');
 let navLinks = document.querySelectorAll('header nav a');
+// Termina definición de variables
+
 // Comienzan efectos de navegación vertical
 window.onscroll = () => 
 {
@@ -35,11 +43,12 @@ function mensaje(icon, mensaje)
         {
             toast: true,
             icon: icon,
-            text: mensaje,
+            html: mensaje,
             animation: false,
             position: 'bottom-start',
             showConfirmButton: false,
             timer: 3000,
+            width: 'auto',
             timerProgressBar: true,
             didOpen: (toast) => 
             {
@@ -56,7 +65,7 @@ function popupMensaje(title, icon, mensaje)
     Swal.fire(
         {
             title: title,
-            text: mensaje,
+            html: mensaje,
             icon: icon,
             confirmButtonText:'OK'
         }
@@ -90,14 +99,6 @@ function popupPregunta(pregunta)
 // Termina función de pregunta
 // Terminan funciones de Sweetalert
 
-// Comienza definición de variables
-const loginPopup = $('.login-popup');
-const registerLink = $('.register-link');
-const loginLink = $('.login-link');
-const btnPopup = $('.btnLogin');
-const closeIcon = $('.icon-close');
-// Termina definición de variables
-
 // Comienza cambio entre el formulario de login y el de registro
 registerLink.on("click", function()
 {
@@ -123,15 +124,6 @@ closeIcon.on("click", function()
 });
 // Termina control para mostrar o guardar el popup
 
-// Prueba del sweetalert
-Swal.fire(
-    {
-        title: '¡Página de muestra!',
-        html: 'Para probar el acceso, <br/>intente usar las credenciales:<br/><b>admin&nbsp;&nbsp;&nbsp;&nbsp;admin<br/>david&nbsp;&nbsp;&nbsp;&nbsp;david<br/></b>También pruebe usar cualquier otra credencial.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar'
-    });
-
 // Comienzan funciones de login y acceso
 // Comienzan funciones de login
 $("#login-form").submit(function(e)
@@ -139,40 +131,47 @@ $("#login-form").submit(function(e)
     // Que el formulario no cargue ninguna página automáticamente
     e.preventDefault();
     // Jalamos los datos del formulario
-    var user = document.getElementById('login-user').value;
-    var pass = document.getElementById('login-pass').value;
-    // Función de AJAX para validación de datos
-    // Función temporal para prototipos: Un if sencillo
-    // Si los datos son correctos da mensaje de éxito
-    if (user == "admin" && pass == "admin")
-    {
-        // Primero, que cargue el mensaje. Dura 3000 ms
-        mensaje('success', 'Bienvenido, ADMIN. Serás redirigido a la página principal.');
-        // Segundo, que redirija a la página de admin luego de 3000 ms. Esto sucede con setTimeOut
-        
-        //let espera = setInterval(()=>{console.log(Date())},500)
-        
-        setTimeout(function() 
-        { 
-            //clearInterval(espera)
-            window.location.href = "admin-page.html";
-        }, 3000);
-    }
-    else if (user == 'david' && pass == 'david')
-    {
-        // Primero, que cargue el mensaje. Dura 3000 ms
-        mensaje('success', 'Bienvenido, David. Serás redirigido a tu página principal.');
-        // Segundo, que redirija a la página de admin luego de 3000 ms. Esto sucede con setTimeOut
-        setTimeout(function() 
-        { 
-            window.location.href = "user-page.html";
-        }, 3000);
-    }
-    // Si no, da mensaje de error  
-    else
-    {
-        mensaje('error', 'Datos de acceso incorrectos, intente nuevamente.');
-    }
+    var user = $('#login-user').val();
+    var pass = $('#login-pass').val();
+    /* Función de AJAX para validación de datos */
+    $.ajax
+    ({
+        type: 'POST', // Type es el tipo de solicitud
+        url: './app/controller/login-check.php',
+        data: 
+        {
+            login_check: true,
+            user: user,
+            pass: pass
+        },
+        /* contentType: 'application/json', // contentType es el tipo de contenido deseado */
+        async: true, // async indica si se desea que los datos sean asíncronos. true viene por defecto pero es mejor especificarlo
+        success: function(data)
+        {
+            var respuesta = JSON.parse(data);
+            if (respuesta == null)
+            {
+                var error = 'Los datos ingresados son inválidos.<br/>Por favor verifique e intente nuevamente';
+                // Si la respuesta es null, entonces debe dar un mensaje de error
+                mensaje('error', error);
+            }
+            else
+            {
+                // Sacamos los datos del JSON resultante
+                var nombre = respuesta.nombre;
+                var id = respuesta.id;
+                var token = respuesta.token;
+                // Generamos un mensaje con el nombre
+                mensaje('success', 'Bienvenid@, ' + nombre + '<br/>Serás redirigido a la página principal en unos segundos<br/>ID: ' + id + '<br/>Token: ' + token);
+                // Pasamos id y token a un formulario POST oculto que luego ejecutamos cuando terminen los 3 segundos del mensaje. Podré incorporar datos en session_start de PHP en este archivo?
+            }
+        },
+        error: function(error)
+        {
+            mensaje('error', error);
+        }
+    });
+    /* Termina Función de AJAX para validación de datos */
 });
 
 $("#register-form").submit(function(e)
