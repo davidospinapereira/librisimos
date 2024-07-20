@@ -1,80 +1,3 @@
-<?php
-    /* Podríamos generar un archivo de constantes... Luego miro eso */
-    /* Invocamos el archivo de verificación de base de datos, que se encuentra en model */
-    require './app/model/database_json_check.php';
-    // Verificamos el archivo JSON con los datos de conexión a base de datos.
-    $json_check = json_check('./app/model/connection_data.json');
-    if ($json_check !== "JSON_EXISTE_CORRECTO")
-    {
-        /* Si el archivo JSON no existe o es incorrecto, cargamos installer pasándole el valor de $json_check por POST. Para eso usamos JS de la siguiente manera */
-        ?>
-        <script>
-            const data = 
-            {
-                error_code: '<?php echo $json_check ?>'
-            };
-            const url = './app/installer.php';
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = url;
-            for (const key in data) 
-            {
-                if (data.hasOwnProperty(key)) 
-                {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = data[key];
-                    form.appendChild(input);
-                }
-            }
-            // Agrega el formulario al cuerpo del documento y envíalo
-            document.body.appendChild(form);
-            form.submit();
-        </script>
-        <?php
-    }
-    else
-    {
-        //El archivo JSON existe y tiene la estructura correcta.<br/>Probamos la conexión con la base de datos.
-        //Invocamos el verificador de base de datos
-        require './app/model/database_db_check.php';
-        // Comprobamos si la base de datos existe
-        $db_check = db_check('./app/model/connection_data.json');
-        if ($db_check !== "DB_EXISTE_CORRECTA")
-        {
-            /* Si la base de datos no existe o no tiene la estructura correcta, cargamos installer pasándole el valor de $db_check por POST. Para eso usamos JS de la siguiente manera */
-            ?>
-            <script>
-                const data = 
-                {
-                    error_code: '<?php echo $db_check ?>'
-                };
-                const url = './app/installer.php';
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = url;
-                for (const key in data) 
-                {
-                    if (data.hasOwnProperty(key)) 
-                    {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = key;
-                        input.value = data[key];
-                        form.appendChild(input);
-                    }
-                }
-                // Agrega el formulario al cuerpo del documento y envíalo
-                document.body.appendChild(form);
-                form.submit();
-            </script>
-            <?php
-        }
-        else
-        {
-            // El JSON existe y tiene la estructura, la base de datos existe y tiene su estructura, por fin cargamos HOME.
-            ?>
 <!DOCTYPE html>
 <html lang="es">
     <!-- Comienza HTML -->
@@ -86,10 +9,10 @@
         <!-- Inicialización de responsividad -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Título de la página en específico -->
-        <title>Librísimos - Aplicación de lectura de libros en línea</title>
+        <title>Librísimos - Lee tus libros en línea</title>
         <!-- Archivos CSS -->
         <!-- CSS de página de inicio, incluye header y footer -->
-        <link rel="stylesheet" href="./app/view/css/home-style.css"> 
+        <link rel="stylesheet" href="./app/view/css/home-styles.css"> 
         <!-- CSS de BoxIcons -->
         <link rel="stylesheet" href="./app/view/css/boxicons-2.1.4/css/boxicons.min.css">
         <!-- CSS de SweetAlert2 -->
@@ -97,6 +20,82 @@
         <!-- Termina cabeza de archivo -->
     </head>
     <body>
+        <?php 
+            /* Invocamos el archivo de verificación de base de datos, que se encuentra en model */
+            require './app/model/database_json_check.php';
+            // Verificamos el archivo JSON con los datos de conexión a base de datos.
+            $json_check = json_check('./app/model/connection_data.json');
+            if ($json_check !== "JSON_EXISTE_CORRECTO")
+            {
+                /* Si el archivo JSON no existe o es incorrecto, cargamos installer pasándole el valor de $json_check por POST. Para eso usamos JS de la siguiente manera */
+                ?>
+                <script>
+                    const data = 
+                    {
+                        error_code: '<?php echo $json_check ?>'
+                    };
+                    const url = './app/installer.php';
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = url;
+                    for (const key in data) 
+                    {
+                        if (data.hasOwnProperty(key)) 
+                        {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = key;
+                            input.value = data[key];
+                            form.appendChild(input);
+                        }
+                    }
+                    // Agrega el formulario al cuerpo del documento y envíalo
+                    document.body.appendChild(form);
+                    form.submit();
+                </script>
+                <?php
+            }
+            else
+            {
+                /* El archivo JSON existe y tiene la estructura correcta. Probamos la conexión con la base de datos. */
+                //Invocamos el verificador de base de datos
+                require './app/model/database_db_check.php';
+                // Comprobamos si la base de datos existe
+                $db_check = db_check('./app/model/connection_data.json');
+                if ($db_check !== "DB_EXISTE_CORRECTA")
+                {
+                    /* Si la base de datos no existe o no tiene la estructura correcta, cargamos installer pasándole el valor de $db_check por POST. Para eso usamos JS de la siguiente manera */
+                    ?>
+                    <script>
+                        const data = 
+                        {
+                            error_code: '<?php echo $db_check ?>'
+                        };
+                        const url = './app/installer.php';
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = url;
+                        for (const key in data) 
+                        {
+                            if (data.hasOwnProperty(key)) 
+                            {
+                                const input = document.createElement('input');
+                                input.type = 'hidden';
+                                input.name = key;
+                                input.value = data[key];
+                                form.appendChild(input);
+                            }
+                        }
+                        // Agrega el formulario al cuerpo del documento y envíalo
+                        document.body.appendChild(form);
+                        form.submit();
+                    </script>
+                    <?php
+                }
+                else
+                {
+                    // El JSON existe y tiene la estructura, la base de datos existe y tiene su estructura, por fin cargamos HOME.
+                    ?>
         <!-- Comienza cuerpo de archivo -->
         <!-- Comienza Header -->
         <header class="header">
@@ -204,7 +203,7 @@
                         <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae quod suscipit, assumenda repellendus accusantium laboriosam pariatur tenetur vero voluptatum. A accusantium vitae accusamus libero numquam incidunt iure autem quam corrupti.</p>
                     </div>
                     <div class="col50">
-                        <img src="./img/about-ref.jpg" class="image">
+                        <img src="./app/view/img/about-ref.jpg" class="image">
                     </div>
                 </div>
             </div>
@@ -251,13 +250,13 @@
         <script src="./app/view/js/jquery-3.7.1.min.js"></script>
         <!-- Javascript de SweetAlert2 -->
         <script src="./app/view/js/sweetalert2.all.min.js"></script>
-        <!-- Javascript de página de inicio -->
+        <!-- Javascript general -->
         <script src="./app/view/js/home-scripts.js"></script>
         <!-- Termina Javascript -->
+                    <?php
+                }
+            }
+        ?>
     </body>
     <!-- Termina HTML -->
 </html>
-            <?php
-        }
-    }
-?>

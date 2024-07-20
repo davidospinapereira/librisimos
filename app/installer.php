@@ -17,11 +17,11 @@
         <title>Instalador - Librísimos</title> <!-- Diferencia 1 -->
         <!-- Archivos CSS -->
         <!-- CSS de la página -->
-        <link rel="stylesheet" href="./css/installer-style.css">
+        <link rel="stylesheet" href="./view/css/installer-styles.css">
         <!-- CSS de BoxIcons -->
-        <link rel="stylesheet" href="./css/boxicons-2.1.4/css/boxicons.min.css">
+        <link rel="stylesheet" href="./view/css/boxicons-2.1.4/css/boxicons.min.css">
         <!-- CSS de SweetAlert2 -->
-        <link rel="stylesheet" href="./css/sweetalert2.min.css">
+        <link rel="stylesheet" href="./view/css/sweetalert2.min.css">
         <!-- Termina cabeza de archivo -->
     </head>
     <body>
@@ -30,7 +30,7 @@
         <header class="header">
             <!-- Logo a la izquierda, en texto formateado -->
             <a href="#" class="logo">Libr<span class="red-logo">ísimos</span></a>
-            <!-- Diferencia 3, aquí no hay menú de navegación -->
+            <!-- No hay un menú de navegación en esta página -->
         </header>
         
         <!-- Termina Encabezado de página -->
@@ -130,11 +130,11 @@
         <!-- Termina cuerpo del archivo-->
         <!-- Comienza Javascript -->
         <!-- JQuery -->
-        <script src="./js/jquery-3.7.1.min.js"></script>
+        <script src="./view/js/jquery-3.7.1.min.js"></script>
         <!-- Javascript de SweetAlert2 -->
-        <script src="./js/sweetalert2.all.min.js"></script>
+        <script src="./view/js/sweetalert2.all.min.js"></script>
         <!-- Javascript de la página -->
-        <script src="./js/installer-scripts.js"></script>
+        <script src="./view/js/installer-scripts.js"></script>
         <!-- Termina Javascript -->
     </body>
 </html>
