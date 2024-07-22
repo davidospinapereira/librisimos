@@ -5,8 +5,8 @@ CREATE TABLE `usuario` (
 	`fecha_nacimiento_usuario` DATE,
 	`email_usuario` varchar(50),
 	`url_imagen_usuario` varchar(256),
-	`login_usuario` varchar(30),
-	`pass_usuario` varchar(256),
+	`login_usuario` varchar(30) NOT NULL UNIQUE,
+	`pass_usuario` varchar(256) NOT NULL,
 	`id_tipo_usuario` int NOT NULL,
 	PRIMARY KEY (`id_usuario`)
 );

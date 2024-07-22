@@ -1,6 +1,13 @@
 /* Comienza declaración de variables locales */
 /* Termina declaración de variables locales */
 var seccionMensajes = $('#seccion-mensajes');
+var dbServer = $('#db-server');
+var dbName = $('#db-name');
+var dbUser = $('#db-user');
+var dbPass = $('#db-pass');
+var dbSuperLogin = $('#superadmin-login');
+var dbSuperPass = $('#superadmin-pass');
+var dbSuperPassConfirm = $('#superadmin-pass-confirm');
 /* Comienzan Scripts generales */
 window.onscroll = () => 
     {
@@ -82,6 +89,7 @@ function popupPregunta(pregunta)
 // // error puede ser 'JSON_NO_EXISTE', 'JSON_DECODE_ERROR', 'JSON_EXISTE_INCORRECTO', 'DB_CONNECTION_ERROR', 'DB_NO_EXISTE', 'DB_CONNECTION_ERROR' y 'DB_EXISTE_INCORRECTA'
 $( document ).ready(function() 
 {
+    $('#btn-save-file').css('display', 'none');
     seccionMensajes.children().remove();
     // Dependiendo del error se debe llenar la parte de mensajes con uno u otro mensaje.
     switch(error)
@@ -181,5 +189,258 @@ function mostrarMensaje(mode, icon, mensaje)
     '<div class=\"col w100 mensaje ' + mode + '\"><div class=\"mensaje-interno\"><div class=\"icono\"><i class=\'' + icon + '\'></i></div><div class=\"texto\"><p>' + mensaje + '</p></div></div></div>';
     seccionMensajes.html(htmlMensaje);
 }
-//Termina función que muestra mensajes en la sección de mensajes de la página
+// Termina función que muestra mensajes en la sección de mensajes de la página
+
+// Comienza función que verifica que los campos vacíos de JSON necesarios estén llenos
+function camposJsonVacios()
+{
+    // El campo contraseña puede estar vacío porque este software también puede ejecutarse en phpmyadmin
+    return (dbServer.val() == "" || dbName.val() == "" || dbUser.val() == "");
+}
+// Termina función que verifica que los campos vacíos de JSON necesarios estén llenos
+
+// Comienza función que verifica que los campos de base de datos necesarios estén llenos
+function camposDBVacios()
+{
+    // El campo contraseña puede estar vacío porque este software también puede ejecutarse en phpmyadmin
+    return (dbSuperLogin.val() == "" || dbSuperPass.val() == "" || dbSuperPassConfirm.val() == "");
+}
+// Termina función que verifica que los campos de base de datos necesarios estén llenos
+
+// Comienza función de botón de probar base de datos
+$('#btn-test-connection').on( "click", function() 
+{
+    // Si hay valores vacíos en host, nombre de base de datos, usuario y contraseña,
+    if (camposJsonVacios())
+    {
+        // Rebotemos un error
+        mensaje('error', '<b>Error</b>: Hay campos vacíos.<br/>Por favor revise los datos ingresados e intente nuevamente');
+    }
+    else
+    {
+        // Mandamos los datos a AJAX a un archivo
+        $.ajax
+        ({
+            type: 'POST',
+            url: './controller/installer-functions.php',
+            data:
+            {
+                // El archivo recibe los datos
+                check_connection: true,
+                server: dbServer.val(),
+                name: dbName.val(),
+                user: dbUser.val(),
+                pass: dbPass.val()
+            },
+            async: true,
+            success: function(data)
+            {
+                // El archivo verifica que esos datos sí sean correctos
+                // El archivo devuelve un código que indique si sí o si no
+                if (data == "EXITO")
+                {
+                    // Si sí, habilita el botón de instalar JSON y deshabilita el botón de probar conexión
+                    $('#btn-test-connection').prop("disabled", true);
+                    $('#btn-test-connection').css('display', 'none');
+                    $('#btn-save-file').prop("disabled", false);
+                    $('#btn-save-file').css('display', 'block');
+                    // Deshabilitamos los formularios para que no haya errores luego
+                    $('#db-server').attr('disabled', 'disabled');
+                    $('#db-name').attr('disabled', 'disabled');
+                    $('#db-user').attr('disabled', 'disabled');
+                    $('#db-pass').attr('disabled', 'disabled');
+                    // Mandamos mensajes de éxito
+                    mostrarMensaje('exito', 'bx bxs-check-circle', '<b>ÉXITO</b><br/>Datos viables. Puede instalar la conexión.');
+                    mensaje('success', '<b>ÉXITO</b><br/>Datos viables. Puede instalar la conexión.');
+                }
+                else
+                {
+                    // Si no, mensaje informativo
+                    mensaje('error', '<b>ERROR</b><br/>Datos erróneos. Por favor verifique los datos<br/>e intente nuevamente o contacte al desarrollador.')
+                }
+            },
+            error: function(error)
+            {
+                // Si falla el AJAX, entonces ponga un mensaje en el sistema
+                mensaje('error', '<b>ERROR</b><br/>Error de comunicación con el servidor:<br/>' + error + '<br/>Por favor contacte al desarrollador.');
+            }
+        });
+        // popupMensaje('Datos', 'success', texto);
+        // $('#btn-save-file').css('display', 'block');
+    }
+});
+// Termina función de botón de probar conexión
+
+// Comienza función de guardado de JSON
+$('#btn-save-file').on( "click", function() 
+{
+    // Está seguro el usuario de hacer esto?
+    Swal.fire(
+        {
+            title: 'Datos de configuración',
+            html: '<b>Servidor</b>: \"' + dbServer.val() + '\"<br/>' + '<b>Base de datos</b>: \"' + dbName.val() + '\"<br/>' + '<b>Usuario</b>: \"' + dbUser.val() + '\"<br/>' + '<b>Contraseña</b>: \"' + dbPass.val() + '\"<br/>' + '<b>ESTA ACCIÓN ES IRREVERSIBLE</b><br/>¿Está seguro de continuar?',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => 
+        {
+            if (result.isConfirmed) 
+            {
+                // Llamamos a AJAX
+                $.ajax
+                ({
+                    type: 'POST',
+                    // Invocamos installer-functions.php
+                    url: './controller/installer-functions.php',
+                    // El archivo recibe los datos
+                    data:
+                    {
+                        // El archivo recibe los datos
+                        install_json: true,
+                        server: dbServer.val(),
+                        name: dbName.val(),
+                        user: dbUser.val(),
+                        pass: dbPass.val()
+                    },
+                    async: true,
+                    success: function(data)
+                    {
+                        // El archivo genera el JSON y lo guarda en su sitio correspondiente.
+                        // El archivo retorna un código que indique si sí lo logró o si no lo logró
+                        if (data == "EXITO")
+                        {
+                            // Si sí lo logró, deshabilita el botón de generar JSON, habilita el formulario de base de datos
+                            $('#btn-save-file').prop("disabled", true);
+                            // Deshabilitamos los formularios para que no haya errores luego
+                            $('#superadmin-login').attr('disabled', false);
+                            $('#superadmin-pass').attr('disabled', false);
+                            $('#superadmin-pass-confirm').attr('disabled', false);
+                            $('#btn-install-database').prop("disabled", false);
+                            // Mandamos mensajes de éxito
+                            mostrarMensaje('exito', 'bx bxs-check-circle', '<b>ÉXITO</b><br/>Archivo de configuración guardado. Puede iniciar la instalación de la base de datos.');
+                            mensaje('success', '<b>ÉXITO</b><br/>Archivo de configuración guardado.<br/>Puede iniciar la instalación de la base de datos.');
+                        }
+                        else
+                        {
+                            // Si no lo logró, genera un mensaje de error avisando que hubo un error.
+                            mensaje('error', '<b>ERROR</b><br/>Datos erróneos. Por favor verifique los datos<br/>e intente nuevamente o contacte al desarrollador.')
+                        }
+                    },
+                    error: function(error)
+                    {
+                        // Si falla el AJAX, entonces ponga un mensaje en el sistema
+                        mensaje('error', '<b>ERROR</b><br/>Error de comunicación con el servidor:<br/>' + error + '<br/>Por favor contacte al desarrollador.');
+                    }
+                });
+            } 
+            else if (result.isDenied) 
+            {
+              // Mensaje de error
+              mensaje('error', '<b>DATOS NO INSTALADOS</b><br/>Por favor verifique su información e intente nuevamente.')
+            }
+        });    
+});
+// Termina función de guardado de JSON
+
+// Comienza función de instalación de base de datos
+$('#btn-install-database').on( "click", function()
+{
+    // Primero, tenemos que verificar si hay campos vacíos aquí
+    if (camposDBVacios())
+    {
+        // Si hay campos vacíos, mostramos un mensaje de error
+        mensaje('error', '<b>Error</b>: Hay campos vacíos.<br/>Por favor revise los datos ingresados e intente nuevamente');
+    }
+    else
+    {
+        // Si no están vacíos podemos operar
+        // Si no son iguales las contraseñas
+        if (dbSuperPass.val() != dbSuperPassConfirm.val())
+        {
+            // Emitimos un mensaje de error
+            mensaje('error', '<b>Error</b>: Las contraseñas no son iguales.<br/>Por favor revise los datos ingresados e intente nuevamente');
+        }
+        // Si las contraseñas sí son iguales
+        else
+        {
+            var login = dbSuperLogin.val();
+            var pass = dbSuperPass.val();
+            // Debemos preguntar si está seguro.
+            Swal.fire(
+            {
+                title: 'Datos iniciales - Base de datos',
+                html: '<b>Base de datos</b>: \"' + dbName.val() + '\"<br/><b>Usuario Administrador</b>: \"' + dbSuperLogin.val() + '\"<br/><b>Contraseña</b>: <i>OCULTA POR SEGURIDAD</i><br/><b>¡EL CONTENIDO DE ESTA BASE DE DATOS SERÁ BORRADO!</b><br/><b>ESTA ACCIÓN ES IRREVERSIBLE</b><br/>¿Está seguro de continuar?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: "Sí",
+                denyButtonText: "No"
+            }).then((result) => 
+            {
+                if (result.isConfirmed) 
+                {
+                    // Llamamos a AJAX
+                    $.ajax
+                    ({
+                        type: 'POST',
+                        // Invocamos installer-functions.php
+                        url: './controller/installer-functions.php',
+                        // El archivo recibe los datos
+                        data:
+                        {
+                            install_dbase: true,
+                            user: login,
+                            pass: pass
+                        },
+                        async: true,
+                        success: function(data)
+                        {
+                            // El archivo lee el SQL completo y genera las tablas y las conexiones entre ellas.
+                            // Luego, el archivo usa los datos recibidos para generar la estructura completa, y el usuario súper administrador, y agregar todo a la base de datos.
+                            // El archivo retorna un código que indique si sí lo logró o si no lo logró
+                            if (data == "EXITO")
+                            {
+                                // Si sí lo logró
+                                // Deshabilita todos los campos y botones
+                                $('#db-server').attr('disabled', 'disabled');
+                                $('#db-name').attr('disabled', 'disabled');
+                                $('#db-user').attr('disabled', 'disabled');
+                                $('#db-pass').attr('disabled', 'disabled');
+                                $('#btn-test-connection').prop("disabled", true);
+                                $('#btn-save-file').prop("disabled", true);
+                                $('#superadmin-login').attr('disabled', 'disabled');
+                                $('#superadmin-pass').attr('disabled', 'disabled');
+                                $('#superadmin-pass-confirm').attr('disabled', 'disabled');
+                                $('#btn-install-database').prop("disabled", true);
+                                // Mensaje de éxito
+                                mensaje('success', '<b>EXITO</b><br/>Base de datos instalada.<br/>Será enviado a la página principal dentro de tres segundos.');
+                                // Reenviamos a la página principal
+                                setTimeout(function() 
+                                { 
+                                    window.location.href = "../";
+                                }, 3000);
+                            }
+                            else
+                            {
+                                // Si no lo logró, genera un mensaje de error avisando que hubo un error.
+                                mensaje('error', '<b>ERROR</b><br/>Base de datos no instalada. Por favor verifique los datos<br/>e intente nuevamente o contacte al desarrollador.');
+                            }
+                        },
+                        error: function(error)
+                        {
+                            // Si falla el AJAX, entonces ponga un mensaje en el sistema
+                            mensaje('error', '<b>ERROR</b><br/>Error de comunicación con el servidor:<br/>' + error + '<br/>Por favor contacte al desarrollador.');
+                        }
+                    });
+                } 
+                else if (result.isDenied) 
+                {
+                    // Mensaje de error
+                    mensaje('error', '<b>DATOS NO INSTALADOS</b><br/>Por favor verifique su información e intente nuevamente.')
+                }
+            });
+        }
+    }
+});
+// Termina función de instalación de base de datos
 /* Terminan Scripts específicos */
