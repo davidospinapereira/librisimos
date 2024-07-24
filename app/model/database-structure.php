@@ -122,7 +122,7 @@
         MODIFY `id_tipo_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
         ALTER TABLE `usuario`
-        MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+        MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
         ALTER TABLE `autores_libro`
         ADD CONSTRAINT `autores_libro_fk0` FOREIGN KEY (`id_libro`) REFERENCES `libro` (`id_libro`),
