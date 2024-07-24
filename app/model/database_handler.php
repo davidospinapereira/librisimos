@@ -66,4 +66,50 @@
             return false;
         }
     }
+
+    // Comienza función que prueba una conexión
+    function probar_conexion_nueva($host, $user, $pass)
+    {
+        try
+        {
+            // Genera la conexión sólo para probarla
+            $conexion = new mysqli($host, $user, $pass); // Host, usuario, contraseña y base de datos
+            // Y la cerramos de inmediato
+            mysqli_close($conexion);
+            // Si logramos ambas partes, retornamos true
+            return true;
+        }
+        catch (Exception $e)
+        {
+            // Si hay falla en la conexión, retornamos false
+            return false;
+        }
+    }
+    // Crear si no existe la Base de Datos
+    function crearBaseDatos($host, $user, $pass, $name)
+    {
+        $resp=false;
+        try
+        {
+            // Genera la conexión sólo para probarla
+            $conexion = new mysqli($host, $user, $pass); // Host, usuario, contraseña
+            //Sentencia SQL para crear base de datos
+            $sql = "CREATE DATABASE IF NOT EXISTS $name";
+            // Preparamos la sentencia con base en la frase de búsqueda ya generada
+            $sentencia = mysqli_query($conexion, $sql);
+            if (mysqli_error($conexion)) {
+                throw new Exception("MySQL error ".mysqli_error($conexion));    
+            }else {
+                $resp=true;
+            }
+            // Cerramos la conexión y la declaración preparada
+            $sentencia->close();
+            // Y la cerramos de inmediato
+            mysqli_close($conexion);
+            // Si logramos ambas partes, retornamos
+        }
+        catch (Exception $e)
+        {$resp=$e;}
+        finally{return $resp;}
+    }
 ?>

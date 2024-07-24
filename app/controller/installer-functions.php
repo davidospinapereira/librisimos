@@ -8,7 +8,11 @@
         $pass = $_POST['pass'];
         require '../model/database_handler.php';
         // Operador ternario
-        echo (probar_conexion($server, $name, $user, $pass)) ? "EXITO" : "ERROR";
+        if(probar_conexion_nueva($server, $user, $pass)){
+            //var_dump(crearBaseDatos($server, $user, $pass, $name));
+            echo (crearBaseDatos($server, $user, $pass, $name)) ? "EXITO" : "ERROR";
+        }else {echo "ERROR";}
+        //echo (probar_conexion($server, $name, $user, $pass)) ? "EXITO" : "ERROR";
     }
 
     // Cuando es invocado para generar el archivo 

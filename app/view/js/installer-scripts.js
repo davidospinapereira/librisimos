@@ -237,6 +237,7 @@ $('#btn-test-connection').on( "click", function()
             {
                 // El archivo verifica que esos datos sí sean correctos
                 // El archivo devuelve un código que indique si sí o si no
+                console.log(data)
                 if (data == "EXITO")
                 {
                     // Si sí, habilita el botón de instalar JSON y deshabilita el botón de probar conexión
@@ -262,6 +263,7 @@ $('#btn-test-connection').on( "click", function()
             error: function(error)
             {
                 // Si falla el AJAX, entonces ponga un mensaje en el sistema
+                console.log(error)
                 mensaje('error', '<b>ERROR</b><br/>Error de comunicación con el servidor:<br/>' + error + '<br/>Por favor contacte al desarrollador.');
             }
         });

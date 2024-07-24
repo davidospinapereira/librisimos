@@ -63,15 +63,15 @@
                 <div class="col w50" id="formulario-json">
                     <div class="form-group">
                         <span class="label">Nombre del servidor</span>
-                        <input type="text" name="db-server" id="db-server">
+                        <input type="text" name="db-server" id="db-server" value="localhost">
                     </div>
                     <div class="form-group">
                         <span class="label">Nombre de la base de datos</span>
-                        <input type="text" name="db-name" id="db-name">
+                        <input type="text" name="db-name" id="db-name" value="dbdavid">
                     </div>
                     <div class="form-group">
                         <span class="label">Nombre de usuario de la base de datos</span>
-                        <input type="text" name="db-user" id="db-user">
+                        <input type="text" name="db-user" id="db-user" value="root">
                     </div>
                     <div class="form-group">
                         <span class="label">Contraseña de la base de datos</span>
