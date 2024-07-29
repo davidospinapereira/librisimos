@@ -1,3 +1,13 @@
+<?php
+    // Iniciamos sesión
+    session_start();
+    // Si hay datos en sesión entonces la sesión está previamente iniciada
+    if (isset($_SESSION['user_id'])) 
+    {
+        header('Location: ./app/index.php?page=main');
+        exit();
+    }
+?>
 <!DOCTYPE html>
 <html lang="es">
     <!-- Comienza HTML -->
@@ -12,7 +22,7 @@
         <title>Librísimos - Lee tus libros en línea</title>
         <!-- Archivos CSS -->
         <!-- CSS de página de inicio, incluye header y footer -->
-        <link rel="stylesheet" href="./app/view/css/home-styles.css"> 
+        <link rel="stylesheet" href="./app/view/css/index-styles.css"> 
         <!-- CSS de BoxIcons -->
         <link rel="stylesheet" href="./app/view/css/boxicons-2.1.4/css/boxicons.min.css">
         <!-- CSS de SweetAlert2 -->
@@ -251,7 +261,7 @@
         <!-- Javascript de SweetAlert2 -->
         <script src="./app/view/js/sweetalert2.all.min.js"></script>
         <!-- Javascript general -->
-        <script src="./app/view/js/home-scripts.js"></script>
+        <script src="./app/view/js/index-scripts.js"></script>
         <!-- Termina Javascript -->
                     <?php
                 }

@@ -88,7 +88,7 @@
     // Crear si no existe la Base de Datos
     function crearBaseDatos($host, $user, $pass, $name)
     {
-        $resp=false;
+        $resp = false;
         try
         {
             // Genera la conexión sólo para probarla
@@ -97,10 +97,13 @@
             $sql = "CREATE DATABASE IF NOT EXISTS $name";
             // Preparamos la sentencia con base en la frase de búsqueda ya generada
             $sentencia = mysqli_query($conexion, $sql);
-            if (mysqli_error($conexion)) {
-                throw new Exception("MySQL error ".mysqli_error($conexion));    
-            }else {
-                $resp=true;
+            if (mysqli_error($conexion)) 
+            {
+                throw new Exception("Error MySQL: ".mysqli_error($conexion));    
+            }
+            else
+            {
+                $resp = true;
             }
             // Cerramos la conexión y la declaración preparada
             $sentencia->close();
@@ -109,7 +112,13 @@
             // Si logramos ambas partes, retornamos
         }
         catch (Exception $e)
-        {$resp=$e;}
-        finally{return $resp;}
+        {
+            $resp = $e;
+        }
+        // Parte final de un try-catch, no la conocía
+        finally
+        {
+            return $resp;
+        }
     }
 ?>

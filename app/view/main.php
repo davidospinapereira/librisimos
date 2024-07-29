@@ -1,83 +1,5 @@
-<?php
-    // TEST es un archivo diseñado para probar funciones y pulirlas antes de incluirlas en el software terminado.  
-    // Invocamos header
-    require './view/header_template.php'; 
-?>
-<!-- Antes de cargar el HTML, debes traer los datos de la sesión -->
-<!DOCTYPE html>
-    <html lang="es">
-    <!-- Comienza HTML -->
-    <head>
-        <!-- Comienza cabeza de archivo -->
-        <meta charset="UTF-8">
-        <!-- Adaptación para que se vea bien en IExplore y Microsoft Edge -->
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <!-- Inicialización de responsividad -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- Título de la página en específico -->
-        <title>Administrador - Librísimos</title>
-        <!-- Archivos CSS -->
-        <!-- CSS de estilos generales -->
-        <link rel="stylesheet" href="./view/css/general-style.css">
-        <!-- CSS de estilos de header -->
-        <link rel="stylesheet" href="./view/css/header-style.css">
-        <!-- CSS de página específica -->
-        <link rel="stylesheet" href="./view/css/main-style.css">
-        <!-- CSS de estilos de footer -->
-        <link rel="stylesheet" href="./view/css/footer-style.css">
-        <!-- CSS de herramienta de lectura -->
-        <link rel="stylesheet" href="./view/css/read-tool-style.css">
-        <!-- CSS de estilos responsivos -->
-        <link rel="stylesheet" href="./view/css/responsive-style.css">
-        <!-- CSS de BoxIcons -->
-        <link rel="stylesheet" href="./view/css/boxicons-2.1.4/css/boxicons.min.css">
-        <!-- CSS de SweetAlert2 -->
-        <link rel="stylesheet" href="./view/css/sweetalert2.min.css">
-        <!-- Termina cabeza de archivo -->
-    </head>
-    <body>
-        <!-- Comienza cuerpo del archivo -->
-        <!-- Comienza Header -->
-        <header class="header">
-            <!-- Logo a la izquierda, en texto formateado -->
-            <a href="#" class="logo">Libr<span class="red-logo">ísimos</span></a>
-            <!-- Menú de navegación a la derecha, en enlaces formateados -->
-            <nav class="navbar">
-                <a href="#" class="nav-active">Inicio</a>
-                <a href="index.php?page=page-search">Biblioteca</a>
-                <a href="index.php?page=my-books">Mis Libros</a>
-                <!-- Este sale sólo si el usuario es admin o súper admin -->
-                <a href="index.php?page=users-list">Usuarios</a>
-                <!-- Enlace para "mi perfil" -->
-                <img src="./view/img/user-avatar.jpg" class="user-pic">
-            </nav>
-        </header>
-        <!-- Comienza submenú "mi perfil" -->
-        <div class="profile-wrap">
-            <div class="sub-menu">
-                <div class="user-info">
-                    <img src="./view/img/user-avatar.jpg">
-                    <h4>DAVID ALBERTO OSPINA</h4>
-                </div>
-                <a href="index.php?page=profile-edit" class="sub-menu-link">
-                    <i class='bx bx-user-circle'></i>
-                    <p>Editar perfil</p>
-                </a>
-                <a href="#" class="sub-menu-link">
-                    <i class='bx bxs-help-circle' ></i>
-                    <p>Ayuda</p>
-                </a>                
-                <a href="./controller/logout.php" class="sub-menu-link">
-                    <i class='bx bx-log-out-circle' ></i>
-                    <p>Cerrar sesión</p>
-                </a>
-            </div>
-        </div>
-        <!-- Termina submenú "mi perfil" -->
-        <!-- Termina Header -->
-        
-        <!-- Comienza herramienta de lectura -->
-        <div class="read-overlay">
+    <!-- Cargaremos la herramienta de lectura manualmente en cada página que lo necesite -->
+    <div class="read-overlay">
             <!-- Comienza popup con la herramienta -->
             <div class="read-space">
                 <!-- Botón de cierre -->
@@ -141,10 +63,30 @@
         <section class="contenido" id="inicio">
             <div class="fila">
                 <div class="col w70" id="main-data">
-                    <h3 id="nombre-usuario">Bienvenido(a),<br/><span>DAVID ALBERTO OSPINA</span></h3>
-                    <h5 id="tipo-usuario">Súper administrador del sistema</h5>
-                    <h6 id="id-usuario">ID: <span>001</span></h6>
+                    <h3 id="nombre-usuario">Bienvenido(a),<br/><span style="text-transform: uppercase;"><?php echo $perfil['nombres'] . ' ' . $perfil['apellidos']; ?></span></h3>
+                    <h5 id="tipo-usuario">
+                        <?php
+                            // 1-SUPERADMIN, 2-ADMIN, 3-SUSCRIPTOR
+                            switch ($perfil['id_tipo'])
+                            {
+                                case 1:
+                                    echo "Súper administrador del sistema";
+                                    break;
+                                case 2:
+                                    echo "Administrador";
+                                    break;
+                                case 3:
+                                    echo "Suscriptor";
+                                    break;
+                                default:
+                                    echo "Error en el tipo de usuario";
+                                    break;
+                            }
+                        ?>
+                    </h5>
+                    <h6 id="id-usuario">ID: <span><?php echo $user_id; ?></span></h6>
                 </div>
+                <!-- Comienzan estadísticas. Esto cambia en la página principal para usuarios, debo adaptarlo -->
                 <div class="col w30" id="statistics">
                     <h2>Estadísticas</h2>
                     <!-- Spinner, cuando este se activa las estadísticas se desactivan -->
@@ -152,26 +94,29 @@
                         <span class="loader"></span>
                     </div>
                     <!-- Termina Spinner -->
-                    <!-- Comienzan estadísticas, cuando estas se activan el Spinner se desactiva -->
+                    <!-- Comienzan datos a mostrar, cuando estas se activan el Spinner se desactiva -->
                     <div class="data active">
                         <h3>Usuarios registrados: <b>25</b></h3>
                         <h3>Libros publicados: <b>22</b></h3>
                         <h3>Libros sin publicar: <b>5</b></h3>
                         <h3>Libros leídos: <b>12</b></h3>
                     </div>
-                    <!-- Terminan estadísticas -->
+                    <!-- Terminan datos a mostrar -->
                 </div>
+                <!-- Terminan estadísticas -->
             </div>
             <div class="fila">
+                <!-- Comienzan funciones rápidas, cambian dependiendo del tipo de usuario -->
                 <div class="col w100" id="functions">
                     <h3>Funciones rápidas</h3>
                     <div id="listado-funciones">
-                        <a href="" class="btn">Nuevo libro</a>
-                        <a href="" class="btn">Nuevo usuario</a>
-                        <a href="" class="btn">Editar libros</a>
-                        <a href="" class="btn">Editar usuarios</a>
+                        <a href="#" class="btn">Nuevo libro</a>
+                        <a href="#" class="btn">Nuevo usuario</a>
+                        <a href="#" class="btn">Editar libros</a>
+                        <a href="#" class="btn">Editar usuarios</a>
                     </div>
                 </div>
+                <!-- Terminan funciones rápidas -->
             </div>
             <!-- Comienza la sección de continuar leyendo -->
             <div class="fila">
@@ -225,30 +170,3 @@
             <!-- Comienza la sección de continuar leyendo -->
         </section>
         <!-- Termina contenido -->
-
-        <!-- Comienza footer -->
-        <footer class="footer">
-            <div class="footer-text">
-                <p>Copyright &copy; 2024, para el Servicio Nacional de Aprendizaje.</p>
-            </div>
-            <div class="footer-back-to-top">
-                <a href="#inicio"><i class="bx bx-up-arrow-alt"></i></a>
-            </div>
-        </footer>
-        <!-- Termina footer -->
-
-        <!-- Termina cuerpo del archivo-->
-
-        <!-- Comienza Javascript -->
-        <!-- JQuery -->
-        <script src="./view/js/jquery-3.7.1.min.js"></script>
-        <!-- Javascript de SweetAlert2 -->
-        <script src="./view/js/sweetalert2.all.min.js"></script>
-        <!-- Javascript general -->
-        <script src="./view/js/general-scripts.js"></script>
-        <!-- Javascript de la página específica -->
-        <script src="./view/js/main-scripts.js"></script>
-        <!-- Termina Javascript -->
-
-    </body>
-</html>

@@ -1,0 +1,370 @@
+/* Comienzan Estilos para la herramienta de lectura */
+.read-overlay
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.55);
+    overflow-y: hidden;
+    z-index: 999999;
+    /* Tenemos que arreglar el problema del scrolling detrás */
+    opacity: 0;
+    display: none;
+    /* La animación está puesta pero no me la recibe el sistema, así que no hay animación de salida por ahora */
+    animation: fadeout 1s ease-in-out 0s 1 normal forwards;
+}
+
+.read-overlay.active
+{
+    /* opacity: 1; */
+    display: flex!important;
+    justify-content: center;
+    align-items: center;
+    animation: fadein 1s ease-in-out 0s 1 normal forwards;
+}
+
+.read-overlay .read-space
+{
+    position: relative;
+    width: 75%;
+    height: 90%;
+    border-radius: 5px;
+    box-shadow: 0 0 7px #000000;
+    background-color: #ffffff;
+    color: #282828;
+    opacity: 0;
+    animation: fadein 1s ease-in-out 0s 1 normal forwards;
+    animation-delay: 0.7s;
+    transition: 0.3s ease-in-out;
+}
+
+.read-overlay .read-space .close-icon
+{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    z-index: 999;
+}
+
+.read-overlay .read-space .close-icon i
+{
+    font-size: 25px;
+    color: #282828;
+    transition: 0.3s ease-in-out;
+}
+
+.read-overlay .read-space .close-icon:hover i
+{
+    color: #000000;
+}
+
+.read-overlay .read-space .data-container
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    /* transform: translate(10px, -30px); */
+}
+
+.read-overlay .read-space .data-container .book-container
+{
+    position: relative;
+    height: 25%;
+}
+
+.read-overlay .read-space .data-container .book-title
+{
+    font-size: 43px;
+    color: #000000!important;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: 0.3s ease-in-out;
+    /* margin-bottom: 10px; */
+}
+
+.read-overlay .read-space .data-container .book-meta
+{
+    width: 100%;
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.data-container .book-meta .book-author
+{
+    width: 50%;
+    text-align: left;
+}
+
+.data-container .book-meta .book-author h4
+{
+    color: #282828!important;
+    font-size: 23px;
+    font-weight: 500;
+    transition: 0.3s ease-in-out;
+}
+
+.data-container .book-meta .book-genres
+{
+    width: 50%;
+    text-align: right;
+}
+
+.data-container .book-meta .book-genres span
+{
+    font-size: 11px;
+    margin-left: 10px;
+    text-transform: uppercase;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 0;
+    color: #ffffff;
+    padding: 5px 7px;
+}
+
+.read-overlay .read-space .data-container .section-container
+{
+    position: relative;
+    height: 75%;
+    background-color: #eeeeee;
+    padding: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+.read-space .data-container .section-container .section-meta,
+.read-space .data-container .section-container .section-controls
+{
+    height: 10%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.data-container .section-container .section-meta .section-number
+{
+    width: 25%;
+    text-align: left;
+}
+
+.data-container .section-container .section-meta .section-title
+{
+    width: 75%;
+    text-align: right;
+}
+
+.section-container .section-meta .section-number h4,
+.section-container .section-meta .section-title h4
+{
+    color: #282828;
+    font-weight: 500;
+    font-size: 17px;
+    transition: 0.3s ease-in-out;
+}
+
+.read-space .data-container .section-container .section-content
+{
+    height: 80%;
+    padding: 10px 0;
+}
+
+.data-container .section-container .section-content .content
+{
+    background-color: #F4F4F4;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    border: 3px solid #dedede;
+    overflow-y: scroll;
+    padding: 15px;
+    color: #000000;
+    transition: 0.3s ease-in-out;
+}
+
+.section-container .section-content .content p,
+.section-container .section-content .content p i, 
+.section-container .section-content .content p b 
+{
+    font-family: 'Consolas', sans-serif;
+    font-size: 17px;
+}
+
+.section-container .section-content .content p
+{
+    margin-bottom: 13px;
+}
+
+.section-container .section-content .content p:last-child
+{
+    margin-bottom: 0;
+}
+
+.read-space .data-container .section-container .section-controls
+{
+    padding: 5px;
+}
+
+.data-container .section-container .section-controls .prev-next
+{
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.section-container .section-controls .prev-next .control 
+{
+    cursor: pointer;
+    border: 1px solid red;
+    border-radius: 5px;
+    outline: none;
+    padding: 7px 15px;
+    background-color: red;
+    color: #F4F4F4;
+    font-size: 15px;
+    transition: 0.3s ease-in-out;
+}
+
+.section-container .section-controls .prev-next .control:hover
+{
+    background-color: darkred;
+    border-color: darkred;
+}
+
+.section-container .section-controls .light-dark
+{
+    width: 40%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    padding-left: 20px;
+}
+
+.section-controls .light-dark .text
+{
+    font-size: 16px;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 22px;
+    transition: 0.3s ease-in-out;
+}
+.section-controls .light-dark .toggle
+{
+    position: relative;
+    width: 60px;
+    height: 20px;
+    cursor: pointer;
+    background-color: #cccccc;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    transition: 0.3s ease-in-out;
+}
+
+.section-controls .light-dark .toggle::before
+{
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background-color: #eeeeee;
+    top: 3px;
+    left: 4px;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease-in-out;
+}
+
+.section-controls .light-dark .toggle.pushed
+{
+    background-color: red;
+}
+.section-controls .light-dark .toggle.pushed::before
+{
+    left: calc(100% - 18px);
+}
+
+/* Comienza Modo oscuro */
+.read-space.dark
+{
+    background-color: #000000;
+}
+
+.read-space.dark .close-icon i
+{
+    font-size: 25px;
+    color: #F4F4F4;
+    transition: 0.3s ease-in-out;
+}
+
+.read-space.dark .close-icon:hover i
+{
+    color: #ffffff;
+}
+
+.read-space.dark .data-container .book-title
+{
+    color: #ffffff!important;
+}
+
+.read-space.dark .data-container .book-meta .book-author h4
+{
+    color: #F4F4F4!important;
+}
+
+.read-space.dark .section-container
+{
+    background-color: #2b2b2b!important;
+}
+
+.read-space.dark .section-container .section-meta .section-number h4,
+.read-space.dark .section-container .section-meta .section-title h4
+{
+    color: #f4f4f4;
+}
+
+.read-space.dark .section-container .section-content .content
+{
+    background-color: #242424;
+    border-color: #3f3f3f;
+    color: #f8f8f8;
+}
+
+.read-space.dark .section-controls .light-dark .text
+{
+    color: #f4f4f4;
+}
+/* Termina modo oscuro */
+
+/* Comienzan animaciones */
+@keyframes fadein 
+{
+	0% 
+    {
+		opacity: 0;
+	}
+
+	100% 
+    {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeout 
+{
+	0% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}
+/* Terminan animaciones */
+/* Terminan Estilos para la herramienta de lectura */

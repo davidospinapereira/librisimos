@@ -1,0 +1,148 @@
+/* Comienza header */
+.header
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 100px;
+    background: #1d1d1d;
+    border-bottom: 1px solid rgba(255, 255, 255, 0);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s ease-in-out;
+    z-index: 999;
+}
+
+.header.sticky
+{
+    background: #000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header .navbar
+{
+    display: inline-flex;
+    align-items: center;
+}
+
+.logo
+{
+    font-size: 29px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+.logo .red-logo
+{
+    color: red;
+}
+
+.header .user-pic
+{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.navbar a
+{
+    font-size: 17px;
+    text-decoration: none;
+    font-weight: 400;
+    margin-right: 35px;
+}
+
+.navbar a
+{    
+    color: #f4f4f4;
+    transition: 0.3s ease-in-out;
+}
+
+.navbar a:hover,
+.navbar a:focus,
+.navbar a.nav-active
+{
+    color: red;
+}
+/* Termina header */
+
+/* Comienzan estilos para el submenú "mi perfil" */
+.profile-wrap
+{
+    position: fixed;
+    top: 80px;
+    right: 50px;
+    width: 300px;
+    max-height: 0px;
+    overflow: hidden;
+    transition: 0.7s ease-in-out;
+}
+
+.profile-wrap.open-menu
+{
+    max-height: 400px;
+    z-index: 2;
+}
+
+.profile-wrap .sub-menu
+{
+    background: #505050;
+    padding: 20px;
+    margin: 10px;
+}
+
+.profile-wrap .sub-menu .user-info
+{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-wrap .sub-menu .user-info img
+{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.profile-wrap .sub-menu .user-info h4 
+{
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.profile-wrap .sub-menu .sub-menu-link
+{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #f4f4f4;
+    margin: 12px 0;
+}
+
+.profile-wrap .sub-menu .sub-menu-link i
+{
+    font-size: 25px;
+    margin-right: 19px;
+}
+
+.profile-wrap .sub-menu .sub-menu-link p
+{
+    width: 100%;
+    font-weight: 400;
+}
+
+.profile-wrap .sub-menu .sub-menu-link:hover p 
+{
+    font-weight: 500;
+}
+/* Terminan estilos para el submenú "mi perfil" */

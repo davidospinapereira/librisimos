@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;    
+    scroll-behavior: smooth;
+}
+
+/* Comienzan estilos generales de página */
+h1, h2, h3, h4, h5, h6
+{
+    color: #ffffff;
+}
+
+.contenido
+{
+    min-height: 100vh;
+    padding: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #f4f4f4;
+    background: url('../img/background-principal.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.contenido .fila
+{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.fila .col
+{
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.fila .w100
+{
+    width: 100%;
+}
+
+.fila .w90
+{
+    width: 90%;
+}
+
+.fila .w80
+{
+    width: 80%;
+}
+
+.fila .w70
+{
+    width: 70%;
+}
+
+.fila .w60
+{
+    width: 60%;
+}
+
+.fila .w50
+{
+    width: 50%;
+}
+
+.fila .w40
+{
+    width: 40%;
+}
+
+.fila .w30
+{
+    width: 30%;
+}
+
+.fila .w20
+{
+    width: 20%;
+}
+
+.fila .w10
+{
+    width: 10%;
+}
+/* Terminan estilos generales de página */

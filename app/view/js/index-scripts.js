@@ -148,22 +148,36 @@ $("#login-form").submit(function(e)
         async: true, // async indica si se desea que los datos sean asíncronos. true viene por defecto pero es mejor especificarlo
         success: function(data)
         {
-            var respuesta = JSON.parse(data);
-            if (respuesta == null)
+            console.log(data);
+            /* var respuesta = JSON.parse(data); */
+            var codigo = data.codigo;
+            /* Si el código de la respuesta es de usuario inválido */
+            if (codigo == 'USER_INCORRECT')
             {
-                var error = 'Los datos ingresados son inválidos.<br/>Por favor verifique e intente nuevamente';
+                var error = 'Nombre de usuario incorrecto. Por favor verifique e intente nuevamente';
                 // Si la respuesta es null, entonces debe dar un mensaje de error
                 mensaje('error', error);
             }
+            /* Si el código de la respuesta es de contraseña inválida */
+            else if (codigo == 'PASS_INCORRECT')
+            {
+                var error = 'Contraseña incorrecta. Por favor verifique e intente nuevamente';
+                // Si la respuesta es null, entonces debe dar un mensaje de error
+                mensaje('error', error);
+            }
+            /* De otra manera es éxito */
             else
             {
                 // Sacamos los datos del JSON resultante
-                var nombre = respuesta.nombre;
-                var id = respuesta.id;
-                var token = respuesta.token;
+                var id = data.id;
+                var nombre = data.nombre;
                 // Generamos un mensaje con el nombre
-                mensaje('success', 'Bienvenid@, ' + nombre + '<br/>Serás redirigido a la página principal en unos segundos<br/>ID: ' + id + '<br/>Token: ' + token);
-                // Pasamos id y token a un formulario POST oculto que luego ejecutamos cuando terminen los 3 segundos del mensaje. Podré incorporar datos en session_start de PHP en este archivo?
+                mensaje('success', 'Bienvenid@, usuario ' + id + '<br/>Serás redirigido a la página principal en unos segundos<br/>en cuanto averigue cómo manejarlo para generar cookies o sesiones desde JS');
+                // Pasamos id y token a un formulario POST oculto que luego ejecutamos cuando terminen los 3 segundos del mensaje. No hace falta incorporar SESSION en este archivo, la sesión la maneja el archivo de PHP que invocamos por AJAX aquí.
+                setTimeout(function() 
+                { 
+                    window.location.href = "./app/index.php?page=main";
+                }, 3000);
             }
         },
         error: function(error)

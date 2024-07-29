@@ -1,0 +1,230 @@
+/* Comienzan estilos específicos de página */
+#main-data
+{
+    min-height: 200px;
+    color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    height: 100%;
+}
+
+#main-data h3, 
+#functions h3,
+#continue-reading h3
+{
+    font-size: 25px;
+    font-weight: 500;
+}
+
+#main-data h3 span 
+{
+    font-size: 35px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+#main-data h5
+{
+    font-size: 19px;
+    font-weight: 400;
+}
+
+#main-data #id-usuario
+{
+    font-size: 15px;
+    font-weight: 400;
+    margin-top: 25px;
+}
+
+.data h3
+{
+    font-size: 17px;
+    font-weight: 400;
+    margin: 3px 0;
+}
+
+#functions
+{
+    min-height: 100px;
+    color: #f4f4f4;
+    background: #333;
+    padding: 25px;
+}
+
+#functions h3
+{
+    padding-bottom: 15px;
+}
+
+#functions #listado-funciones,
+#functions #listado-filtros
+{
+    width: 100%;
+    min-height: 30px;
+}
+
+#functions #listado-funciones .btn
+{
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+    padding: 7px 15px;
+    background-color: red;
+    border-radius: 3px;
+    transition: 0.3s ease-in-out;
+}
+
+#functions #listado-funciones .btn:hover
+{
+    background: rgb(199, 0, 0);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
+}
+
+#continue-reading,
+#cards
+{
+    min-height: 150px;
+    color: #f4f4f4;
+    padding: 25px;
+    background: #1d1d1d;
+    border-radius: 5px;
+}
+/* Comienzan estilos de tabla de continuar leyendo */
+.continue-table, .section-table
+{
+    width: 100%;
+    border-collapse: collapse;
+    background: #323232;
+}
+
+.continue-table caption,
+.section-table caption 
+{
+    text-align: left;
+    padding-bottom: 25px;
+    font-size: 29px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.continue-table th,
+.continue-table td, 
+.section-table th,
+.section-table td
+{
+    padding: 7px 13px;
+    color: #f4f4f4;
+}
+
+.continue-table th,
+.section-table td
+{
+    text-align: left;
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.continue-table td,
+.section-table td
+{
+    font-size: 13px;
+}
+
+.continue-table .acciones,
+.section-table .acciones
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.continue-table td span.button, 
+.section-table td span.button
+{
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilos de tooltip para botones de la lista*/
+span.button .tooltip
+{
+    position: absolute;
+    margin-bottom: 90px;
+    background: #202020;
+    padding: 10px;
+    color: #f4f4f4;
+    font-size: 15px;
+    text-align: center;
+    box-sizing: border-box;
+    border-radius: 5px;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.3s ease-in-out;
+}
+
+span.button .tooltip::before
+{
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #202020;
+    bottom: -5px;
+    transform: rotate(45deg);
+}
+
+span.button:hover .tooltip
+{
+    visibility: visible;
+    opacity: 1;
+}
+
+.continue .tooltip::before
+{    
+    left: 73px;
+}
+
+.quit .tooltip::before
+{    
+    left: 51px;
+}
+
+.continue .tooltip
+{    
+    width: 160px;
+}
+
+.quit .tooltip
+{    
+    width: 120px;
+}
+/* Terminan estilos de tooltip para botones de la lista*/
+
+.continue-table td span.continue,
+.section-table  td span.continue
+{
+    background: green;
+    font-size: 15px;
+}
+
+.continue-table td span.quit,
+.section-table  td span.quit
+{
+    background: red;
+    font-size: 17px;
+}
+
+.continue-table tr:nth-of-type(2n),
+.section-table tr:nth-of-type(2n)
+{
+    background: rgba(0, 0, 0, 0.05);
+}
+/* Terminan estilos de tabla de continuar leyendo */
+/* Terminan estilos específicos de página */

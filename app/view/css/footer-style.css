@@ -1,0 +1,40 @@
+/* Comienza footer */
+.footer
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 2rem 9%;
+    background: #000;
+    color: #fff;
+}
+
+.footer-text p 
+{
+    font-size: 17px;
+}
+
+.footer-back-to-top a
+{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.4rem;
+    background: red;
+    border-radius: 0.8rem;
+    text-decoration: none;
+    transition: 0.3s ease-in-out;
+}
+
+.footer-back-to-top a:hover
+{
+    box-shadow: 0 0 1rem rgba(236, 36, 36, 0.45);
+}
+
+.footer-back-to-top a i 
+{
+    font-size: 2.4rem;
+    color: #fff;
+}
+/* Termina footer */

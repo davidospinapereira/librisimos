@@ -8,10 +8,15 @@
         $pass = $_POST['pass'];
         require '../model/database_handler.php';
         // Operador ternario
-        if(probar_conexion_nueva($server, $user, $pass)){
+        if(probar_conexion_nueva($server, $user, $pass))
+        {
             //var_dump(crearBaseDatos($server, $user, $pass, $name));
             echo (crearBaseDatos($server, $user, $pass, $name)) ? "EXITO" : "ERROR";
-        }else {echo "ERROR";}
+        }
+        else 
+        {
+            echo "ERROR";
+        }
         //echo (probar_conexion($server, $name, $user, $pass)) ? "EXITO" : "ERROR";
     }
 
@@ -61,7 +66,7 @@
         // Traemos los datos enviados
         $user = $_POST['user'];
         $pass = $_POST['pass'];
-        $pass_hashed = password_hash($pass, PASSWORD_DEFAULT);
+        $pass_hashed = password_hash($pass, PASSWORD_DEFAULT, ['cost' => 10]);
         // Leemos un archivo donde se encuentre toda la base de datos con tablas, campos y conexiones en formato SQL, en un archivo PHP para más facilidad y seguridad.
         // Con eso creamos la variable $structure
         require '../model/database-structure.php';
