@@ -21,7 +21,7 @@
         }
         else
         {
-            $url_imagen = $perfil['url_imagen'];
+            $url_imagen = './' . $perfil['url_imagen'];
         }
         $pag_editor_perfil = ($page == 'profile-edit') ? '#' : 'index.php?page=profile-edit';
         $pag_ayuda = ($page == 'help') ? '#' : 'index.php?page=help';
@@ -101,7 +101,6 @@
         <!-- Termina submenú "mi perfil" -->
         <!-- Termina Header -->
         ';
-        var_dump($html_header);
         return $html_header;
     }
 ?>

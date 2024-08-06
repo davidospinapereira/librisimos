@@ -41,7 +41,7 @@
         // Primero, debemos generar la conexión
         $conexion = abrir_conexion($json_file);
         // Luego preparamos un statement
-        $sql = "SELECT nombres_usuario, apellidos_usuario, fecha_nacimiento_usuario, email_usuario, login_usuario, id_tipo_usuario FROM `usuario` WHERE id_usuario = $id";
+        $sql = "SELECT nombres_usuario, apellidos_usuario, fecha_nacimiento_usuario, email_usuario, url_imagen_usuario, login_usuario, id_tipo_usuario FROM `usuario` WHERE id_usuario = $id";
         // Ejecutamos la sentencia
         $sentencia = mysqli_query($conexion, $sql);
         // Sabemos que encontraremos resultados, pero tenemos que colocar condicional
@@ -56,6 +56,7 @@
                 'apellidos' => $consulta['apellidos_usuario'],
                 'fecha_nacimiento' => $consulta['fecha_nacimiento_usuario'],
                 'email' => $consulta['email_usuario'],
+                'url_imagen' => $consulta['url_imagen_usuario'],
                 'login' => $consulta['login_usuario'],
                 'id_tipo' => $consulta['id_tipo_usuario']
             ];

@@ -9,33 +9,37 @@
     background: rgba(0, 0, 0, 0.55);
     overflow-y: hidden;
     z-index: 999999;
-    /* Tenemos que arreglar el problema del scrolling detrás */
     opacity: 0;
-    display: none;
-    /* La animación está puesta pero no me la recibe el sistema, así que no hay animación de salida por ahora */
-    animation: fadeout 1s ease-in-out 0s 1 normal forwards;
+    /* Tenemos que arreglar el problema del scrolling detrás */
 }
 
 .read-overlay.active
 {
-    /* opacity: 1; */
+    opacity: 1;
     display: flex!important;
     justify-content: center;
     align-items: center;
-    animation: fadein 1s ease-in-out 0s 1 normal forwards;
+    /* animation: fadein 1s ease-in-out 0s 1 normal forwards; */
 }
 
 .read-overlay .read-space
 {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 75%;
     height: 90%;
     border-radius: 5px;
     box-shadow: 0 0 7px #000000;
     background-color: #ffffff;
     color: #282828;
-    opacity: 0;
-    animation: fadein 1s ease-in-out 0s 1 normal forwards;
+}
+
+.read-overlay.active .read-space
+{
+    /* opacity: 1; */
+    /* animation: fadein 1s ease-in-out 0s 1 normal forwards; */
     animation-delay: 0.7s;
     transition: 0.3s ease-in-out;
 }

@@ -121,7 +121,7 @@
                 exit();
             }
             // Creamos la sentencia para incluir al usuario súper administrador al usuario súper administrador que fue solicitado.
-            $incluir_super_admin = 'INSERT INTO `usuario` (`id_usuario`, `nombres_usuario`, `apellidos_usuario`, `fecha_nacimiento_usuario`, `email_usuario`, `url_imagen_usuario`, `login_usuario`, `pass_usuario`, `id_tipo_usuario`) VALUES (NULL, NULL, NULL, NULL, NULL, NULL, \'' . $user . '\', \'' . $pass_hashed . '\', \'1\');';
+            $incluir_super_admin = 'INSERT INTO `usuario` (`id_usuario`, `nombres_usuario`, `apellidos_usuario`, `fecha_nacimiento_usuario`, `email_usuario`, `url_imagen_usuario`, `login_usuario`, `pass_usuario`, `id_tipo_usuario`) VALUES (NULL, "SÚPER", "ADMINISTRADOR", CURRENT_DATE(), "notiene@correo.com", "view/img/user-avatar.png", \'' . $user . '\', \'' . $pass_hashed . '\', \'1\');';
             // Ejecutamos la sentencia creada
             $result = mysqli_query($connection, $incluir_super_admin);
             // Cerramos conexión
