@@ -47,7 +47,7 @@ function mensaje(icon, mensaje)
             animation: false,
             position: 'bottom-start',
             showConfirmButton: false,
-            timer: 3000,
+            timer: 5000,
             width: 'auto',
             timerProgressBar: true,
             didOpen: (toast) => 
@@ -148,36 +148,37 @@ $("#login-form").submit(function(e)
         async: true, // async indica si se desea que los datos sean asíncronos. true viene por defecto pero es mejor especificarlo
         success: function(data)
         {
-            console.log(data);
-            /* var respuesta = JSON.parse(data); */
-            var codigo = data.codigo;
-            /* Si el código de la respuesta es de usuario inválido */
+            // Como los datos vienen en JSON, hay que hacer parse para descifrarlos
+            var datos = jQuery.parseJSON(data);
+            // Sacamos el código de respuesta
+            var codigo = datos.codigo;
+            // Si el código de la respuesta es de usuario inválido
             if (codigo == 'USER_INCORRECT')
             {
+                // Preparamos mensaje de error
                 var error = 'Nombre de usuario incorrecto. Por favor verifique e intente nuevamente';
-                // Si la respuesta es null, entonces debe dar un mensaje de error
                 mensaje('error', error);
             }
-            /* Si el código de la respuesta es de contraseña inválida */
+            // Si el código de la respuesta es de contraseña inválida
             else if (codigo == 'PASS_INCORRECT')
             {
+                // Preparamos mensaje de error
                 var error = 'Contraseña incorrecta. Por favor verifique e intente nuevamente';
-                // Si la respuesta es null, entonces debe dar un mensaje de error
                 mensaje('error', error);
             }
-            /* De otra manera es éxito */
+            // De otra manera es éxito
             else
             {
                 // Sacamos los datos del JSON resultante
-                var id = data.id;
-                var nombre = data.nombre;
+                var id = datos.id;
+                var nombre = datos.nombre;
                 // Generamos un mensaje con el nombre
-                mensaje('success', 'Bienvenid@, usuario ' + id + '<br/>Serás redirigido a la página principal en unos segundos<br/>en cuanto averigue cómo manejarlo para generar cookies o sesiones desde JS');
+                mensaje('success', 'Bienvenid@, usuario ' + nombre + ' ' + id + '<br/>Serás redirigido a la página principal en unos segundos.');
                 // Pasamos id y token a un formulario POST oculto que luego ejecutamos cuando terminen los 3 segundos del mensaje. No hace falta incorporar SESSION en este archivo, la sesión la maneja el archivo de PHP que invocamos por AJAX aquí.
                 setTimeout(function() 
                 { 
                     window.location.href = "./app/index.php?page=main";
-                }, 3000);
+                }, 5000);
             }
         },
         error: function(error)
@@ -187,13 +188,102 @@ $("#login-form").submit(function(e)
     });
     /* Termina Función de AJAX para validación de datos */
 });
+// Terminan funciones de login
 
+// Comienzan funciones de registro
 $("#register-form").submit(function(e)
 {
+    // Que el formulario no cargue ninguna página automáticamente
     e.preventDefault();
-    // Validación de datos por AJAX
-    // Para estos prototipos no se usará el registro
-    popupMensaje('Formulario de registro', 'error', 'Para estos prototipos no se usará el formulario de registro.');
+    // Jalamos los datos del formulario
+    var login = $('#register-login').val();
+    var email = $('#register-email').val();
+    var accept = $('#register-accept');
+    // Primero, verifiquemos si el checkbox de términos y condiciones es aceptado
+    if (accept.prop('checked'))
+    {
+        $.ajax
+        ({
+            type: 'POST',
+            // El verificador de registro lo haré aislado porque la vez pasada me dejó de hacer login porque todo lo cargué en el mismo archivo
+            url: './app/controller/register-check.php', 
+            data:
+            {
+                register_check: true,
+                login: login,
+                email: email
+            },
+            async: true,
+            success: function(data)
+            {
+                var respuesta = jQuery.parseJSON(data);
+                switch (respuesta.codigo) 
+                {
+                    // Si respuesta.codigo es "LOGIN_AND_EMAIL_EXIST"
+                    case 'LOGIN_AND_EMAIL_EXIST':
+                        mensaje('error', '<b>ERROR</b><br/>El nombre de usuario y el correo electrónico ya están tomados.<br/>Por favor seleccione otro nombre de usuario y otro correo e inténtelo nuevamente.');
+                        break;
+                    // Si respuesta.codigo es "LOGIN_EXISTS"
+                    case 'LOGIN_EXISTS':
+                        mensaje('error', '<b>ERROR</b><br/>El nombre de usuario ya está tomado.<br/>Por favor seleccione otro nombre de usuario e inténtelo nuevamente.');
+                        break;
+                    // Si respuesta.codigo es "LOGIN_EXISTS"
+                    case 'EMAIL_EXISTS':
+                        mensaje('error', '<b>ERROR</b><br/>El correo electrónico ya está tomado.<br/>Por favor seleccione otro correo electrónico e inténtelo nuevamente.');
+                        break;
+                    case 'REGISTER_VALID':
+                        mensaje('success', '<b>EXITO</b><br/>Nombre de usuario y correo válidos para registrar. <br/>Será redirigido a la página de registro completo en unos segundos.');
+                        setTimeout(function() 
+                        {
+                            // Generamos un segundo formulario oculto para transferir
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = './app/register.php';
+                            const loginField = document.createElement('input');
+                            loginField.type = 'hidden';
+                            loginField.name = 'login';
+                            loginField.value = login;
+                            form.appendChild(loginField);
+                            const emailField = document.createElement('input');
+                            emailField.type = 'hidden';
+                            emailField.name = 'email';
+                            emailField.value = email;
+                            form.appendChild(emailField);
+                            document.body.appendChild(form);
+                            form.submit();
+                            // window.location.href = "./app/register.php";
+                        }, 5000);
+                        break;
+                    default:
+                        break;
+                }
+                /* // Si respuesta.codigo es "LOGIN_AND_EMAIL_EXIST"
+                
+                if (respuesta.codigo == 'LOGIN_AND_EMAIL_EXIST')
+                {
+                    mensaje('error', '<b>ERROR</b><br/>El nombre de usuario y el correo electrónico ya están tomados.<br/>Por favor seleccione otro nombre de usuario y otro correo e inténtelo nuevamente.');
+                }
+                // Si respuesta.codigo es "LOGIN_EXISTS"
+                else if (respuesta.codigo == 'LOGIN_EXISTS')
+                {
+                    mensaje('error', '<b>ERROR</b><br/>El nombre de usuario ya está tomado.<br/>Por favor seleccione otro nombre de usuario e inténtelo nuevamente.');
+                }
+                // Si respuesta.codigo es "EMAIL_EXISTS"
+                else if (respuesta.codigo == 'EMAIL_EXISTS')
+                {
+                    mensaje('error', '<b>ERROR</b><br/>El correo electrónico ya está tomado.<br/>Por favor seleccione otro correo electrónico e inténtelo nuevamente.');
+                }
+                else */
+            },
+            error: function(error)
+            {
+                mensaje('error', error);
+            }
+        });
+    }
+    else
+    {
+        mensaje('error', '<b>ERROR</b><br/>No ha aceptado los términos y condiciones.<br/>Por favor acéptelos e inténtelo nuevamente');
+    }
 });
-
-// Terminan funciones de login
+// Terminan funciones de registro

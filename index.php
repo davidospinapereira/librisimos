@@ -165,21 +165,16 @@
                         <form action="#" id="register-form">
                             <div class="input-box">
                                 <span class="icon"><i class='bx bxs-user'></i></span>
-                                <input type="text" required>
+                                <input type="text" id="register-login" required>
                                 <label>Nombre de usuario</label>
                             </div>
                             <div class="input-box">
                                 <span class="icon"><i class='bx bxs-envelope'></i></span>
-                                <input type="email" required>
+                                <input type="email" id="register-email" required>
                                 <label>Email</label>
                             </div>
-                            <div class="input-box">
-                                <span class="icon"><i class='bx bxs-lock-alt'></i></span>
-                                <input type="password" required>
-                                <label>Contraseña</label>
-                            </div>
                             <div class="forgot">
-                                <label><input type="checkbox">Acepto los términos y condiciones</label>
+                                <label><input type="checkbox" id="register-accept">Acepto los términos y condiciones</label>
                             </div>
                             <button type="submit" class="btn">REGISTRARTE</button>
                             <div class="logreg-link">

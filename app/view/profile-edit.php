@@ -66,6 +66,7 @@
                 <div class="col w20">
                     <p style="color: transparent;">Texto falso</p>
                     <button type="submit" id="update-data">Actualizar datos</button>
+                    <!-- Este botón debe aparecer sólo para los tipos de usuario diferentes de 1 -->
                     <button type="submit" class="delete-account" id="delete-account">Eliminar cuenta</button>
                 </div>
             </div>
