@@ -13,7 +13,7 @@
         {
             $conexion = abrir_conexion($json_file);
             // Preparamos la frase de búsqueda. Necesitamos el nombre, el ID y la contraseña. Sin miedo porque a estas alturas ya sabemos que la base de datos existe y tiene su estructura correcta
-            $sql = "SELECT nombres_usuario, id_usuario, pass_usuario FROM usuario WHERE login_usuario = '$user'";
+            $sql = "SELECT nombres_usuario, apellidos_usuario, id_usuario, pass_usuario FROM usuario WHERE login_usuario = '$user'";
             // Preparamos la sentencia con base en la frase de búsqueda ya generada
             $sentencia = mysqli_query($conexion, $sql);
             // Verificamos si se encontró el usuario
@@ -21,7 +21,7 @@
             {
                 // Separamos el resultado de la búsqueda en tres componentes
                 $consulta = mysqli_fetch_array($sentencia);
-                $user_db = $consulta['nombres_usuario'];
+                $user_db = $consulta['nombres_usuario'] . ' ' . $consulta['apellidos_usuario'];
                 $user_id_db = $consulta['id_usuario'];
                 $pass_db = $consulta['pass_usuario'];
                 // Verificamos la contraseña
@@ -34,7 +34,6 @@
                     $respuesta = 
                     [
                         'codigo' => "EXITO",
-                        'id' => $user_id_db,
                         'nombre' => $user_db
                     ];
                 }

@@ -170,10 +170,9 @@ $("#login-form").submit(function(e)
             else
             {
                 // Sacamos los datos del JSON resultante
-                var id = datos.id;
                 var nombre = datos.nombre;
                 // Generamos un mensaje con el nombre
-                mensaje('success', 'Bienvenid@, usuario ' + nombre + ' ' + id + '<br/>Serás redirigido a la página principal en unos segundos.');
+                mensaje('success', 'Bienvenid@, ' + nombre + '<br/>Serás redirigido a la página principal en unos segundos.');
                 // Pasamos id y token a un formulario POST oculto que luego ejecutamos cuando terminen los 3 segundos del mensaje. No hace falta incorporar SESSION en este archivo, la sesión la maneja el archivo de PHP que invocamos por AJAX aquí.
                 setTimeout(function() 
                 { 

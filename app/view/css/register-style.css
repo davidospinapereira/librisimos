@@ -86,11 +86,17 @@
     margin-bottom: 10px;
 }
 
-.col .form-group input
+.col .form-group .input
 {
     height: 35px;
     padding: 5px 7px;
     border-radius: 0;
+    outline: none;
+}
+
+.form-group .input.danger
+{
+    border-color: red;
 }
 
 .col button

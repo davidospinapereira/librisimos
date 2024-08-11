@@ -9,11 +9,12 @@ function mensaje(icon, mensaje)
         {
             toast: true,
             icon: icon,
-            text: mensaje,
+            html: mensaje,
             animation: false,
             position: 'bottom-start',
             showConfirmButton: false,
-            timer: 3000,
+            timer: 5000,
+            width: 'auto',
             timerProgressBar: true,
             didOpen: (toast) => 
             {
@@ -30,7 +31,7 @@ function popupMensaje(title, icon, mensaje)
     Swal.fire(
         {
             title: title,
-            text: mensaje,
+            html: mensaje,
             icon: icon,
             confirmButtonText:'OK'
         }

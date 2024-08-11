@@ -2,6 +2,7 @@
     require './model/database_handler.php';
     /* Comienzan funciones C del CRUD de usuarios */
     // C: CREATE
+    
     /* Terminan funciones C del CRUD de usuarios */
 
     /* Comienzan funciones R del CRUD de usuarios */

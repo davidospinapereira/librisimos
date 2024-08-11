@@ -62,33 +62,33 @@
                 <div class="col w40">
                     <div class="form-group">
                         <span class="label">Nombre(s) del usuario</span>
-                        <input type="text" name="nombre-usuario" id="nombre-usuario">
+                        <input type="text" class="input" name="nombre-usuario" id="nombre-usuario">
                     </div>
                     <div class="form-group">
                         <span class="label">Apellido(s) del usuario</span>
-                        <input type="text" name="apellido-usuario" id="apellido-usuario">
+                        <input type="text" class="input" name="apellido-usuario" id="apellido-usuario">
                     </div>
                     <div class="form-group">
                         <span class="label">Fecha de nacimiento del usuario</span>
-                        <input type="date" name="fecha-nacimiento" id="fecha-nacimiento">
+                        <input type="date" class="input" name="fecha-nacimiento" id="fecha-nacimiento">
                     </div>
                 </div>
                 <div class="col w40">
                     <div class="form-group">
                         <span class="label">Correo electrónico</span>
-                        <input type="email" name="email-usuario" id="email-usuario" value="<?php echo $email; ?>">
+                        <input type="email" class="input" name="email-usuario" id="email-usuario" value="<?php echo $email; ?>">
                     </div>
                     <div class="form-group">
                         <span class="label">Nombre de usuario</span>
-                        <input type="text" name="login-usuario" id="login-usuario" value="<?php echo $login; ?>">
+                        <input type="text" class="input" name="login-usuario" id="login-usuario" value="<?php echo $login; ?>">
                     </div>
                     <div class="form-group">
                         <span class="label">Contraseña</span>
-                        <input type="password" name="pass-usuario" id="pass-usuario">
+                        <input type="password" class="input" name="pass-usuario" id="pass-usuario">
                     </div>
                     <div class="form-group">
                         <span class="label">Confirmar contraseña</span>
-                        <input type="password" name="conf-pass-usuario" id="conf-pass-usuario">
+                        <input type="password" class="input" name="conf-pass-usuario" id="conf-pass-usuario">
                     </div>
                 </div>
                 <div class="col w20">
