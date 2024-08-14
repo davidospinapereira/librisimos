@@ -85,6 +85,7 @@
                         ?>
                     </h5>
                     <h6 id="id-usuario">ID: <span><?php echo $user_id; ?></span></h6>
+                    <input type="hidden" id="user_id" value="<?php echo $user_id; ?>">
                 </div>
                 <?php
                 if ($perfil['id_tipo'] != 3)
@@ -140,56 +141,18 @@
             <!-- Comienza la sección de continuar leyendo -->
             <div class="fila">
                 <div class="col w100" id="continue-reading">
-                    <table class="continue-table">
+                    <table class="continue-table" id="continue-reading-table">
                         <caption>Continúa leyendo</caption>
-                            <!-- Encabezado de la tabla -->
-                            <tr>
-                                <th>Título</th>
-                                <th>Autor</th>
-                                <th>Género</th>
-                                <th>Capítulo/Sección actual</th>
-                                <th>Acciones</th>
-                            </tr>
-                            <!-- 
-                            Aquí tenemos que:
-                            - Consultar la última sección de cada libro que el usuario esté leyendo.
-                            Eso significa:
-                                - Consultar todas las secciones de cada libro que el usuario esté leyendo
-                                - Agrupar las secciones leídas por el id del libro
-                                - Mostrar sólo la más reciente de cada libro
-                                - Al tener el listado, debemos saber a qué libro corresponde esa sección, y sacar sus datos
-                             -->
-                            <!-- Contenido de la tabla -->
-                            <tr>
-                                <td data-cell="titulo">Cosmos</td>
-                                <td data-cell="autor">Carl Sagan</td>
-                                <td data-cell="genero">Divulgación Científica</td>
-                                <td data-cell="seccion">13 - ¿Quién hablará en nombre de la Tierra?</td>
-                                <td data-cell="acciones" class="acciones">
-                                    <span class="button continue" onclick="activarHerramienta()"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
-                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-cell="titulo">Ojos de Serpiente</td>
-                                <td data-cell="autor">David Ospina</td>
-                                <td data-cell="genero">Suspenso</td>
-                                <td data-cell="seccion">Antídoto - Parte 1</td>
-                                <td data-cell="acciones" class="acciones">
-                                    <span class="button continue" onclick="activarHerramienta()"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
-                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-cell="titulo">20 poemas de amor y una canción desesperada</td>
-                                <td data-cell="autor">Pablo Neruda</td>
-                                <td data-cell="genero">Poemas</td>
-                                <td data-cell="seccion">4 - Me gustas cuando callas</td>
-                                <td data-cell="acciones" class="acciones">
-                                    <span class="button continue" onclick="activarHerramienta()"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
-                                    <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
-                                </td>
-                            </tr>
+                        <!-- Encabezado de la tabla -->
+                        <tr>
+                            <th>Título</th>
+                            <th>Autor</th>
+                            <th>Género</th>
+                            <th>Capítulo/Sección actual</th>
+                            <th>Acciones</th>
+                        </tr>
+                        <!-- Contenido de la tabla -->
+                        
                     </table>
                 </div>
             </div>

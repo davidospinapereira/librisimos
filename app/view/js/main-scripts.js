@@ -1,5 +1,6 @@
 /* Comienza asignación de variables */
 var statistics = document.getElementById("statistics");
+var user_id = $('#user_id').val();
 /* Termina asignación de variables */
 
 /* Comienzan funciones que cargan cuando la página esté lista */
@@ -11,6 +12,7 @@ $(document).ready(function()
         // Si existe la sección de statistics es porque el usuario es suscriptor
         cargarEstadisticas();
     }
+    continuarLeyendo();
 });
 /* Terminan funciones que cargan cuando la página esté lista */
 
@@ -91,3 +93,45 @@ function cargarEstadisticas()
     // Luego, los ponemos en el div de estadísticas
 }
 /* Terminan funciones para las estadísticas en main para administradores */
+
+/* Comienza función de continuar leyendo */
+function continuarLeyendo()
+{
+    var readingTable = $('#continue-reading-table');
+    /* <tr>
+            <td data-cell="titulo">Cosmos</td>
+            <td data-cell="autor">Carl Sagan</td>
+            <td data-cell="genero">Divulgación Científica</td>
+            <td data-cell="seccion">13 - ¿Quién hablará en nombre de la Tierra?</td>
+            <td data-cell="acciones" class="acciones">
+                <span class="button continue" onclick="activarHerramienta()"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
+            </td>
+        </tr> */
+    $.ajax
+    ({
+        type: 'POST',
+        url: './controller/book-crud.php',
+        async: true,
+        data: 
+        {
+            get_list: true,
+            user_id
+        },
+        beforeSend: function()
+        {
+            // Spinner?
+        },
+        success: function(data)
+        {
+            // Mandamos el dato al HTML
+            $('#continue-reading-table').append(data);
+        },
+        error: function(error)
+        {  
+           // Mandamos el error al HTML
+           $('#continue-reading-table').append(error);
+        }
+    });
+}
+/* Termina función de continuar leyendo */
