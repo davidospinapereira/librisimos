@@ -1,9 +1,18 @@
-/* Comienza función que prepara la herramienta de lectura */
+/* Comienza asignación de variables */
+var statistics = document.getElementById("statistics");
+/* Termina asignación de variables */
+
+/* Comienzan funciones que cargan cuando la página esté lista */
 $(document).ready(function()
 {
     $('.read-overlay').hide();
+    if (statistics)
+    {
+        // Si existe la sección de statistics es porque el usuario es suscriptor
+        cargarEstadisticas();
+    }
 });
-/* Termina función que prepara la herramienta de lectura */
+/* Terminan funciones que cargan cuando la página esté lista */
 
 /* Comienza función para cerrar la herramienta de lectura */
 $('#close-read-tool').on('click', function()
@@ -34,3 +43,51 @@ $('#dark-toggle').on('click', function()
     $('.read-space').toggleClass('dark');
     $('.toggle').toggleClass('pushed');
 });
+/* Termina función para activar el modo oscuro */
+
+/* Comienzan funciones para las estadísticas en main para administradores */
+function cargarEstadisticas()
+{
+    /* <h3>Usuarios registrados: <b>25</b></h3>
+    <h3>Libros publicados: <b>22</b></h3>
+    <h3>Libros sin publicar: <b>5</b></h3>
+    <h3>Libros leídos: <b>12</b></h3> */
+    $.ajax
+    ({
+        type: 'POST',
+        url: './controller/stats-getter.php',
+        async: true,
+        data: 
+        {
+            get_stats: true,
+        },
+        beforeSend: function()
+        {
+            $('#stats-spinner').addClass('active');
+            $('#stats-data').removeClass('active');
+        },
+        success: function(data)
+        {
+            // Tenemos que decodificar el JSON resultante
+            var results = JSON.parse(data);
+            // Tenemos que poner los datos en una cadena de caracteres
+            var texto = 
+            '<h3>Usuarios registrados: <b>' + results.usuarios + '</b></h3><h3>Libros publicados: <b>' + results.publicados + '</b></h3><h3>Libros sin publicar: <b>' + results.sin_publicar + '</b></h3>';
+            // Tenemos que poner esa cadena de caracteres en su lugar, borrando todo lo que hubiere previamente
+            $('#stats-data').html('');
+            $('#stats-data').html(texto);
+        },
+        error: function(error)
+        {
+            // Generamos un mensaje de error
+            mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa:<br/>' + error + '<br/>Por favor comuníquese con el administrador o el desarrollador.');
+        },
+        complete: function()
+        {
+            $('#stats-spinner').removeClass('active');
+            $('#stats-data').addClass('active');
+        }
+    });
+    // Luego, los ponemos en el div de estadísticas
+}
+/* Terminan funciones para las estadísticas en main para administradores */

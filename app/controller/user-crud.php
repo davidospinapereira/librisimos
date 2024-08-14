@@ -32,6 +32,7 @@
         // Finalmente, cerramos la conexión
         cerrar_conexion($conexion);
         return $respuesta;
+        
     }
 
     // Función para obtener un perfil completo de usuario

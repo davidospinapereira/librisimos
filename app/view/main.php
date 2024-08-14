@@ -86,34 +86,53 @@
                     </h5>
                     <h6 id="id-usuario">ID: <span><?php echo $user_id; ?></span></h6>
                 </div>
-                <!-- Comienzan estadísticas. Esto cambia en la página principal para usuarios, debo adaptarlo -->
-                <div class="col w30" id="statistics">
-                    <h2>Estadísticas</h2>
-                    <!-- Spinner, cuando este se activa las estadísticas se desactivan -->
-                    <div class="spinner">
-                        <span class="loader"></span>
+                <?php
+                if ($perfil['id_tipo'] != 3)
+                {
+                    // Si el tipo de usuario es diferente a "Suscriptor", cargue estadísticas
+                    ?>
+                    <!-- Comienzan estadísticas. Esto cambia si el usuario es suscriptor, debo sacar los segmentos de los prototipos -->
+                    <div class="col w30" id="statistics">
+                        <h2>Estadísticas</h2>
+                        <!-- Spinner, cuando este se activa las estadísticas se desactivan -->
+                        <div class="spinner" id="stats-spinner">
+                            <span class="loader"></span>
+                        </div>
+                        <!-- Termina Spinner -->
+                        <!-- Comienzan datos a mostrar, cuando estas se activan el Spinner se desactiva -->
+                        <div class="data active" id="stats-data">
+                            
+                        </div>
+                        <!-- Terminan datos a mostrar -->
                     </div>
-                    <!-- Termina Spinner -->
-                    <!-- Comienzan datos a mostrar, cuando estas se activan el Spinner se desactiva -->
-                    <div class="data active">
-                        <h3>Usuarios registrados: <b>25</b></h3>
-                        <h3>Libros publicados: <b>22</b></h3>
-                        <h3>Libros sin publicar: <b>5</b></h3>
-                        <h3>Libros leídos: <b>12</b></h3>
-                    </div>
-                    <!-- Terminan datos a mostrar -->
-                </div>
-                <!-- Terminan estadísticas -->
+                    <!-- Terminan estadísticas -->
+                    <?php
+                }
+                else
+                {
+                    // Si no, que cargue las tarjetas
+                }
+                ?>
             </div>
             <div class="fila">
                 <!-- Comienzan funciones rápidas, cambian dependiendo del tipo de usuario -->
                 <div class="col w100" id="functions">
                     <h3>Funciones rápidas</h3>
                     <div id="listado-funciones">
-                        <a href="#" class="btn">Nuevo libro</a>
-                        <a href="#" class="btn">Nuevo usuario</a>
-                        <a href="#" class="btn">Editar libros</a>
-                        <a href="#" class="btn">Editar usuarios</a>
+                        <?php
+                        // Esto solo sucede si el tipo de usuario es diferente a suscriptor
+                        if ($perfil['id_tipo'] != 3)
+                        {
+                            ?>
+                            <a href="index.php?page=new-book" class="btn">Nuevo libro</a>
+                            <a href="index.php?page=new-user" class="btn">Nuevo usuario</a>
+                            <a href="index.php?page=book-search" class="btn">Editar libros</a>
+                            <a href="index.php?page=user-search" class="btn">Editar usuarios</a>
+                            <?php
+                        }
+                        ?>
+                        <!-- Y esto sucede para todos los usuarios -->
+                        <a href="index.php?page=book-search" class="btn">Buscar libros</a>
                     </div>
                 </div>
                 <!-- Terminan funciones rápidas -->
@@ -121,7 +140,6 @@
             <!-- Comienza la sección de continuar leyendo -->
             <div class="fila">
                 <div class="col w100" id="continue-reading">
-                    <!--<h3>Continúa leyendo...</h3>-->
                     <table class="continue-table">
                         <caption>Continúa leyendo</caption>
                             <!-- Encabezado de la tabla -->
@@ -132,7 +150,15 @@
                                 <th>Capítulo/Sección actual</th>
                                 <th>Acciones</th>
                             </tr>
-    
+                            <!-- 
+                            Aquí tenemos que:
+                            - Consultar la última sección de cada libro que el usuario esté leyendo.
+                            Eso significa:
+                                - Consultar todas las secciones de cada libro que el usuario esté leyendo
+                                - Agrupar las secciones leídas por el id del libro
+                                - Mostrar sólo la más reciente de cada libro
+                                - Al tener el listado, debemos saber a qué libro corresponde esa sección, y sacar sus datos
+                             -->
                             <!-- Contenido de la tabla -->
                             <tr>
                                 <td data-cell="titulo">Cosmos</td>
