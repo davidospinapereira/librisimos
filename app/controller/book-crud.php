@@ -1,11 +1,12 @@
 <?php
     require '../model/database_handler.php';
     $json_file = '../model/connection_data.json';
-    /* Comienza */
+    /* Comienza invocación AJAX */
     if(isset($_POST['get_list']))
     {
         echo generar_tabla($_POST['user_id'], $json_file);
     }
+    /* Termina invocación AJAX */
 
     function generar_tabla($user_id, $json_file)
     {
@@ -32,7 +33,7 @@
                         <td data-cell='seccion'>".$row['numero_seccion']." - " . $row['titulo_seccion']. "</td>
                         <td data-cell='acciones' class='acciones'>
                             <span class='button continue' onclick='activarHerramienta(" . $row['id_seccion'] . ")'><div class='tooltip'>Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
-                            <span class='button quit' onclick='dejarDeLeer(" . $row['id_seccion'] . ")'><div class='tooltip'>Dejar de leer</div><i class='bx bx-x' ></i></span>
+                            <span class='button quit' onclick='dejarDeLeer(" . $row['id_libro'] . ", " . $user_id . ")'><div class='tooltip'>Dejar de leer</div><i class='bx bx-x' ></i></span>
                         </td>
                     </tr>
                 ";

@@ -28,14 +28,81 @@ $('#close-read-tool').on('click', function()
 /* Termina función para cerrar la herramienta de lectura */
 
 /* Comienza función para abrir la herramienta de lectura */
-function activarHerramienta()
+function activarHerramienta(idSeccion)
 {
     // Aquí tengo que jalar los datos de la sección deseada por AJAX. Por lo tanto, esta función tendrá parámetros
+    // Primero, hacemos visible la herramienta de lectura
     $('.read-overlay').addClass('active');
     $('.read-overlay').fadeIn("slow");
     $('.read-space').fadeIn("slow");
     $('.read-space').removeClass('dark');
     $('.toggle').removeClass('pushed');
+    // Después, hacemos visible el spinner
+    $('#reader-overlay').addClass('active');
+    $('#reader-overlay').fadeIn("slow");
+    // Ahora, invocamos el AJAX
+    $.ajax
+    ({
+        type: 'POST',
+        url: './controller/section-crud.php',
+        async: true,
+        data: 
+        {
+            read_section: true,
+            id_seccion: idSeccion
+        },
+        success: function(data)
+        {
+            // Tenemos que decodificar el JSON resultante
+            var results = JSON.parse(data);
+            // Aquí debemos sacar los datos, organizarlos en la herramienta de lectura
+            $('#read-tool-book-title').text(results.book_title);
+            $('#read-tool-book-author').html('<h4>' + results.book_author + '</h4>');
+            // <span style="background-color: blue; border-color: blue;">Divulgación científica</span><span style="background-color: blueviolet; border-color: blueviolet;">Fantasía</span>
+            $('#read-tool-book-genres').html(results.genres);
+            // <h4>Parte/Capítulo: <b>13</b></h4>
+            $('#read-tool-section-chapter').html('<h4>Parte/Capítulo: <b>' + results.section_number + '</b></h4>');
+            // <h4>¿Quién hablará en nombre de la Tierra?</h4>
+            $('#read-tool-section-title').html('<h4>' + results.section_title + '</h4>');
+            $('#read-tool-section-content').html(results.section_content);
+            // Para los botones
+            switch (results.section_position) 
+            {
+                case 'FIRST':
+                    // Si la sección es la primera, no puede haber sección anterior
+                    $('#read-tool-previous').prop('disabled', true);
+                    $('#read-tool-next').on('click', leerSeccionDesdeReader(results.section_number + 1, results.book_id, user_id));
+                    break;
+                case 'MIDDLE':
+                    $('#read-tool-previous').on('click', leerSeccionDesdeReader(results.section_number - 1, results.book_id, user_id));
+                    $('#read-tool-next').on('click', leerSeccionDesdeReader(results.section_number + 1, results.book_id, user_id));
+                    break;
+                case 'LAST':
+                    // Si la sección es la última, debe haber sección anterior
+                    $('#read-tool-previous').on('click', leerSeccionDesdeReader(results.section_number - 1, results.book_id, user_id));
+                    // Si la sección es la última, no puede haber sección siguiente
+                    $('#read-tool-next').prop('disabled', true);
+                    break;
+                default:
+                    // Si la sección es única o si hay un error, no puede haber sección siguiente ni anterior
+                    $('#read-tool-previous').prop('disabled', true);
+                    $('#read-tool-next').prop('disabled', true);
+                    break;
+            }
+        },
+        error: function(error)
+        {
+            // Generamos un mensaje de error
+            mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa:<br/>' + error + '<br/>Por favor comuníquese con el administrador o el desarrollador.');
+            $('#read-tool-section-content').html('<b>ERROR</b><br/>Hubo un error en el programa:<br/>' + error + '<br/>Por favor comuníquese con el administrador o el desarrollador.');
+        },
+        complete: function()
+        {
+            // Luego, quitamos el spinner
+            $('#reader-overlay').fadeOut("slow");
+            $('#reader-overlay').removeClass('active');
+        }
+    });
 }
 /* Termina función para abrir la herramienta de lectura */
 
@@ -97,17 +164,6 @@ function cargarEstadisticas()
 /* Comienza función de continuar leyendo */
 function continuarLeyendo()
 {
-    var readingTable = $('#continue-reading-table');
-    /* <tr>
-            <td data-cell="titulo">Cosmos</td>
-            <td data-cell="autor">Carl Sagan</td>
-            <td data-cell="genero">Divulgación Científica</td>
-            <td data-cell="seccion">13 - ¿Quién hablará en nombre de la Tierra?</td>
-            <td data-cell="acciones" class="acciones">
-                <span class="button continue" onclick="activarHerramienta()"><div class="tooltip">Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
-                <span class="button quit"><div class="tooltip">Dejar de leer</div><i class='bx bx-x' ></i></span>
-            </td>
-        </tr> */
     $.ajax
     ({
         type: 'POST',
@@ -118,10 +174,7 @@ function continuarLeyendo()
             get_list: true,
             user_id
         },
-        beforeSend: function()
-        {
-            // Spinner?
-        },
+        // Tal vez tengamos que usar un beforesend, cuando la tabla tenga muchos libros
         success: function(data)
         {
             // Mandamos el dato al HTML
@@ -135,3 +188,25 @@ function continuarLeyendo()
     });
 }
 /* Termina función de continuar leyendo */
+
+/* Comienza función de dejar de leer */
+function dejarDeLeer(id_libro, $user_id)
+{
+    // Debemos preguntar si se está seguro
+    // Si la respuesta es afirmativa
+    // Debe invocarse AJAX para eliminar
+    // Luego debe recargarse la página
+    // Si la respuesta es negativa, no haga nada
+}
+/* Termina función de dejar de leer */
+
+/* Comienza función para leer otra sección desde la misma herramienta de lectura */
+function leerSeccionDesdeReader(section_number, book_id, user_id)
+{
+    // Primero, hacemos visible el spinner
+    // Luego, llamamos al AJAX muy similar a activarHerramienta
+    // Sólo recargamos la parte interna, por lo que la función debe ser diferente
+    // Luego, reconfiguramos los botones de anterior y siguiente
+    // Finalmente, quitamos el spinner
+}
+/* Termina función para leer otra sección desde la misma herramienta de lectura */

@@ -7,42 +7,29 @@
                 <!-- Comienza contenedor de datos -->
                 <div class="data-container">
                     <!-- Comienza información del libro -->
+                    <div class="overlay" id="reader-overlay"><span class="loader"></span></div>
                     <div class="book-container">
-                        <h2 class="book-title">Cosmos</h2>
+                        <h2 class="book-title" id="read-tool-book-title"></h2>
                         <div class="book-meta">
-                            <div class="book-author"><h4>Carl Sagan</h4></div>
-                            <div class="book-genres"><span style="background-color: blue; border-color: blue;">Divulgación científica</span><span style="background-color: blueviolet; border-color: blueviolet;">Fantasía</span></div>
+                            <div class="book-author" id="read-tool-book-author"></div>
+                            <div class="book-genres" id="read-tool-book-genres"></div>
                         </div>
                     </div>
                     <!-- Termina información del libro -->
                      <!-- Comienza contenedor de sección -->
                     <div class="section-container">
                         <div class="section-meta">
-                            <div class="section-number">
-                                <h4>Parte/Capítulo: <b>13</b></h4>
-                            </div>
-                            <div class="section-title">
-                                <h4>¿Quién hablará en nombre de la Tierra?</h4>
-                            </div>
+                            <div class="section-number" id="read-tool-section-chapter"></div>
+                            <div class="section-title" id="read-tool-section-title"></div>
                         </div>
                         <div class="section-content">
                             <!-- Un recuadro con un margen, con overflow interno y con estilos cuadrados para lectura. -->
-                             <div class="content">
-                                <!-- Comienza contenido de la sección -->
-                                <p style="text-align: right;"><i><b>¿Por qué motivo tendría que ocuparme en buscar los<br/>
-                                secretos de las estrellas si tengo continuamente, ante<br/>
-                                mis ojos a la muerte y a la esclavitud?</b></i></p>
-                                <p style="text-align: right; font-size: 13px;">Pregunta planteada a Pitágoras por Anaxímenes<br/>(hacia 600 a. de C.), según MONTAIGNE</p>
-                                <br/>
-                                <p>El cosmos no fue descubierto hasta ayer. Durante un millón de años era evidente para todos que aparte de la Tierra no había ningún otro lugar. Luego, en la última décima parte de un uno por ciento de la vida de nuestra especie, en el instante entre Aristarco y nosotros, nos dimos cuenta de mala gana de que no éramos el centro ni el objetivo del universo, sino que vivíamos sobre un mundo diminuto y frágil perdido en la inmensidad y en la eternidad, a la deriva por un gran océano cósmico punteado aquí y allí por centenares de miles de millones de galaxias y por mil millones de billones de estrellas. Sondeamos valientemente en las aguas y descubrimos que el océano nos gustaba, que resonaba con nuestra naturaleza. Algo en nosotros reconoce el Cosmos como su hogar. Estamos hechos de ceniza de estrellas. Nuestro origen y evolución estuvieron ligados a distantes acontecimientos cósmicos. La exploración del Cosmos es un viaje para autodescubrirnos.</p>
-                                <p>Como ya sabían los antiguos creadores de mitos, somos hijos tanto del cielo como de la Tierra. En nuestra existencia sobre este planeta hemos acumulado un peligroso equipaje evolutivo, propensiones hereditarias a la agresión y al ritual, sumisión a los líderes y hostilidad hacia los forasteros, un equipaje que plantea algunas dudas sobre nuestra supervivencia. Pero también hemos adquirido compasión para con los demás, amor hacia nuestros hijos y hacia los hijos de nuestros hijos, el deseo de aprender de la historia, y una inteligencia apasionada y de altos vuelos: herramientas evidentes para que continuemos sobreviviendo y prosperando. No sabemos qué aspectos de nuestra naturaleza predominarán, especialmente cuando nuestra visión y nuestra comprensión de las perspectivas están limitadas exclusivamente a la Tierra, o lo que es peor a una pequeña parte de ella. Pero allí arriba, en la inmensidad del Cosmos, nos espera una perspectiva inescapable. Por ahora no hay signos obvios de inteligencias extraterrestres, y esto nos hace preguntamos si las civilizaciones como la nuestra se precipitan siempre de modo implacable y directo hacia la autodestrucción. Las fronteras nacionales no se distinguen cuando miramos la Tierra desde el espacio. Los chauvinismos étnicos o religiosos o nacionales son algo difíciles de mantener cuando vemos nuestro planeta como un creciente azul y frágil que se desvanece hasta convertirse en un punto de luz sobre el bastión y la ciudadela de las estrellas. Viajar ensancha nuestras perspectivas.</p>
-                                <!-- Termina contenido de la sección -->
-                             </div>
+                             <div class="content" id="read-tool-section-content"></div>
                         </div>
                         <div class="section-controls">
                             <div class="prev-next">
-                                <button class="control" id="previous">Anterior</button>
-                                <button class="control" id="next">Siguiente</button>
+                                <button class="control" id="read-tool-previous">Anterior</button>
+                                <button class="control" id="read-tool-next">Siguiente</button>
                             </div>
                             <!-- Comienza control de modo oscuro y claro -->
                             <div class="light-dark">

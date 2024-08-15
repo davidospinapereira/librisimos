@@ -76,15 +76,52 @@
     /* transform: translate(10px, -30px); */
 }
 
+/* Comienzan estilos para el overlay con el spinner */
+.read-space .data-container .overlay
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #F4F4F4;
+    z-index: 9;
+    /* display: flex; */
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.read-space .data-container .overlay.active
+{
+    display: flex;
+}
+
+.read-space .data-container .overlay .loader 
+{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #282828;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+/* Terminan estilos para el overlay con el spinner */
+
 .read-overlay .read-space .data-container .book-container
 {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     height: 25%;
 }
 
 .read-overlay .read-space .data-container .book-title
 {
-    font-size: 43px;
+    font-size: 35px;
     color: #000000!important;
     font-weight: 500;
     text-transform: uppercase;
@@ -180,6 +217,7 @@
 
 .data-container .section-container .section-content .content
 {
+    font-family: 'Consolas', sans-serif;
     background-color: #F4F4F4;
     position: relative;
     width: 100%;
@@ -239,6 +277,15 @@
 {
     background-color: darkred;
     border-color: darkred;
+}
+
+.section-container .section-controls .prev-next .control:disabled, 
+.section-container .section-controls .prev-next .control:disabled[disabled]
+{
+    border: 1px solid #999999;
+    background-color: #999999;
+    color: #cccccc;
+    cursor: not-allowed;
 }
 
 .section-container .section-controls .light-dark
@@ -370,5 +417,17 @@
 		opacity: 0;
 	}
 }
+
+@keyframes rotation 
+{
+    0% 
+    {
+      transform: rotate(0deg);
+    }
+    100% 
+    {
+      transform: rotate(360deg);
+    }
+  } 
 /* Terminan animaciones */
 /* Terminan Estilos para la herramienta de lectura */
