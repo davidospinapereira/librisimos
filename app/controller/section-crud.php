@@ -20,34 +20,16 @@
         // La idea es que con la id de sección sacamos los datos de sección y el id del libro, con el ID del libro sacamos los datos del libro y los géneros como array y con todo eso generamos un array
         $conexion = abrir_conexion($json_file);
         // Primero, la info de la sección
-        $sql = "SELECT `numero_seccion`, `titulo_seccion`, `contenido_seccion` FROM `seccion` WHERE `id_seccion` = $id_seccion";
+        $sql = "SELECT cs.`id_libro`, l.`nombre_libro`, s.`numero_seccion`, s.`titulo_seccion`, s.`contenido_seccion` FROM `seccion` AS s INNER JOIN `componer_seccion` AS cs ON (cs.`id_seccion` = s.`id_seccion`) INNER JOIN `libro` AS l ON (l.`id_libro`= cs.`id_libro`) WHERE s.`id_seccion` = $id_seccion";
         // Ejecutamos la sentencia
         $sentencia = mysqli_query($conexion, $sql);
         // Separamos el resultado de la búsqueda en sus componentes, no hay que hacer ifs ni nada, porque sabemos que se va a encontrar
-        $consulta = mysqli_fetch_array($sentencia);
+        $consulta = mysqli_fetch_array($sentencia);        
+        $id_libro = $consulta['id_libro'];
+        $nombre_libro = $consulta['nombre_libro'];
         $numero_seccion = $consulta['numero_seccion'];
         $titulo_seccion = $consulta['titulo_seccion'];
         $contenido_seccion = $consulta['contenido_seccion'];
-        // Finalmente, cerramos la conexión
-        cerrar_conexion($conexion);
-        $conexion = abrir_conexion($json_file);
-        // Ahora, sigue la ID del libro
-        $sql = "SELECT `id_libro` FROM `componer_seccion` WHERE `id_seccion` = $id_seccion";
-        // Ejecutamos la sentencia
-        $sentencia = mysqli_query($conexion, $sql);
-        // Separamos el resultado de la búsqueda en sus componentes
-        $consulta = mysqli_fetch_array($sentencia);
-        $id_libro = $consulta['id_libro'];
-        // Finalmente, cerramos la conexión
-        cerrar_conexion($conexion);
-        $conexion = abrir_conexion($json_file);
-        // Ahora, siguen los datos del libro con el ID del libro
-        $sql = "SELECT `nombre_libro` FROM `libro` WHERE `id_libro` = $id_libro";
-        // Ejecutamos la sentencia
-        $sentencia = mysqli_query($conexion, $sql);
-        // Separamos el resultado de la búsqueda en sus componentes
-        $consulta = mysqli_fetch_array($sentencia);
-        $nombre_libro = $consulta['nombre_libro'];
         // Finalmente, cerramos la conexión
         cerrar_conexion($conexion);
         $conexion = abrir_conexion($json_file);
@@ -80,9 +62,58 @@
         $sql = "SELECT s.`numero_seccion` FROM `seccion` AS s INNER JOIN `componer_seccion` AS cs ON (cs.`id_seccion` = s.`id_seccion`) WHERE cs.`id_libro` = $id_libro";
         // Generamos la sentencia
         $sentencia = mysqli_query($conexion, $sql);
-        // convertimos el resultado en un array asociativo
-        $consulta = mysqli_fetch_array($sentencia);
-        $posicion_seccion = posicion_seccion($numero_seccion, $consulta, $sentencia);
+        // Convertir los resultados en un array asociativo
+        $secciones = [];
+        while ($row = mysqli_fetch_assoc($sentencia)) 
+        {
+            $secciones[] = $row['numero_seccion'];
+        }
+        // Verificar la posición del número en el array
+        if (count($secciones) === 0) 
+        {
+            // Hasta aquí no se supone que llegue
+            $posicion_seccion = "EMPTY_ARRAY";
+        }
+        else if (count($secciones) === 1)
+        {
+            // Caso especial: si solo hay un elemento
+            if ($secciones[0] == $numero_seccion) 
+            {
+                // Si el número está entonces la posición es ONLY
+                $posicion_seccion = "ONLY";
+            } 
+            else 
+            {
+                // Si el número no está entonces... no está
+                $posicion_seccion = "NOT_IN";
+            }
+        }
+        else
+        {
+            // Caso general: más de un elemento
+            if ($secciones[0] == $numero_seccion) 
+            {
+                // El número está en la primera posición
+                $posicion_seccion = "FIRST";
+            } 
+            else if ($secciones[count($secciones) - 1] == $numero_seccion) 
+            {
+                // El número está en la última posición
+                $posicion_seccion = "LAST";
+            } 
+            elseif (in_array($numero_seccion, $secciones)) 
+            {
+                // El número está en la lista, pero no en la primera ni en la última posición
+                $posicion_seccion = "MIDDLE";
+            } 
+            else 
+            {
+                // Si el número no está entonces... no está
+                $posicion_seccion = "NOT_IN";
+            }
+        }
+        // Cerramos la conexión
+        cerrar_conexion($conexion);
         // Ahora tenemos que armar la respuesta como array
         $respuesta = array
         (
@@ -95,7 +126,6 @@
             "section_position" => $posicion_seccion,
             "book_id" => $id_libro
         );
-        cerrar_conexion($conexion); 
         return json_encode($respuesta);
     }
     /* Termina función que devuelve datos para la herramienta de lectura */
@@ -108,13 +138,12 @@
         $conexion = abrir_conexion($json_file);
         // Luego, viene el SQL:
         // Debemos sacar el los datos de la sección, haciendo un inner join con componer_sección tal que la ID del libro sea la ID proporcionada y el número de sección sea el proporcionado
-        $sql = "SELECT s.`id_seccion`, s.`numero_seccion`, s.`titulo_seccion`, s.`contenido_seccion` FROM `seccion` AS s INNER JOIN `componer_seccion` AS cs ON (cs.`id_seccion` = s.`id_seccion`) WHERE cs.`id_libro` = $book_id AND s.`numero_seccion` = $numero_seccion";
+        $sql = "SELECT s.`id_seccion`, s.`titulo_seccion`, s.`contenido_seccion` FROM `seccion` AS s INNER JOIN `componer_seccion` AS cs ON (cs.`id_seccion` = s.`id_seccion`) WHERE cs.`id_libro` = $book_id AND s.`numero_seccion` = $numero_seccion";
         // Ejecutamos la sentencia
         $sentencia = mysqli_query($conexion, $sql);
         // convertimos el resultado en un array asociativo
         $consulta = mysqli_fetch_array($sentencia);
         // Luego, guardamos los datos generados
-        $numero_seccion = $consulta['numero_seccion'];
         $titulo_seccion = $consulta['titulo_seccion'];
         $contenido_seccion = $consulta['contenido_seccion'];
         $id_seccion = $consulta['id_seccion'];
@@ -125,12 +154,58 @@
         $sql = "SELECT s.`numero_seccion` FROM `seccion` AS s INNER JOIN `componer_seccion` AS cs ON (cs.`id_seccion` = s.`id_seccion`) WHERE cs.`id_libro` = $book_id";
         // Generamos la sentencia
         $sentencia = mysqli_query($conexion, $sql);
-        // convertimos el resultado en un array asociativo
-        $consulta = mysqli_fetch_array($sentencia);
-        // Aquí me está saltando a "NOT IN", por eso se me bloquean los botones, tengo que pedir ayuda con esto
-        $posicion_seccion = posicion_seccion($numero_seccion, $consulta, $sentencia);
+        // Convertir los resultados en un array asociativo
+        $secciones = [];
+        while ($row = mysqli_fetch_assoc($sentencia)) 
+        {
+            $secciones[] = $row['numero_seccion'];
+        }
+        // Verificar la posición del número en el array
+        if (count($secciones) === 0) 
+        {
+            // Hasta aquí no se supone que llegue
+            $posicion_seccion = "EMPTY_ARRAY";
+        }
+        else if (count($secciones) === 1)
+        {
+            // Caso especial: si solo hay un elemento
+            if ($secciones[0] == $numero_seccion) 
+            {
+                // Si el número está entonces la posición es ONLY
+                $posicion_seccion = "ONLY";
+            } 
+            else 
+            {
+                // Si el número no está entonces... no está
+                $posicion_seccion = "NOT_IN";
+            }
+        }
+        else
+        {
+            // Caso general: más de un elemento
+            if ($secciones[0] == $numero_seccion) 
+            {
+                // El número está en la primera posición
+                $posicion_seccion = "FIRST";
+            } 
+            else if ($secciones[count($secciones) - 1] == $numero_seccion) 
+            {
+                // El número está en la última posición
+                $posicion_seccion = "LAST";
+            } 
+            elseif (in_array($numero_seccion, $secciones)) 
+            {
+                // El número está en la lista, pero no en la primera ni en la última posición
+                $posicion_seccion = "MIDDLE";
+            } 
+            else 
+            {
+                // Si el número no está entonces... no está
+                $posicion_seccion = "NOT_IN";
+            }
+        }
         // Cerramos la conexión
-        cerrar_conexion($conexion); 
+        cerrar_conexion($conexion);
         // Luego, verificamos si el usuario ya vio la sección que estamos abriendo, para eso hacemos otra conexión SQL
         $conexion = abrir_conexion($json_file);
         $sql = "SELECT * FROM `ver_seccion` WHERE `id_usuario` = $user_id AND `id_seccion` = $id_seccion";
@@ -153,7 +228,11 @@
                 $view_registered = "ERROR: " . mysqli_error($conexion);
             }
         }
-        // Si sí, no haga nada
+        // Si sí, reporte algo más
+        else
+        {
+            $view_registered = "ALREADY_VIEWED";
+        }
         // Ahora tenemos que armar la respuesta como array
         $respuesta = array
         (
@@ -167,44 +246,4 @@
         return json_encode($respuesta);
     }
     /* Termina función que devuelve datos para leer otra sección dentro de la herramienta de lectura */
-
-    /* Comienza función que nos dice en qué posición está el número de la sección dentro de un array asociativo SQL */
-    function posicion_seccion($numero_seccion, $consulta, $sentencia)
-    {
-        $key = array_search($numero_seccion, $consulta);
-        // Buscamos el número de sección actual
-        if ($key !== false) 
-        {
-            // Obtener todas las claves del array
-            $keys = array_keys($consulta);
-            // Verificar la posición de la clave
-            if (mysqli_num_rows($sentencia) == 1)
-            {
-                // El arreglo sólo tiene un valor, por lo que el valor es primero y último al tiempo
-                $posicion_seccion = "ONLY";
-            }
-            else if ($key === reset($keys)) 
-            {
-                // El valor está de primero
-                $posicion_seccion = "FIRST";
-            } 
-            elseif ($key === end($keys)) 
-            {
-                // El valor está de último
-                $posicion_seccion = "LAST";
-            } 
-            else 
-            {
-                // El valor está en medio
-                $posicion_seccion = "MIDDLE";
-            }
-        } 
-        else 
-        {
-            // El valor no está en el array, no se supone que se llegue hasta ahí
-            $posicion_seccion = "NOT_IN";
-        }
-        return $posicion_seccion;
-    }
-    /* Termina función que nos dice en qué posición está el número de la sección dentro de un array asociativo SQL */
 ?>

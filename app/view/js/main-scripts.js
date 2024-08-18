@@ -78,24 +78,24 @@ function activarHerramienta(idSeccion)
                     $('#read-tool-previous').prop('disabled', true);
                     $('#read-tool-next').on('click', function()
                     {
-                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, results.book_id, user_id)
+                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, parseInt(results.book_id), parseInt(user_id))
                     });
                     break;
                 case 'MIDDLE':
                     $('#read-tool-previous').on('click', function()
                     {
-                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, results.book_id, user_id)
+                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, parseInt(results.book_id), parseInt(user_id))
                     });
                     $('#read-tool-next').on('click', function()
                     {
-                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, results.book_id, user_id)
+                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, parseInt(results.book_id), parseInt(user_id))
                     });
                     break;
                 case 'LAST':
                     // Si la sección es la última, debe haber sección anterior
                     $('#read-tool-previous').on('click', function()
                     {
-                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, results.book_id, user_id)
+                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, parseInt(results.book_id), parseInt(user_id))
                     });
                     // Si la sección es la última, no puede haber sección siguiente
                     $('#read-tool-next').prop('disabled', true);
@@ -224,6 +224,9 @@ function leerSeccionDesdeReader(section_number, book_id, user_id)
     // Primero, hacemos visible el spinner
     $('#reader-overlay').addClass('active');
     $('#reader-overlay').fadeIn("slow");
+    // Después, reinicializamos los botones
+    $('#read-tool-previous').prop('disabled', false);
+    $('#read-tool-next').prop('disabled', false);
     // Luego, llamamos al AJAX muy similar a activarHerramienta
     $.ajax
     ({
@@ -239,7 +242,6 @@ function leerSeccionDesdeReader(section_number, book_id, user_id)
         },
         success: function(data)
         {
-            console.log(data);
             // Sólo recargamos la parte interna, por lo que la función debe ser diferente
             var results = JSON.parse(data);
             $('#read-tool-section-chapter').html('<h4>Parte/Capítulo: <b>' + results.section_number + '</b></h4>');
@@ -247,26 +249,32 @@ function leerSeccionDesdeReader(section_number, book_id, user_id)
             $('#read-tool-section-title').html('<h4>' + results.section_title + '</h4>');
             $('#read-tool-section-content').html(results.section_content);
             // Recargamos la tabla detrás de la herramienta de lectura
-            continuarLeyendo();
-            // Luego, reconfiguramos los botones de anterior y siguiente
-            if (results.view_registered != 'SUCCESS')
-            {
-                mensaje ('error', results.view_registered);
-            }
             switch (results.section_position) 
             {
                 case 'FIRST':
                     // Si la sección es la primera, no puede haber sección anterior
                     $('#read-tool-previous').prop('disabled', true);
-                    $('#read-tool-next').on('click', leerSeccionDesdeReader(parseInt(results.section_number) + 1, results.book_id, user_id));
+                    $('#read-tool-next').on('click', function()
+                    {
+                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, book_id, user_id);
+                    });
                     break;
                 case 'MIDDLE':
-                    $('#read-tool-previous').on('click', leerSeccionDesdeReader(parseInt(results.section_number) - 1, results.book_id, user_id));
-                    $('#read-tool-next').on('click', leerSeccionDesdeReader(parseInt(results.section_number) + 1, results.book_id, user_id));
+                    $('#read-tool-previous').on('click', function()
+                    {
+                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, book_id, user_id);
+                    });
+                    $('#read-tool-next').on('click', function()
+                    {
+                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, book_id, user_id);
+                    });
                     break;
                 case 'LAST':
                     // Si la sección es la última, debe haber sección anterior
-                    $('#read-tool-previous').on('click', leerSeccionDesdeReader(parseInt(results.section_number) - 1, results.book_id, user_id));
+                    $('#read-tool-previous').on('click', function () 
+                    {
+                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, book_id, user_id);
+                    });
                     // Si la sección es la última, no puede haber sección siguiente
                     $('#read-tool-next').prop('disabled', true);
                     break;
@@ -285,6 +293,8 @@ function leerSeccionDesdeReader(section_number, book_id, user_id)
         },
         complete: function()
         {
+            // Recargamos la tabla de continuar leyendo
+            continuarLeyendo();
             // Luego, quitamos el spinner
             $('#reader-overlay').fadeOut("slow");
             $('#reader-overlay').removeClass('active');
