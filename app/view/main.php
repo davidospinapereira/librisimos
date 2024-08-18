@@ -7,7 +7,7 @@
                 <!-- Comienza contenedor de datos -->
                 <div class="data-container">
                     <!-- Comienza información del libro -->
-                    <div class="overlay" id="reader-overlay"><span class="loader"></span></div>
+                    <div class="overlay" id="reader-overlay"><span class="reader-loader"></span></div>
                     <div class="book-container">
                         <h2 class="book-title" id="read-tool-book-title"></h2>
                         <div class="book-meta">
@@ -128,18 +128,8 @@
             <!-- Comienza la sección de continuar leyendo -->
             <div class="fila">
                 <div class="col w100" id="continue-reading">
-                    <table class="continue-table" id="continue-reading-table">
-                        <caption>Continúa leyendo</caption>
-                        <!-- Encabezado de la tabla -->
-                        <tr>
-                            <th>Título</th>
-                            <th>Autor</th>
-                            <th>Género</th>
-                            <th>Capítulo/Sección actual</th>
-                            <th>Acciones</th>
-                        </tr>
-                        <!-- Contenido de la tabla -->
-                        
+                    <div id="table-overlay"><span class="loader"></span></div>
+                    <table class="continue-table" id="continue-reading-table">                        
                     </table>
                 </div>
             </div>

@@ -91,7 +91,51 @@
     background: #1d1d1d;
     border-radius: 5px;
 }
+
+#continue-reading
+{
+    position: relative;
+}
+
+#continue-reading #table-overlay
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 150px;
+    display: none;
+    z-index: 9;
+}
+
+#continue-reading #table-overlay.active
+{    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#table-overlay .loader
+{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #F4F4F4;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
 /* Comienzan estilos de tabla de continuar leyendo */
+#continue-reading .continue-table
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
 .continue-table, .section-table
 {
     width: 100%;
@@ -227,4 +271,19 @@ span.button:hover .tooltip
     background: rgba(0, 0, 0, 0.05);
 }
 /* Terminan estilos de tabla de continuar leyendo */
+
+/* Comienzan animaciones */
+@keyframes rotation 
+{
+    0% 
+    {
+      transform: rotate(0deg);
+    }
+    100% 
+    {
+      transform: rotate(360deg);
+    }
+} 
+/* Terminan animaciones */
+
 /* Terminan estilos específicos de página */

@@ -21,6 +21,19 @@
         $sentencia = mysqli_query($conexion, $sql); */
         if ($sentencia = mysqli_query($conexion, $sql))
         {
+            $respuesta = 
+            "
+                <caption>Continúa leyendo</caption>
+                <!-- Encabezado de la tabla -->
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Género</th>
+                    <th>Capítulo/Sección actual</th>
+                    <th>Acciones</th>
+                </tr>
+                <!-- Contenido de la tabla -->
+            ";
             /* obtener array asociativo */
             while ($row = mysqli_fetch_assoc($sentencia)) 
             {

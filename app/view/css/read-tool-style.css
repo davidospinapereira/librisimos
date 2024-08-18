@@ -86,18 +86,18 @@
     height: 100%;
     background-color: #F4F4F4;
     z-index: 9;
-    /* display: flex; */
     display: none;
-    justify-content: center;
-    align-items: center;
+    transition: 0.3s ease-in-out;
 }
 
 .read-space .data-container .overlay.active
 {
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.read-space .data-container .overlay .loader 
+.read-space .data-container .overlay .reader-loader 
 {
     width: 48px;
     height: 48px;
@@ -107,6 +107,7 @@
     border-right: 3px solid transparent;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
+    margin: auto;
   }
 /* Terminan estilos para el overlay con el spinner */
 
@@ -428,6 +429,6 @@
     {
       transform: rotate(360deg);
     }
-  } 
+} 
 /* Terminan animaciones */
 /* Terminan Estilos para la herramienta de lectura */
