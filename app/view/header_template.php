@@ -17,7 +17,7 @@
         }
         if ($perfil['url_imagen'] == '' || $perfil['url_imagen'] == null)
         {
-            $url_imagen = './view/img/user-avatar.jpg';
+            $url_imagen = './view/uploads/users/user-avatar.png';
         }
         else
         {

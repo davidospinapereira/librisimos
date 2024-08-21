@@ -238,10 +238,10 @@
     justify-content: baseline;
 }
 
-#side-cards .cards.active,
-#statistics .data.active
+#side-cards .cards.active
 {
     display: flex;
+    flex-direction: column;
 }
 
 .cards h3

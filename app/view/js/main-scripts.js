@@ -1,5 +1,6 @@
 /* Comienza asignación de variables */
 var statistics = document.getElementById("statistics");
+var side_cards = document.getElementById("side-cards");
 var user_id = $('#user_id').val();
 /* Termina asignación de variables */
 
@@ -9,8 +10,13 @@ $(document).ready(function()
     $('.read-overlay').hide();
     if (statistics)
     {
-        // Si existe la sección de statistics es porque el usuario es suscriptor
+        // Si existe la sección de statistics es porque el usuario es administrador
         cargarEstadisticas();
+    }
+    if(side_cards)
+    {
+        // Si existe la sección de side-cards es porque el usuario es suscriptor
+        cargarTarjetas(user_id);
     }
     continuarLeyendo();
 });
@@ -174,6 +180,44 @@ function cargarEstadisticas()
 }
 /* Terminan funciones para las estadísticas en main para administradores */
 
+/* Comienzan funciones para las tarjetas en main para suscriptores */
+function cargarTarjetas(user_id)
+{
+    $.ajax
+    ({
+        type: 'POST',
+        url: './controller/cards-getter.php',
+        async: true,
+        data: 
+        {
+            get_cards: true,
+            user_id
+        },
+        beforeSend: function()
+        {
+            $('#cards-spinner').addClass('active');
+            $('#cards-data').removeClass('active');
+        },
+        success: function(data)
+        {
+            // El código completo será recibido como HTML en una variable string
+            $('#cards-data').html('');
+            $('#cards-data').html(data);
+        },
+        error: function(error)
+        {
+            // Generamos un mensaje de error
+            mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa:<br/>' + error + '<br/>Por favor comuníquese con el administrador o el desarrollador.');
+        },
+        complete: function()
+        {
+            $('#cards-spinner').removeClass('active');
+            $('#cards-data').addClass('active');
+        }
+    });
+}
+/* Terminan funciones para las tarjetas en main para suscriptores */
+
 /* Comienza función de continuar leyendo */
 function continuarLeyendo()
 {
@@ -196,6 +240,7 @@ function continuarLeyendo()
         {
             // Mandamos el dato al HTML
             $('#table-overlay').removeClass('active');
+            $('#continue-reading-table').html('');
             $('#continue-reading-table').html(data);
         },
         error: function(error)
@@ -208,13 +253,58 @@ function continuarLeyendo()
 /* Termina función de continuar leyendo */
 
 /* Comienza función de dejar de leer */
-function dejarDeLeer(id_libro, $user_id)
+function dejarDeLeer(book_id, user_id)
 {
     // Debemos preguntar si se está seguro
-    // Si la respuesta es afirmativa
-    // Debe invocarse AJAX para eliminar
-    // Luego debe recargarse la página
-    // Si la respuesta es negativa, no haga nada
+    Swal.fire(
+        {
+            title: 'DEJAR DE LEER',
+            html: '<b>ESTA ACCIÓN ES IRREVERSIBLE</b><br/>¿Está seguro?',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => 
+        {
+            if (result.isConfirmed) 
+            {
+                // Si la respuesta es afirmativa
+                // Debe invocarse AJAX para eliminar
+                $.ajax
+                ({
+                    type: 'POST',
+                    url: './controller/book-crud.php',
+                    async: true,
+                    data: 
+                    {
+                        delete_read: true,
+                        book_id,
+                        user_id
+                    },
+                    // Tal vez tengamos que usar un beforesend, cuando la tabla tenga muchos libros
+                    beforeSend: function()
+                    {
+                        $('#table-overlay').addClass('active');
+                    },
+                    success: function(data)
+                    {
+                        // Debemos tener un control
+                        if (data != 'SUCCESS')
+                        {
+                            mensaje('error', '<b>ERROR: </b><br/>Hubo un error en el programa:<br/>' + data + '<br/>Por favor comuníquese con el desarrollador o con el administrador');
+                        }
+                        // Luego debe recargarse la tabla
+                        continuarLeyendo();
+                    },
+                    error: function(error)
+                    {  
+                    // Mandamos el error al HTML
+                    mensaje('error', '<b>ERROR: </b><br/>Hubo un error en el programa:<br/>' + error + '<br/>Por favor comuníquese con el desarrollador o con el administrador');
+                    }
+                });
+            }
+            // Si la respuesta es negativa, no haga nada
+        });
 }
 /* Termina función de dejar de leer */
 

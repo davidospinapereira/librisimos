@@ -1,4 +1,11 @@
 /* Comienzan estilos específicos de página */
+#statistics,
+#side-cards
+{
+    justify-content: start;
+    padding-top: 20px;
+}
+
 #main-data
 {
     min-height: 200px;
@@ -271,6 +278,80 @@ span.button:hover .tooltip
     background: rgba(0, 0, 0, 0.05);
 }
 /* Terminan estilos de tabla de continuar leyendo */
+
+/* Comienzan estilos de tarjetas en lista para la barra lateral */
+#side-cards .cards
+{
+    position: relative;
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    justify-content: baseline;
+}
+
+#side-cards .cards.active
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.cards h3
+{
+    font-size: 23px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.cards a
+{
+    text-decoration: none;
+}
+
+.cards .entry
+{
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.entry .featured-image
+{
+    width: 15%;
+    margin-right: 20px;
+}
+
+.entry .details
+{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.details .title 
+{
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 23px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #FFF;
+    margin-bottom: 10px;
+}
+
+.details .author
+{
+    text-decoration: none;
+    font-size: 15px;
+    color: #f4f4f4;
+}
+
+.details .sections
+{
+    font-size: 13px;
+    text-decoration: none;
+    color: #f4f4f4;
+}
+/* Terminan estilos de tarjetas en lista para la barra lateral */
 
 /* Comienzan animaciones */
 @keyframes rotation 

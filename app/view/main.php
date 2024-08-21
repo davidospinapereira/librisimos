@@ -98,7 +98,25 @@
                 }
                 else
                 {
-                    // Si no, que cargue las tarjetas
+                    // Si no, que cargue las tarjetas por AJAX
+                    // Primero, debemos sacar las secciones leídas por el usuario
+                    // Luego, la ID de a qué libro corresponden las secciones
+                    // Con la ID del libro, sacamos los géneros
+                    // Luego, sacamos un listado de libros que correspondan a esos géneros
+                    ?>
+                    <div class="col w30" id="side-cards">
+                        <!-- Spinner, cuando este se activa las tarjetas se desactivan -->
+                        <div class="spinner" id="cards-spinner">
+                            <span class="loader"></span>
+                        </div>
+                        <!-- Termina Spinner -->
+                        <!-- Comienzan tarjetas, cuando estas se activan el Spinner se desactiva -->
+                        <div class="cards active" id="cards-data">
+
+                        </div>
+                        <!-- Terminan tarjetas -->
+                    </div>
+                    <?php
                 }
                 ?>
             </div>
