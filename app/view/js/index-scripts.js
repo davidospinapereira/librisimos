@@ -256,23 +256,6 @@ $("#register-form").submit(function(e)
                     default:
                         break;
                 }
-                /* // Si respuesta.codigo es "LOGIN_AND_EMAIL_EXIST"
-                
-                if (respuesta.codigo == 'LOGIN_AND_EMAIL_EXIST')
-                {
-                    mensaje('error', '<b>ERROR</b><br/>El nombre de usuario y el correo electrónico ya están tomados.<br/>Por favor seleccione otro nombre de usuario y otro correo e inténtelo nuevamente.');
-                }
-                // Si respuesta.codigo es "LOGIN_EXISTS"
-                else if (respuesta.codigo == 'LOGIN_EXISTS')
-                {
-                    mensaje('error', '<b>ERROR</b><br/>El nombre de usuario ya está tomado.<br/>Por favor seleccione otro nombre de usuario e inténtelo nuevamente.');
-                }
-                // Si respuesta.codigo es "EMAIL_EXISTS"
-                else if (respuesta.codigo == 'EMAIL_EXISTS')
-                {
-                    mensaje('error', '<b>ERROR</b><br/>El correo electrónico ya está tomado.<br/>Por favor seleccione otro correo electrónico e inténtelo nuevamente.');
-                }
-                else */
             },
             error: function(error)
             {

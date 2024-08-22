@@ -14,6 +14,15 @@
     $fecha_nacimiento = $perfil['fecha_nacimiento'];
     $email = $perfil['email'];
     $login = $perfil['login'];
+    $id_tipo = $perfil['id_tipo'];    
+    if($perfil['url_imagen'] == NULL)
+    {
+        $url_imagen = 'view/uploads/users/user-avatar.png';
+    }
+    else
+    {
+        $url_imagen = $perfil['url_imagen'];
+    }
     // Para la imagen de perfil, entra al archivo profile-edit-scripts.js
 ?>
 <!-- Comienza contenido -->
@@ -26,6 +35,7 @@
                 <div class="col w80" id="main-data">
                     <h6>ID: <span><?php echo $user_id; ?></span></h6>
                     <h3><span style="text-transform: uppercase;"><?php echo $nombre_completo; ?></span></h3>
+                    <!-- <h4><span style="text-transform: uppercase;">URL: <?php echo $url_imagen; ?></span></h4> -->
                     <h5>EDITOR DE PERFIL</h5>
                     <a href="#formulario" class="btn">Editar</a>
                 </div>
@@ -56,20 +66,22 @@
                     </div>
                     <div class="form-group">
                         <span class="label">Contraseña</span>
-                        <input type="password" name="pass-usuario" id="pass-usuario">
-                    </div>
-                    <div class="form-group">
-                        <span class="label">Confirmar contraseña</span>
-                        <input type="password" name="conf-pass-usuario" id="conf-pass-usuario">
+                        <button type="submit" id="change-pass">Cambiar contraseña</button>
                     </div>
                 </div>
                 <div class="col w20">
                     <p style="color: transparent;">Texto falso</p>
                     <button type="submit" id="update-data">Actualizar datos</button>
                     <!-- Este botón debe aparecer sólo para los tipos de usuario diferentes de 1 -->
-                    <button type="submit" class="delete-account" id="delete-account">Eliminar cuenta</button>
+                    <?php
+                        if ($id_tipo != 1)
+                        {
+                            ?><button type="submit" id="delete-account">Eliminar Cuenta</button><?php
+                        }
+                    ?>
                 </div>
             </div>
         </section>
         <!-- Termina contenido -->
-        <script> var id_usuario = <?php echo $user_id; ?>;</script>
+        <input type="hidden" id="user_id_hidden" value="<?php echo $user_id; ?>">
+        <input type="hidden" id="url_imagen_hidden" value="<?php echo $url_imagen; ?>">

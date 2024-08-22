@@ -1,6 +1,15 @@
 <?php
     function cargar_footer($page)
     {
+        if ($page == 'main' || $page == 'book-page')
+        {
+            $js_read_tool = '<!-- Javascript de la herramienta de lectura -->
+        <script src="./view/js/read-tool-scripts.js"></script>';
+        }
+        else
+        {
+            $js_read_tool = '';
+        }
         $html_footer = 
         '
         <!-- Comienza footer -->
@@ -25,6 +34,7 @@
         <script src="./view/js/general-scripts.js"></script>
         <!-- Javascript de la página específica -->
         <script src="./view/js/' . $page . '-scripts.js"></script>
+        ' . $js_read_tool . '
         <!-- Termina Javascript -->
 
     </body>

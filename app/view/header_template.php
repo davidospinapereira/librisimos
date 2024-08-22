@@ -23,6 +23,16 @@
         {
             $url_imagen = './' . $perfil['url_imagen'];
         }
+        if ($page == 'main' || $page == 'book-page')
+        {
+            $css_read_tool = 
+            '<!-- CSS de herramienta de lectura -->
+        <link rel="stylesheet" href="./view/css/read-tool-style.css">';
+        }
+        else
+        {
+            $css_read_tool = '';
+        }
         $pag_editor_perfil = ($page == 'profile-edit') ? '#' : 'index.php?page=profile-edit';
         $pag_ayuda = ($page == 'help') ? '#' : 'index.php?page=help';
         $titulo_pagina = ($perfil['id_tipo'] < 3) ? 'Administrador' : 'Usuario';
@@ -50,8 +60,7 @@
         <link rel="stylesheet" href="./view/css/'. $page . '-style.css">
         <!-- CSS de estilos de footer -->
         <link rel="stylesheet" href="./view/css/footer-style.css">
-        <!-- CSS de herramienta de lectura -->
-        <link rel="stylesheet" href="./view/css/read-tool-style.css">
+        ' . $css_read_tool . '
         <!-- CSS de estilos responsivos -->
         <link rel="stylesheet" href="./view/css/responsive-style.css">
         <!-- CSS de BoxIcons -->

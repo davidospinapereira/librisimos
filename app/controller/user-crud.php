@@ -15,7 +15,7 @@
         // Primero, debemos generar la conexión
         $conexion = abrir_conexion($json_file);
         // Luego preparamos un statement
-        $sql = "SELECT nombres_usuario, apellidos_usuario, fecha_nacimiento_usuario, email_usuario FROM `usuario` WHERE id_usuario = $id";
+        $sql = "SELECT nombres_usuario, apellidos_usuario, fecha_nacimiento_usuario, email_usuario, id_tipo_usuario FROM `usuario` WHERE id_usuario = $id";
         // Ejecutamos la sentencia
         $sentencia = mysqli_query($conexion, $sql);
         // Sabemos que encontraremos resultados, pero tenemos que colocar condicional
@@ -24,7 +24,7 @@
             // Separamos el resultado de la búsqueda en sus componentes
             $consulta = mysqli_fetch_array($sentencia);
             // Podríamos recorrer el array con un for, pero como conocemos lo que va a sacar, será mejor con un if
-            if ($consulta['nombres_usuario'] == null || $consulta['apellidos_usuario'] == null || $consulta['fecha_nacimiento_usuario'] == null || $consulta['email_usuario'] == null )
+            if ($consulta['nombres_usuario'] == null || $consulta['apellidos_usuario'] == null || $consulta['fecha_nacimiento_usuario'] == null || $consulta['email_usuario'] == null || $consulta['id_tipo_usuario'] == null )
             {
                 $respuesta = false;
             }
@@ -66,13 +66,6 @@
         // Finalmente, cerramos la conexión
         cerrar_conexion($conexion);
         return $respuesta;
-    }
-
-    // Función AJAX para extraer la URL de la imagen almacenada en la base de datos
-    function obtener_foto_perfil($id, $json_file)
-    {
-        // Será muy parecida a la función de perfil completo
-        
     }
     /* Terminan funciones R del CRUD de usuarios */
 
