@@ -2,15 +2,21 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) 
     {
         $file = $_FILES['file'];
-
         // Verificar si se ha subido un archivo sin errores
         if ($file['error'] === UPLOAD_ERR_OK) 
         {
-            $uploadDir = 'view/uploads/users/';
-            $uploadFile = $uploadDir . basename($file['name']);
+            // Ajustar la ruta para salir de la carpeta "controller" e ir a "view/uploads/users/"
+            $uploadDir = __DIR__ . '/../view/uploads/users/';
+
+            // Verificar si la carpeta existe, si no, crearla
+            if (!file_exists($uploadDir)) 
+            {
+                mkdir($uploadDir, 0777, true);
+            }
+
             $imageType = exif_imagetype($file['tmp_name']);
-            
-            // Verificar si el archivo es una imagen JPEG o PNG
+        
+         // Verificar si el archivo es una imagen JPEG o PNG
             if ($imageType == IMAGETYPE_JPEG || $imageType == IMAGETYPE_PNG) 
             {
                 list($width, $height) = getimagesize($file['tmp_name']);
@@ -56,8 +62,9 @@
                 imagedestroy($dst);
                 imagedestroy($src);
 
-                // Devolver la ruta del archivo guardado
-                echo $newFilename;
+                // Devolver la ruta relativa del archivo guardado para su uso en la base de datos
+                $relativePath = 'view/uploads/users/' . basename($newFilename);
+                echo $relativePath;
             } 
             else 
             {

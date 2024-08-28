@@ -10,6 +10,10 @@
     {
         echo leer_otra_seccion($_POST['section_number'], $_POST['book_id'], $_POST['user_id'], $json_file);
     }
+    if (isset($_POST['save_section']))
+    {
+        echo guardar_seccion($_POST['titulo_seccion'], $_POST['contenido_seccion'], $_POST['id_libro'], $json_file);
+    }
     /* Termina invocación AJAX */
 
     /* Comienza función que devuelve datos para la herramienta de lectura */
@@ -246,4 +250,36 @@
         return json_encode($respuesta);
     }
     /* Termina función que devuelve datos para leer otra sección dentro de la herramienta de lectura */
+
+    /* Comienza función para guardar una sección de un libro específico */
+    function guardar_seccion($titulo_seccion, $contenido_seccion, $id_libro, $json_file)
+    {
+        $respuesta = '';
+        // Tenemos que invocar la conexión
+        $conexion = abrir_conexion($json_file);
+        try 
+        {
+            // Esto se hace en 2 sqls
+            // Primero, viene el SQL 1, que inserta el contenido de la sección:
+            $sql1 = "INSERT INTO `seccion` (`titulo_seccion`, `contenido_seccion`, `numero_seccion`) VALUES ('$titulo_seccion', '$contenido_seccion', (SELECT IFNULL(MAX(s.`numero_seccion`), 0) + 1 FROM `seccion` AS s INNER JOIN `componer_seccion` AS cs ON cs.`id_seccion` = s.`id_seccion` WHERE cs.`id_libro` = $id_libro))";
+            $sentencia = mysqli_prepare($conexion, $sql1);
+            mysqli_stmt_execute($sentencia);
+            // Después, viene el SQL 2, que asocia la nueva sección con el libro en la tabla `componer_seccion`:
+            $sql2 = "INSERT INTO `componer_seccion` (`id_libro`, `id_seccion`) VALUES ($id_libro, LAST_INSERT_ID())";
+            $sentencia = mysqli_prepare($conexion, $sql2);
+            mysqli_stmt_execute($sentencia);
+            // Si todo está bien, confirma la transacción
+            mysqli_commit($conexion);
+            $respuesta = "Sección insertada y asociada con éxito.";
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = $e;
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
 ?>

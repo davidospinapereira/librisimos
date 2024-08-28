@@ -106,6 +106,20 @@
     transition: 0.3s ease-in-out;
 }
 
+.col .delete-button
+{
+    background-color: black;
+    border-color: black;
+    color: #ffffff;
+}
+
+.col .delete-button:hover
+{
+    color: #ffffff;
+    background-color: #1d1d1d;
+    border-color: #1d1d1d;
+}
+
 .col button:hover
 {
     color: #ffffff;

@@ -76,7 +76,7 @@
                     <?php
                         if ($id_tipo != 1)
                         {
-                            ?><button type="submit" id="delete-account">Eliminar Cuenta</button><?php
+                            ?><button type="submit" class="delete-button" id="delete-account">Eliminar Cuenta</button><?php
                         }
                     ?>
                 </div>
