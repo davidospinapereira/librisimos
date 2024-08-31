@@ -1,0 +1,37 @@
+#main-data
+{
+    min-height: 150px;
+}
+
+#main-data h3
+{
+    font-size: 23px;
+    font-weight: 500;
+}
+
+#main-data h3 span
+{
+    font-size: 39px;
+    font-weight: 600;
+}
+
+#main-data h5
+{
+    font-size: 19px;
+    font-weight: 400;
+}
+
+#cards
+{
+    display: grid;
+    gap: 35px;
+    grid-auto-flow: dense; /* dense ocupa todo el porcentaje completo */
+    grid-auto-rows: 25rem; /* Alto de tarjeta */
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); /* valor-1 son el ancho de la tarjeta */
+    margin-top: 35px;
+}
+
+.card a .poster img
+{
+    width: 100%;
+}
