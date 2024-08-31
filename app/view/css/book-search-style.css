@@ -1,37 +1,290 @@
-#main-data
+/* Comienzan estilos de intro */
+#intro
 {
     min-height: 150px;
 }
 
-#main-data h3
+#intro h3
 {
     font-size: 23px;
     font-weight: 500;
 }
 
-#main-data h3 span
+#intro h3 span
 {
     font-size: 39px;
     font-weight: 600;
 }
 
-#main-data h5
+#intro h5
 {
     font-size: 19px;
     font-weight: 400;
 }
+/* Terminan estilos de intro */
 
-#cards
+/* Comienzan estilos de filtros de búsqueda */
+#title h3
 {
+    font-size: 19px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Estilo tomado y adaptado de https://codepen.io/raubaca/pen/bGWmZje */
+#filter-select select
+{
+    min-height: 35px;    
+    /* Reset */
+    appearance: none;
+    border: 0;
+    outline: 0;
+    font: inherit;
+    /* Personalize */
+    padding: 1rem 4rem 1rem 1rem;
+    background: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg) no-repeat right 0.8em center / 1.4em,
+    linear-gradient(to left, rgba(255, 255, 255, 0.3) 3em, rgba(255, 255, 255, 0.2) 3em);
+    color: white;
+    font-size: 15px;
+    font-weight: 400;
+    border-radius: 0.25em;
+    box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    /* Remove IE arrow */
+    &::-ms-expand 
+    {
+        display: none;
+    }
+    /* Remove focus outline */
+    &:focus 
+    {
+        outline: none;
+    }
+}
+#filter-select option
+/* <option> colors */ 
+{
+    font-size: 15px;
+    font-weight: 400;
+    color: #000000!important;
+}
+
+/* Estilo adaptado de https://codepen.io/raubaca/pen/bGWmZje */
+#filter-search .search-filter
+{
+    min-height: 35px;    
+    /* Reset */
+    appearance: none;
+    border: 0;
+    outline: 0;
+    font: inherit;
+    /* Personalize */
+    padding: 0.8rem 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 15px;
+    font-weight: 400;
+    border-radius: 0.25em;
+    box-shadow: 0 0 1em 0 rgba(0, 0, 0, 0.2);
+    /* Remove IE arrow */
+    &::-ms-expand 
+    {
+        display: none;
+    }
+    /* Remove focus outline */
+    &:focus 
+    {
+        outline: none;
+    }
+}
+/* Terminan estilos de filtros de búsqueda */
+
+/* Comienzan estilos para la sección de tarjetas */
+#cards-grid
+{
+    min-height: 100px;
     display: grid;
     gap: 35px;
     grid-auto-flow: dense; /* dense ocupa todo el porcentaje completo */
-    grid-auto-rows: 25rem; /* Alto de tarjeta */
-    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); /* valor-1 son el ancho de la tarjeta */
+    /* grid-auto-rows: 50rem; */ /* Alto de tarjeta */
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); /* valor-1 son el ancho de la tarjeta */
     margin-top: 35px;
 }
 
-.card a .poster img
+.card
+{
+    position: relative;
+    /* width: 320px; */
+    height: 350px;    
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.card .poster
+{
+    position: relative;
+    overflow: hidden;
+}
+
+.card .poster::before
+{
+    content: '';
+    position: absolute;
+    bottom: -180px;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, #1a1a1aec 50%, transparent);
+    transition: 0.3s ease-in-out;
+    z-index: 1;
+}
+
+.card:hover .poster::before
+{
+    bottom: 0;
+}
+
+.card .poster img
 {
     width: 100%;
+    transition: 0.3s ease-in-out;
 }
+
+.card:hover .poster img
+{
+    transform: translateY(-50px);
+    filter: blur(5px);
+}
+
+.card .details
+{
+    position: absolute;
+    bottom: -110px;
+    left: 0;
+    padding: 20px;
+    width: 100%;
+    z-index: 2;
+    transition: 0.3s ease-in-out;
+}
+
+.card:hover .details
+{
+    bottom: 0;
+}
+
+.card .details h3
+{
+    font-size: 0.7em;
+    color: #f4f4f4;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-left: 3px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
+.card .details h2
+{
+    font-size: 23px;
+    color: #FFFFFF;
+    font-weight: 500;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+}
+
+.card .details .sections
+{
+    position: relative;
+    padding: 5px 0;
+}
+
+.card .details .sections span
+{
+    color: #fff;
+    font-size: 0.8em;
+}
+
+.card .details .genres
+{
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+.card .details .genres span
+{
+    padding: 2px 5px;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.7em;
+}
+
+.card .details .sinopsis
+{
+    color: #fff;
+    margin-top: 0;
+    font-size: 0.7em;
+}
+/* Terminan estilos para la sección de tarjetas */
+
+/* Comienzan estilos para el segmento de nada encontrado */
+#nothing-found, 
+#loading
+{
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#nothing-found h2
+{
+    font-size: 31px;
+    font-weight: 500;
+}
+
+#nothing-found h4
+{
+    font-size: 23px;
+    font-weight: 400;
+}
+/* Terminan estilos para el segmento de nada encontrado */
+
+/* Comienzan estilos para el segmento de loading */
+#loading
+{
+    min-height: 200px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading.active
+{
+    display: flex;
+}
+
+#loading .loader
+{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #F4F4F4;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+/* Terminan estilos para el segmento de loading */
+
+/* Comienzan animaciones */
+@keyframes rotation 
+{
+    0% 
+    {
+      transform: rotate(0deg);
+    }
+    100% 
+    {
+      transform: rotate(360deg);
+    }
+} 
+/* Terminan animaciones */

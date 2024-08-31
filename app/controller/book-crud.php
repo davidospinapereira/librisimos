@@ -11,6 +11,11 @@
     {
         echo dejar_de_leer($_POST['book_id'], $_POST['user_id'], $json_file);
     }
+    
+    if(isset($_POST['book_grid']))
+    {
+        echo book_grid_general($_POST['genero'], $_POST['input'], $json_file);
+    }
     /* Termina invocación AJAX */
 
     /* Comienza la función que genera los datos de la tabla de continuar leyendo */
@@ -93,4 +98,77 @@
         }
     }
     /* Termina la función que borra las lecturas del libro por parte de un usuario */
+
+    /* Comienza la función que genera las tarjetas en la página de biblioteca */
+    function book_grid_general($id_genero, $termino_busqueda, $json_file)
+    {
+        // Debe devolver booleano
+        $respuesta = '';
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Ahora, hagamos un valor adicional
+        $sql_genero = ($id_genero == 0) ? "" : "g.id_genero = '$id_genero' AND ";
+        // Luego preparamos un statement
+        $sql = 
+        "SELECT l.`id_libro`, l.`url_caratula_libro`, l.`nombre_libro`, a.`nombre_autor`, g.`nombre_genero`, g.`color_genero`, COUNT(DISTINCT(cs.`id_seccion`)) AS cantidad_secciones, l.`sinopsis_libro` FROM `libro` l INNER JOIN `componer_seccion` cs ON (cs.`id_libro` = l.`id_libro`) INNER JOIN `autores_libro` al ON (al.`id_libro` = l.`id_libro`) INNER JOIN `autor` a ON (a.`id_autor` = al.`id_autor`) INNER JOIN `generos_libro` gl ON (gl.`id_libro` = l.`id_libro`) INNER JOIN `genero` g ON (g.`id_genero` = gl.`id_genero`) WHERE " . $sql_genero . "(l.nombre_libro LIKE '%$termino_busqueda%' OR a.nombre_autor LIKE '%$termino_busqueda%' OR g.nombre_genero LIKE '%$termino_busqueda%' OR l.sinopsis_libro LIKE '%$termino_busqueda%') GROUP BY l.id_libro";
+        // Ejecutamos la sentencia
+        try 
+        {
+            // Si hay respuesta, que la genere
+            if ($sentencia = mysqli_query($conexion, $sql))
+            {
+                $respuesta .= "<div class='col w100' id='cards-grid'>";
+                while ($row = mysqli_fetch_assoc($sentencia)) 
+                {
+                    $id_libro = $row['id_libro'];
+                    $url_caratula_libro = $row['url_caratula_libro'];
+                    $nombre_libro = $row['nombre_libro'];
+                    $nombre_autor = $row['nombre_autor'];
+                    $nombre_genero = $row['nombre_genero'];
+                    $color_genero = $row['color_genero'];
+                    $cantidad_secciones = $row['cantidad_secciones'];
+                    $sinopsis_libro = substr($row['sinopsis_libro'], 0, 45) . "...";
+                    $respuesta .= 
+                    "
+                    <div class='card'>
+                        <a href='index.php?page=book-page&book-id=$id_libro'>
+                            <div class='poster'>
+                                <img src='./$url_caratula_libro'>
+                            </div>
+                            <div class='details'>
+                                <h3>$nombre_autor</h3>
+                                <h2>$nombre_libro</h2>
+                                <div class='genres'>
+                                    <span style='background-color: #$color_genero'>$nombre_genero</span>
+                                </div>
+                                <div class='sections'>
+                                    <span>$cantidad_secciones secciones/capítulos</span>
+                                </div>
+                                <div class='sinopsis'>
+                                    <p>$sinopsis_libro</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    ";
+                }
+                $respuesta .= "</div>";
+            }
+            // Si no, que mande la sección de nada encontrado
+            else
+            {
+                $respuesta = '<div class="col w100" id="nothing-found"><h2>¡OOPS! Su búsqueda no arrojó ningún resultado</h2><h4>Por favor cambie los parámetros de búsqueda.</h4></div>';
+            }
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = "<div class='col w100' id='nothing-found'><h2>¡ERROR! Hay un error en el programa</h2><h4>$error</h4><h4>Por favor consulte al administrador.</h4></div>";
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina la función que genera las tarjetas en la página de biblioteca */
 ?>
