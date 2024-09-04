@@ -36,6 +36,11 @@
     {
         echo get_similar_books($_POST['book_id'], $json_file);
     }
+
+    if (isset($_POST['is_user_reading']))
+    {
+        echo is_user_reading($_POST['user_id'], $_POST['book_id'], $json_file);
+    }
     /* Termina invocación AJAX */
 
     /* Comienza la función que genera los datos de la tabla de continuar leyendo */
@@ -463,4 +468,40 @@
         return $respuesta;
     }
     /* Termina función que genera el grid de libros relacionados */
+
+    /* Comienza función que muestra el botón de dejar de leer sólo si el usuario está leyendo un libro */
+    function is_user_reading($user_id, $book_id, $json_file)
+    {
+        //<div class="col w100"><button class="control" id="stop-reading">Dejar de leer</button></div>
+        // Debe devolver String
+        $respuesta = '';
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Luego preparamos un statement
+        $sql = 
+        "SELECT vs.`id_seccion` FROM `ver_seccion` vs INNER JOIN `componer_seccion` cs ON (cs.`id_seccion` = vs.`id_seccion`) WHERE vs.`id_usuario` = $user_id AND cs.`id_libro` = $book_id";
+        try 
+        {
+            if ($sentencia = mysqli_query($conexion, $sql))
+            {
+                // Si la respuesta tiene campos, es porque el libro está leído, y aplica el botón
+                if(mysqli_num_rows($sentencia) > 0)
+                {
+                    $respuesta .= '<div class="col w100"><button class="control" id="stop-reading">Dejar de leer</button></div>';
+                }
+                // Si la respuesta no tiene campos, es porque no se ha leído el libro, y entonces no aplica nada
+            }
+        } 
+        catch (Exception $e) 
+        {
+            // Si hay un error, que me lo muestre
+            $respuesta .= "<div class='col w100'>Error en el programa:<br/> $e</div>";
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función que muestra el botón de dejar de leer sólo si el usuario está leyendo un libro */
 ?>

@@ -12,6 +12,8 @@ $(document).ready(function()
     cards_loading.addClass('active');
     setTimeout(function()
     {
+        // Botón de borrar
+        botonBorrar(user_id, book_id);
         // Llenar datos de la ficha
         llenarDatos(book_id);
         // Llenar datos de la tabla
@@ -175,3 +177,32 @@ function continuarLeyendo()
     });
 }
 /* Termina función de continuar leyendo, traducida a la página de libro específico */
+
+/* Comienza función que agrega el botón de dejar de leer sólo a quienes lo ha leído */
+function botonBorrar(user_id, book_id)
+{
+    // Tenemos que llamar a un AJAX
+    // Aquí tenemos que invocar AJAX para la tabla de secciones
+    $.ajax
+    ({
+        type: 'POST',
+        url: './controller/book-crud.php',
+        data:
+        {
+            is_user_reading: true,
+            user_id,
+            book_id
+        },
+        async: true,
+        success: function(data)
+        {
+            $('#boton-dejar-leer').html(data);
+        },
+        error: function(error)
+        {
+            // Si hay un error, generemos un mensaje
+            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+        }
+    });
+}
+/* Termina función que agrega el botón de dejar de leer sólo a quienes lo ha leído */

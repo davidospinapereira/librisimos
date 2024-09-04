@@ -69,12 +69,9 @@
                     <div class="sinopsis" id="sinopsis"></div>
                 </div>
             </div>
-            <!-- Aquí debajo debe ir el botón de dejar de leer, en rojo -->
-            <div class="fila">
-                <div class="col w100">
-                    <button class="control" id="stop-reading">Dejar de leer</button>
-                </div>
-            </div>
+            <!-- Aquí debajo debe ir el botón de dejar de leer, en rojo Y SOLO CUANDO NO SE HAYA LEÍDO -->
+            <div class="fila" id="boton-dejar-leer"></div>
+            
             <!-- Termina Información principal del libro -->
             <!-- Comienza listado de secciones -->
             <div class="fila" id="listado-secciones">
