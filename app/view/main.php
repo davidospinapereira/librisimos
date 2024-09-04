@@ -1,5 +1,5 @@
-    <!-- Cargaremos la herramienta de lectura manualmente en cada página que lo necesite -->
-    <div class="read-overlay">
+        <!-- Cargaremos la herramienta de lectura manualmente en cada página que lo necesite -->
+        <div class="read-overlay">
             <!-- Comienza popup con la herramienta -->
             <div class="read-space">
                 <!-- Botón de cierre -->

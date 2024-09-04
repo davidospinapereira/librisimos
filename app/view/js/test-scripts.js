@@ -28,8 +28,8 @@ $('#guardar-seccion').on('click', function()
             save_section: true,
             titulo_seccion: titulo,
             contenido_seccion: contenido,
-            // 1 es ojos de serpiente, 2 es 20 poemas de amor
-            id_libro: 1
+            // 1 es ojos de serpiente, 2 es 20 poemas de amor y 3 es Cosmos
+            id_libro: 3
         },
         async: true,
         success: function(data)

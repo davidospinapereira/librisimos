@@ -12,7 +12,7 @@ $('#close-read-tool').on('click', function()
 /* Termina función para cerrar la herramienta de lectura */
 
 /* Comienza función para abrir la herramienta de lectura */
-function activarHerramienta(idSeccion)
+function activarHerramienta(section_id, user_id)
 {
     // Aquí tengo que jalar los datos de la sección deseada por AJAX. Por lo tanto, esta función tendrá parámetros
     // Primero, hacemos visible la herramienta de lectura
@@ -31,7 +31,8 @@ function activarHerramienta(idSeccion)
         data: 
         {
             read_section: true,
-            id_seccion: idSeccion
+            section_id,
+            user_id
         },
         beforeSend: function()
         {
@@ -42,51 +43,58 @@ function activarHerramienta(idSeccion)
         {
             // Tenemos que decodificar el JSON resultante
             var results = JSON.parse(data);
-            // Aquí debemos sacar los datos, organizarlos en la herramienta de lectura
-            $('#read-tool-book-title').text(results.book_title);
-            $('#read-tool-book-author').html('<h4>' + results.book_author + '</h4>');
-            // <span style="background-color: blue; border-color: blue;">Divulgación científica</span><span style="background-color: blueviolet; border-color: blueviolet;">Fantasía</span>
-            $('#read-tool-book-genres').html(results.genres);
-            // <h4>Parte/Capítulo: <b>13</b></h4>
-            $('#read-tool-section-chapter').html('<h4>Parte/Capítulo: <b>' + results.section_number + '</b></h4>');
-            // <h4>¿Quién hablará en nombre de la Tierra?</h4>
-            $('#read-tool-section-title').html('<h4>' + results.section_title + '</h4>');
-            $('#read-tool-section-content').html(results.section_content);
-            // Para los botones
-            switch (results.section_position) 
+            if (results.codigo = 'SUCCESS')
             {
-                case 'FIRST':
-                    // Si la sección es la primera, no puede haber sección anterior
-                    $('#read-tool-previous').prop('disabled', true);
-                    $('#read-tool-next').on('click', function()
-                    {
-                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, parseInt(results.book_id), parseInt(user_id))
-                    });
-                    break;
-                case 'MIDDLE':
-                    $('#read-tool-previous').on('click', function()
-                    {
-                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, parseInt(results.book_id), parseInt(user_id))
-                    });
-                    $('#read-tool-next').on('click', function()
-                    {
-                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, parseInt(results.book_id), parseInt(user_id))
-                    });
-                    break;
-                case 'LAST':
-                    // Si la sección es la última, debe haber sección anterior
-                    $('#read-tool-previous').on('click', function()
-                    {
-                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, parseInt(results.book_id), parseInt(user_id))
-                    });
-                    // Si la sección es la última, no puede haber sección siguiente
-                    $('#read-tool-next').prop('disabled', true);
-                    break;
-                default:
-                    // Si la sección es única o si hay un error, no puede haber sección siguiente ni anterior
-                    $('#read-tool-previous').prop('disabled', true);
-                    $('#read-tool-next').prop('disabled', true);
-                    break;
+                // Aquí debemos sacar los datos, organizarlos en la herramienta de lectura
+                $('#read-tool-book-title').text(results.book_title);
+                $('#read-tool-book-author').html('<h4>' + results.book_author + '</h4>');
+                // <span style="background-color: blue; border-color: blue;">Divulgación científica</span><span style="background-color: blueviolet; border-color: blueviolet;">Fantasía</span>
+                $('#read-tool-book-genres').html(results.genres);
+                // <h4>Parte/Capítulo: <b>13</b></h4>
+                $('#read-tool-section-chapter').html('<h4>Parte/Capítulo: <b>' + results.section_number + '</b></h4>');
+                // <h4>¿Quién hablará en nombre de la Tierra?</h4>
+                $('#read-tool-section-title').html('<h4>' + results.section_title + '</h4>');
+                $('#read-tool-section-content').html(results.section_content);
+                // Para los botones
+                switch (results.section_position) 
+                {
+                    case 'FIRST':
+                        // Si la sección es la primera, no puede haber sección anterior
+                        $('#read-tool-previous').prop('disabled', true);
+                        $('#read-tool-next').on('click', function()
+                        {
+                            leerSeccionDesdeReader(parseInt(results.section_number) + 1, parseInt(results.book_id), parseInt(user_id))
+                        });
+                        break;
+                    case 'MIDDLE':
+                        $('#read-tool-previous').on('click', function()
+                        {
+                            leerSeccionDesdeReader(parseInt(results.section_number) - 1, parseInt(results.book_id), parseInt(user_id))
+                        });
+                        $('#read-tool-next').on('click', function()
+                        {
+                            leerSeccionDesdeReader(parseInt(results.section_number) + 1, parseInt(results.book_id), parseInt(user_id))
+                        });
+                        break;
+                    case 'LAST':
+                        // Si la sección es la última, debe haber sección anterior
+                        $('#read-tool-previous').on('click', function()
+                        {
+                            leerSeccionDesdeReader(parseInt(results.section_number) - 1, parseInt(results.book_id), parseInt(user_id))
+                        });
+                        // Si la sección es la última, no puede haber sección siguiente
+                        $('#read-tool-next').prop('disabled', true);
+                        break;
+                    default:
+                        // Si la sección es única o si hay un error, no puede haber sección siguiente ni anterior
+                        $('#read-tool-previous').prop('disabled', true);
+                        $('#read-tool-next').prop('disabled', true);
+                        break;
+                }
+            }
+            else
+            {
+                mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa:<br/>' + results.error + '<br/>Por favor comuníquese con el administrador o el desarrollador.');
             }
         },
         error: function(error)
@@ -97,6 +105,8 @@ function activarHerramienta(idSeccion)
         },
         complete: function()
         {
+            // Recargamos las tablas            
+            continuarLeyendo();
             // Luego, quitamos el spinner
             $('#reader-overlay').fadeOut("slow");
             $('#reader-overlay').removeClass('active');
@@ -188,7 +198,7 @@ function leerSeccionDesdeReader(section_number, book_id, user_id)
         },
         complete: function()
         {
-            // Recargamos la tabla de continuar leyendo
+            // Recargamos la tabla de continuar leyendo, en home es una, en book-page tiene que ser otra con el mismo nombre
             continuarLeyendo();
             // Luego, quitamos el spinner
             $('#reader-overlay').fadeOut("slow");

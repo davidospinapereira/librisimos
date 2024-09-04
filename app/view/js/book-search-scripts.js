@@ -31,9 +31,22 @@ $(document).ready(function()
         }, 500);
     });
 
+    var i = 0;
     filter_search.on('keyup', function()
     {
+        i++;
         if($(this).val().length > 2)
+        {
+            content.html('<!-- Comienza segmento de spinner --><div class="col w100 active" id="loading"><div class="spinner" id="cards-spinner"><span class="loader"></span></div></div><!-- Termina segmento de spinner -->');
+            setTimeout(function()
+            {            
+                // Luego, generamos el grid de libros
+                gridLibros(genero, filter_search);
+                loading.removeClass('active');
+            }, 500);
+        }
+        // Control por si el usuario borra todo el texto de búsqueda seleccionando todo y presionando borrar
+        if ($(this).val().length < i)
         {
             content.html('<!-- Comienza segmento de spinner --><div class="col w100 active" id="loading"><div class="spinner" id="cards-spinner"><span class="loader"></span></div></div><!-- Termina segmento de spinner -->');
             setTimeout(function()
