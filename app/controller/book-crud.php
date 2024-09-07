@@ -17,6 +17,11 @@
         echo book_grid_general($_POST['genero'], $_POST['input'], $json_file);
     }
     
+    if(isset($_POST['my_books_grid']))
+    {
+        echo my_books_grid($_POST['user_id'], $_POST['genero'], $_POST['input'], $json_file);
+    }
+    
     if(isset($_POST['get_book_data']))
     {
         echo json_encode(get_book_data($_POST['book_id'], $json_file));
@@ -40,6 +45,11 @@
     if (isset($_POST['is_user_reading']))
     {
         echo is_user_reading($_POST['user_id'], $_POST['book_id'], $json_file);
+    }
+
+    if (isset($_POST['quit_reading']))
+    {
+        echo quit_reading($_POST['user_id'], $_POST['book_id'], $json_file);
     }
     /* Termina invocación AJAX */
 
@@ -472,7 +482,6 @@
     /* Comienza función que muestra el botón de dejar de leer sólo si el usuario está leyendo un libro */
     function is_user_reading($user_id, $book_id, $json_file)
     {
-        //<div class="col w100"><button class="control" id="stop-reading">Dejar de leer</button></div>
         // Debe devolver String
         $respuesta = '';
         // Primero, debemos generar la conexión
@@ -487,7 +496,7 @@
                 // Si la respuesta tiene campos, es porque el libro está leído, y aplica el botón
                 if(mysqli_num_rows($sentencia) > 0)
                 {
-                    $respuesta .= '<div class="col w100"><button class="control" id="stop-reading">Dejar de leer</button></div>';
+                    $respuesta .= "<div class='col w100'><button class='control' id='stop-reading' onclick='dejarDeLeer($user_id, $book_id);'>Dejar de leer</button></div>";
                 }
                 // Si la respuesta no tiene campos, es porque no se ha leído el libro, y entonces no aplica nada
             }
@@ -504,4 +513,108 @@
         }
     }
     /* Termina función que muestra el botón de dejar de leer sólo si el usuario está leyendo un libro */
+
+    /* Comienza función para dejar de leer un libro */
+    function quit_reading($user_id, $book_id, $json_file)
+    {
+        // Debe devolver String
+        $respuesta = '';
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Debemos preparar un statement
+        $sql = 
+        "DELETE vs FROM `ver_seccion` vs INNER JOIN `componer_seccion` cs ON cs.`id_seccion` = vs.`id_seccion` WHERE vs.`id_usuario` = $user_id AND cs.`id_libro` = $book_id;";
+        // Abrimos try-catch
+        try 
+        {
+            $sentencia = mysqli_query($conexion, $sql);
+            $respuesta = 'SUCCESS';
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = $e;
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función para dejar de leer un libro */
+
+    /* Comienza la función que genera las tarjetas en la página de biblioteca */
+    function my_books_grid($id_usuario, $id_genero, $termino_busqueda, $json_file)
+    {
+        // Debe devolver booleano
+        $respuesta = '';
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Ahora, hagamos un valor adicional
+        $sql_genero = ($id_genero == 0) ? "" : "g.id_genero = '$id_genero' AND ";
+        // Luego preparamos un statement
+        $sql = 
+        "SELECT l.`id_libro`, l.`url_caratula_libro`, l.`nombre_libro`, a.`nombre_autor`, g.`nombre_genero`, g.`color_genero`, COUNT(DISTINCT(cs.`id_seccion`)) AS cantidad_secciones, l.`sinopsis_libro` FROM `libro` l INNER JOIN `componer_seccion` cs ON (cs.`id_libro` = l.`id_libro`) INNER JOIN `autores_libro` al ON (al.`id_libro` = l.`id_libro`) INNER JOIN `autor` a ON (a.`id_autor` = al.`id_autor`) INNER JOIN `generos_libro` gl ON (gl.`id_libro` = l.`id_libro`) INNER JOIN `genero` g ON (g.`id_genero` = gl.`id_genero`) INNER JOIN `ver_seccion` vs ON (vs.`id_seccion` = cs.`id_seccion`) WHERE " . $sql_genero . "vs.`id_usuario` = $id_usuario AND (l.nombre_libro LIKE '%$termino_busqueda%' OR a.nombre_autor LIKE '%$termino_busqueda%' OR g.nombre_genero LIKE '%$termino_busqueda%' OR l.sinopsis_libro LIKE '%$termino_busqueda%') GROUP BY l.id_libro";
+        // Ejecutamos la sentencia
+        try 
+        {
+            // Si hay respuesta, que la genere
+            if ($sentencia = mysqli_query($conexion, $sql))
+            {
+                $respuesta .= "<div class='col w100' id='cards-grid'>";
+                if (mysqli_num_rows($sentencia) > 0) 
+                {
+                    while ($row = mysqli_fetch_assoc($sentencia)) 
+                    {
+                        $id_libro = $row['id_libro'];
+                        $url_caratula_libro = $row['url_caratula_libro'];
+                        $nombre_libro = $row['nombre_libro'];
+                        $nombre_autor = $row['nombre_autor'];
+                        $nombre_genero = $row['nombre_genero'];
+                        $color_genero = $row['color_genero'];
+                        $cantidad_secciones = $row['cantidad_secciones'];
+                        $sinopsis_libro = substr($row['sinopsis_libro'], 0, 45) . "...";
+                        $respuesta .= 
+                        "
+                        <div class='card'>
+                            <a href='index.php?page=book-page&book-id=$id_libro'>
+                                <div class='poster'>
+                                    <img src='./$url_caratula_libro'>
+                                </div>
+                                <div class='details'>
+                                    <h3>$nombre_autor</h3>
+                                    <h2>$nombre_libro</h2>
+                                    <div class='genres'>
+                                        <span style='background-color: #$color_genero'>$nombre_genero</span>
+                                    </div>
+                                    <div class='sections'>
+                                        <span>$cantidad_secciones secciones/capítulos</span>
+                                    </div>
+                                    <div class='sinopsis'>
+                                        <p>$sinopsis_libro</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        ";
+                    }
+                    $respuesta .= "</div>";
+                }
+                // Si no, que mande la sección de nada encontrado
+                else
+                {
+                    $respuesta = '<div class="col w100" id="nothing-found"><h2>¡OOPS! Su búsqueda no arrojó ningún resultado</h2><h4>Por favor cambie los parámetros de búsqueda.</h4></div>';
+                }
+            }
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = "<div class='col w100' id='nothing-found'><h2>¡ERROR! Hay un error en el programa</h2><h4>$e</h4><h4>Por favor consulte al administrador.</h4></div>";
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina la función que genera las tarjetas en la página de biblioteca */
 ?>

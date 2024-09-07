@@ -206,3 +206,59 @@ function botonBorrar(user_id, book_id)
     });
 }
 /* Termina función que agrega el botón de dejar de leer sólo a quienes lo ha leído */
+
+/* Comienza función para "dejar de leer" */
+function dejarDeLeer(user_id, book_id)
+{
+    // Preparamos la pregunta
+    Swal.fire(
+        {
+            title: 'Dejar de leer este libro',
+            html: '<p style="color: black;"><b>ESTA ACCIÓN ES IRREVERSIBLE</b><br/>¿Está seguro?</p>',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => 
+        {
+            // Si dice que sí
+            if (result.isConfirmed) 
+            {
+                // Llamamos un AJAX
+                $.ajax
+                ({
+                    type: 'POST',
+                    url: './controller/book-crud.php',
+                    data:
+                    {
+                        quit_reading: true,
+                        user_id,
+                        book_id
+                    },
+                    async: true,
+                    success: function(data)
+                    {
+                        // Tenemos que generarlo por JSON para tener un código
+                        if (data = 'SUCCESS')
+                        {
+                            // Si el código es de éxito, que recargue la tabla
+                            continuarLeyendo();
+                            // Y que recargue el botón
+                            botonBorrar(user_id, book_id);
+                        }
+                        else
+                        {
+                            // Si no, que muestre el error
+                            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + data + '<br/>Por favor contacte al desarrollador');
+                        }
+                    },
+                    error: function(error)
+                    {
+                        // Si hay un error, generemos un mensaje
+                        mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+                    }
+                });
+            }
+        });
+}
+/* Termina función para "dejar de leer" */

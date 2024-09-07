@@ -74,6 +74,27 @@
     font-size: 14px;
     color: #f4f4f4;
 }
+
+#boton-dejar-leer #stop-reading
+{
+    color: #ffffff;
+    text-decoration: none;
+    width: 300px;
+    padding: 7px 15px;
+    background-color: red;
+    border: 1px solid red;
+    border-radius: 3px;
+    transition: 0.3s ease-in-out;
+    outline: none;
+    cursor: pointer;
+}
+
+#boton-dejar-leer #stop-reading:hover
+{
+    background: rgb(199, 0, 0);
+    border-color: rgb(199, 0, 0);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.15);
+}
 /* Terminan estilos de parte superior: Info de libro y autor */
 
 /* Comienzan estilos de parte intermedia: Listado de secciones */

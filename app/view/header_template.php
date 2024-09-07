@@ -5,11 +5,14 @@
         $pag_inicio = ($page == 'main') ? '#' : 'index.php?page=main';
         $pag_busqueda = ($page == 'book-search') ? '#' : 'index.php?page=book-search';
         $pag_mis_libros = ($page == 'my-books') ? '#' : 'index.php?page=my-books';
+        $link_inicio = ($page == 'main') ? '<a href="' . $pag_inicio . '" class="nav-active">Inicio</a>' : '<a href="' . $pag_inicio . '">Inicio</a>';
+        $link_busqueda = ($page == 'book-search') ? '<a href="' . $pag_busqueda . '" class="nav-active">Biblioteca</a>' : '<a href="' . $pag_busqueda . '">Biblioteca</a>';
+        $link_mis_libros = ($page == 'my-books') ? '<a href="' . $pag_mis_libros . '" class="nav-active">Mis libros</a>' : '<a href="' . $pag_mis_libros . '">Mis libros</a>';
         // Esta solo sale si el usuario es admin o superadmin (1-SUPERADMIN, 2-ADMIN, 3-USUARIO)
         if ($perfil['id_tipo'] < 3)
         {
             $pag_usuarios = ($page == 'users-list') ? '#' : 'index.php?page=users-list';
-            $link_usuarios = '<a href="' . $pag_usuarios . '">Usuarios</a>';
+            $link_usuarios = ($page == 'users-list') ? '<a href="' . $pag_usuarios . '" class="nav-active">Usuarios</a>' : '<a href="' . $pag_usuarios . '">Usuarios</a>';
         }
         else
         {
@@ -77,9 +80,9 @@
             <a href="#" class="logo">Libr<span class="red-logo">ísimos</span></a>
             <!-- Menú de navegación a la derecha, en enlaces formateados -->
             <nav class="navbar">
-                <a href="' . $pag_inicio . '" class="nav-active">Inicio</a>
-                <a href="' . $pag_busqueda . '">Biblioteca</a>
-                <a href="' . $pag_mis_libros . '">Mis Libros</a>
+                ' . $link_inicio . '
+                ' . $link_busqueda . '
+                ' . $link_mis_libros . '
                 <!-- Este sale sólo si el usuario es admin o súper admin -->
                 ' . $link_usuarios . '
                 <!-- Enlace para "mi perfil" -->
