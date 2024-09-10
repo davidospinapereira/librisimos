@@ -75,7 +75,15 @@
     color: #f4f4f4;
 }
 
-#boton-dejar-leer #stop-reading
+#funciones .col
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+#funciones .control
 {
     color: #ffffff;
     text-decoration: none;
@@ -89,7 +97,7 @@
     cursor: pointer;
 }
 
-#boton-dejar-leer #stop-reading:hover
+#funciones .control:hover
 {
     background: rgb(199, 0, 0);
     border-color: rgb(199, 0, 0);

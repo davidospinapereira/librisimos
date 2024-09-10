@@ -487,18 +487,33 @@
         // Primero, debemos generar la conexión
         $conexion = abrir_conexion($json_file);
         // Luego preparamos un statement
-        $sql = 
+        $sql_is_reading = 
         "SELECT vs.`id_seccion` FROM `ver_seccion` vs INNER JOIN `componer_seccion` cs ON (cs.`id_seccion` = vs.`id_seccion`) WHERE vs.`id_usuario` = $user_id AND cs.`id_libro` = $book_id";
+        $sql_user_type = 
+        "SELECT tu.`id_tipo_usuario` FROM `tipo_usuario` tu INNER JOIN `usuario` u ON (u.`id_tipo_usuario` = tu.`id_tipo_usuario`) WHERE u.`id_usuario` = $user_id";
         try 
         {
-            if ($sentencia = mysqli_query($conexion, $sql))
+            if ($sentencia_leyendo = mysqli_query($conexion, $sql_is_reading))
             {
+                $respuesta .= "<div class='col w100'>";
                 // Si la respuesta tiene campos, es porque el libro está leído, y aplica el botón
-                if(mysqli_num_rows($sentencia) > 0)
+                if(mysqli_num_rows($sentencia_leyendo) > 0)
                 {
-                    $respuesta .= "<div class='col w100'><button class='control' id='stop-reading' onclick='dejarDeLeer($user_id, $book_id);'>Dejar de leer</button></div>";
+                    $respuesta .= "<button class='control' id='stop-reading' onclick='dejarDeLeer($user_id, $book_id);'>Dejar de leer</button>";
                 }
                 // Si la respuesta no tiene campos, es porque no se ha leído el libro, y entonces no aplica nada
+                // FUNCIÓN PARA ADMINISTRADORES = Si el tipo de usuario es menor a 3, es porque es administrador y debe poder borrar el libro
+                if ($sentencia_tipo = mysqli_query($conexion, $sql_user_type))
+                {
+                    // Sólo debe haber un valor encontrado
+                    $row = mysqli_fetch_assoc($sentencia_tipo);
+                    if ($row['id_tipo_usuario'] < 3)
+                    {
+                        $respuesta .= " <button class='control' onclick='editarLibro($book_id)';'>Editar libro</button> <button class='control' id='delete-book' onclick='borrarLibro($book_id);'>BORRAR LIBRO</button>";
+                        /* window.location.href='index.php?page=edit-page&book-id=$book_id'; */
+                    }
+                }
+                $respuesta .= "</div>";
             }
         } 
         catch (Exception $e) 

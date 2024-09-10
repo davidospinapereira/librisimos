@@ -70,7 +70,7 @@
                 </div>
             </div>
             <!-- Aquí debajo debe ir el botón de dejar de leer, en rojo Y SOLO CUANDO NO SE HAYA LEÍDO -->
-            <div class="fila" id="boton-dejar-leer"></div>
+            <div class="fila" id="funciones"></div>
             
             <!-- Termina Información principal del libro -->
             <!-- Comienza listado de secciones -->

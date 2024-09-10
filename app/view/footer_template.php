@@ -10,6 +10,15 @@
         {
             $js_read_tool = '';
         }
+        if ($page == 'edit-book' || $page == 'new-book' || $page == 'edit-author' || $page == 'new-author')
+        {
+            $js_tinymce = '<!-- Javascript de TinyMCE -->
+        <script src="./view/js/tinymce/tinymce.min.js"></script>';
+        }
+        else
+        {
+            $js_tinymce = '';
+        }
         $html_footer = 
         '
         <!-- Comienza footer -->
@@ -35,6 +44,7 @@
         <!-- Javascript de la página específica -->
         <script src="./view/js/' . $page . '-scripts.js"></script>
         ' . $js_read_tool . '
+        ' . $js_tinymce . '
         <!-- Termina Javascript -->
 
     </body>

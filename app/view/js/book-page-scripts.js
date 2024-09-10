@@ -196,7 +196,7 @@ function botonBorrar(user_id, book_id)
         async: true,
         success: function(data)
         {
-            $('#boton-dejar-leer').html(data);
+            $('#funciones').html(data);
         },
         error: function(error)
         {
@@ -262,3 +262,17 @@ function dejarDeLeer(user_id, book_id)
         });
 }
 /* Termina función para "dejar de leer" */
+
+/* Comienza función para editar libro, exclusiva para administradores */
+function editarLibro(book_id)
+{
+    window.location.href='index.php?page=edit-book&book-id=' + book_id;
+}
+/* Termina función para editar libro, exclusiva para administradores */
+
+/* Comienza función para borrar libro, exclusiva para administradores */
+function borrarLibro(book_id)
+{
+    alert('Función de borrar libro activada, libro: ' + book_id);
+}
+/* Termina función para borrar libro, exclusiva para administradores */
