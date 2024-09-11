@@ -90,7 +90,15 @@
                             <input type="text" value="El título de la sección">
                             <button class="remove-section">Eliminar sección</button>
                         </div>
-                        <textarea id="section-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis tempora aperiam rem iure dolorem, eos eveniet hic doloribus facere impedit quae tempore molestias molestiae cumque numquam perferendis accusamus natus ab veritatis iusto. Maiores ea expedita architecto iure aspernatur illo sint, eum perferendis officiis repudiandae, voluptate deleniti quod consectetur itaque. Voluptates?</textarea>
+                        <textarea class="section-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis tempora aperiam rem iure dolorem, eos eveniet hic doloribus facere impedit quae tempore molestias molestiae cumque numquam perferendis accusamus natus ab veritatis iusto. Maiores ea expedita architecto iure aspernatur illo sint, eum perferendis officiis repudiandae, voluptate deleniti quod consectetur itaque. Voluptates?</textarea>
+                    </div>
+                    <button class="accordion-button" onclick="toggle('section-2');">Sección 2: El título de la sección</button>
+                    <div class="accordion-section" id="section-2">
+                        <div class="section-title-functions">
+                            <input type="text" value="El título de la sección">
+                            <button class="remove-section">Eliminar sección</button>
+                        </div>
+                        <textarea class="section-content">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis tempora aperiam rem iure dolorem, eos eveniet hic doloribus facere impedit quae tempore molestias molestiae cumque numquam perferendis accusamus natus ab veritatis iusto. Maiores ea expedita architecto iure aspernatur illo sint, eum perferendis officiis repudiandae, voluptate deleniti quod consectetur itaque. Voluptates?</textarea>
                     </div>
                 </div>
             </div>

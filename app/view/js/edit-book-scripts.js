@@ -21,6 +21,18 @@ $(document).ready(function()
         toolbar: 'undo redo | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | code',
         license_key: 'gpl'
     });
+
+    tinymce.init
+    ({
+        selector: '.section-content',
+        language: 'es',
+        branding: false,
+        menubar: false,
+        resize: false,
+        height: 350,
+        plugins: 'code lists',
+        toolbar: 'undo redo | styles | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | code'
+    });
 });
 /* Terminan funciones automáticas */
 
