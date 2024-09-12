@@ -51,6 +51,11 @@
     {
         echo quit_reading($_POST['user_id'], $_POST['book_id'], $json_file);
     }
+
+    if (isset($_POST['get_book_edit_data']))
+    {
+        echo json_encode(get_book_edit_data($_POST['book_id'], $json_file));
+    }
     /* Termina invocación AJAX */
 
     /* Comienza la función que genera los datos de la tabla de continuar leyendo */
@@ -632,4 +637,111 @@
         }
     }
     /* Termina la función que genera las tarjetas en la página de biblioteca */
+
+    /* Comienza función que recupera los datos del libro para la página de edición del libro */
+    function get_book_edit_data($book_id, $json_file)
+    {
+        // Debe devolver array, y debe funcionar muy similar a get_book_data
+        $respuesta = array();
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Primero, Generamos el SQL del libro
+        $sql_libro = 
+        "SELECT `nombre_libro`, `url_caratula_libro`, `sinopsis_libro` FROM `libro` WHERE `id_libro` = $book_id";
+        // Segundo, generamos el SQL de los géneros
+        $sql_generos = 
+        "SELECT g.`id_genero`, g.`nombre_genero`, g.`color_genero` FROM `genero` g INNER JOIN `generos_libro` gl ON (gl.`id_genero` = g.`id_genero`) WHERE gl.`id_libro` = $book_id";
+        // Tercero, generamos el SQL de los autores
+        $sql_autores = 
+        "SELECT a.`id_autor`, a.`nombre_autor` FROM `autor` a INNER JOIN `autores_libro` al ON (al.`id_autor` = a.`id_autor`) WHERE al.`id_libro` = $book_id";
+        // Aplicamos los SQL dentro de un try
+        try 
+        {
+            $nombre_libro = '';
+            $url_caratula_libro = '';
+            $sinopsis_libro = '';
+            $generos_html = '';
+            $autores_html = '';
+            // Primero, el SQL del libro
+            if ($sentencia_libro = mysqli_query($conexion, $sql_libro))
+            {
+                // Si se generó la sentencia
+                if (mysqli_num_rows($sentencia_libro) > 0) 
+                {
+                    // Si la respuesta trajo datos, sólo me traerá una fila, por lo que puedo pasar todos los datos
+                    $resultado = mysqli_fetch_assoc($sentencia_libro);
+                    $nombre_libro = $resultado['nombre_libro'];
+                    $url_caratula_libro = $resultado['url_caratula_libro'];
+                    $sinopsis_libro = $resultado['sinopsis_libro'];
+                    // Segundo, el SQL de géneros
+                    if ($sentencia_generos = mysqli_query($conexion, $sql_generos))
+                    {
+                        //<span style="background-color: #45f2a2;" id = "genero-1">Aquí <i class="bx bx-x icon-close" onclick="quitarBaldosa('#genero-1')"></i></span>
+                        while ($row = mysqli_fetch_assoc($sentencia_generos))
+                        {
+                            $id_genero = $row['id_genero'];
+                            $nombre_genero = $row['nombre_genero'];
+                            $color_genero = $row['color_genero'];
+                            $generos_html .= "<span style='background-color: #$color_genero;' id = 'genero-$id_genero'>$nombre_genero <i class='bx bx-x icon-close' onclick='quitarBaldosa(1, $id_genero)'></i></span> ";
+                        }
+                    }
+                    if ($sentencia_autores = mysqli_query($conexion, $sql_autores))
+                    {
+                        //<span style="background-color: #45f2a2;" id = "genero-1">Aquí <i class="bx bx-x icon-close" onclick="quitarBaldosa('#genero-1')"></i></span>
+                        while ($row = mysqli_fetch_assoc($sentencia_autores))
+                        {
+                            $id_autor = $row['id_autor'];
+                            $nombre_autor = $row['nombre_autor'];
+                            $autores_html .= "<span id = 'autor-$id_autor'>$nombre_autor <i class='bx bx-x icon-close' onclick='quitarBaldosa(2, $id_autor)'></i></span> ";
+                        }
+                    }
+                    // Confiemos, no hagamos un else
+                    // Luego, preparamos el array
+                    $respuesta = 
+                    [
+                        'codigo' => 'SUCCESS',
+                        'nombre_libro' => $nombre_libro,
+                        'url_caratula_libro' => $url_caratula_libro,
+                        'sinopsis_libro' => $sinopsis_libro,
+                        'generos_html' => $generos_html,
+                        'autores_html' => $autores_html
+                    ];
+                }
+                else
+                {
+                    // Si la respuesta no generó datos
+                    $respuesta = 
+                    [
+                        'codigo' => 'ERROR',
+                        'error' => 'NO_DATA_GENERATED'
+                    ];
+                }
+            }
+            else
+            {
+                // Si no se generó la sentencia
+                $respuesta = 
+                [
+                    'codigo' => 'ERROR',
+                    'error' => 'NULL_QUERY'
+                ];
+            }
+        } 
+        catch (Exception $e) 
+        {
+            // Si hay algún error pare todo y devuelva la respuesta
+            $respuesta = 
+            [
+                'codigo' => 'ERROR',
+                'error' => $e
+            ];
+        }
+        // Finalmente, cerramos la conexión y devolvemos la respuesta
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función que recupera los datos del libro para la página de edición del libro */
 ?>

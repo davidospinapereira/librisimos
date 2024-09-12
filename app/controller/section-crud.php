@@ -9,13 +9,20 @@
     {
         echo generar_datos_lectura($_POST['section_id'], $_POST['user_id'], $json_file);
     }
+
     if (isset($_POST['other_section']))
     {
         echo leer_otra_seccion($_POST['section_number'], $_POST['book_id'], $_POST['user_id'], $json_file);
     }
+
     if (isset($_POST['save_section']))
     {
         echo guardar_seccion($_POST['titulo_seccion'], $_POST['contenido_seccion'], $_POST['id_libro'], $json_file);
+    }
+    
+    if (isset($_POST['obtener_secciones_edit']))
+    {
+        echo obtener_secciones_edit($_POST['book_id'], $json_file);
     }
     /* Termina invocación AJAX */
     
@@ -328,6 +335,86 @@
         return json_encode($respuesta);
     }
     /* Termina función que devuelve datos para leer otra sección dentro de la herramienta de lectura */
+
+    /* Comienza función que devuelve las secciones para la página de edición de libro */
+    function obtener_secciones_edit($book_id, $json_file)
+    {
+        // Debe devolver string con HTML
+        $respuesta = "";
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Segundo, preparamos el SQL
+        $sql_secciones = 
+        "SELECT s.`id_seccion`, s.`numero_seccion`, s.`titulo_seccion`, s.`contenido_seccion` FROM `seccion` s INNER JOIN `componer_seccion` cs ON (cs.`id_seccion` = s.`id_seccion`) WHERE cs.`id_libro` = $book_id ORDER BY s.`numero_seccion` DESC";
+        // Aquí aplicamos MySQL
+        try 
+        {
+            if ($sentencia_secciones = mysqli_query($conexion, $sql_secciones))
+            {
+                if (mysqli_num_rows($sentencia_secciones) > 0)
+                {
+                    // Si hay secciones, empecemos a asignar valores
+                    $respuesta .= 
+                    "<div class='section-intro'>
+                        <h4>Secciones</h4>
+                        <button class= 'btn' id='add-section'>Añadir sección/capítulo</button>
+                    </div>
+                    <div id='section-list'>";
+                    while ($row = mysqli_fetch_assoc($sentencia_secciones))
+                    {
+                        $id_seccion = $row['id_seccion'];
+                        $numero_seccion = $row['numero_seccion'];
+                        $titulo_seccion = $row['titulo_seccion'];
+                        $contenido_seccion = $row['contenido_seccion'];
+                        $respuesta .= 
+                        "<button class='accordion-button' onclick='toggleSection($id_seccion);'>Sección $numero_seccion: $titulo_seccion</button>
+                        <div class='accordion-section' id='section-$id_seccion'>
+                            <div class='section-title-functions'>
+                                <input type='text' value='$titulo_seccion'>
+                                <button class='btn remove-section'>Eliminar sección</button>
+                            </div>
+                            <textarea class='section-content' placeholder='Comienza a escribir...'>$contenido_seccion</textarea>
+                        </div>";
+                    }
+                    $respuesta .= "</div>";
+                }
+                else
+                {
+                    // Si no hay secciones o no hay respuesta, entonces que nos muestre un mensaje
+                    $respuesta .= 
+                    "<div class='section-error'>
+                        <h4>No hay secciones inscritas</h4>
+                        <p>Este libro no tiene ninguna sección inscrita. Por favor da clic en \"Añadir sección/capítulo\" para insertar la primera.</p>
+                        <p>Si esto es un error, por favor contacta al desarrollador.</p>
+                    </div>";
+                }
+            }
+        } 
+        catch (Exception $e) 
+        {
+            // Si hay problemas, que muestre el error ahí
+            $respuesta .= 
+            "<div class='section-error'>
+                <h4>Error en el programa:</h4>
+                <p>$e</p>
+                <p>Por favor contacta al desarrollador.</p>
+            </div>";
+        }
+        finally
+        {            
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }        
+        /* <button class='accordion-button' onclick='toggle('section-1');'>Sección 1: El título de la sección</button>
+                        <div class='accordion-section' id='section-1'>
+                            <div class='section-title-functions'>
+                                <input type='text' value='El título de la sección'>
+                                <button class='remove-section'>Eliminar sección</button>
+                            </div>
+                            <textarea class='section-content'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis tempora aperiam rem iure dolorem, eos eveniet hic doloribus facere impedit quae tempore molestias molestiae cumque numquam perferendis accusamus natus ab veritatis iusto. Maiores ea expedita architecto iure aspernatur illo sint, eum perferendis officiis repudiandae, voluptate deleniti quod consectetur itaque. Voluptates?</textarea>
+                        </div> */
+    }
+    /* Termina función que devuelve las secciones para la página de edición de libro */
     /* TERMINA CÓDIGO R (READ) */
 
     /* COMIENZA CÓDIGO U (UPDATE) */
