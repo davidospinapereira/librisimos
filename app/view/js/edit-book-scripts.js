@@ -289,7 +289,7 @@ function agregarElementoLista(tipo, item)
 /* Termina función genérica para agregar las opciones del select a los listados cuando se de clic en el botón de añadir */
 
 /* Comienza función para agregar secciones */
-function agregarSeccion()
+function agregarSeccion() 
 {
     // Obtener el número de la nueva sección basado en el total de secciones actuales
     var totalSections = $('#section-list .accordion-button').length + 1;
@@ -298,13 +298,15 @@ function agregarSeccion()
     <button class="accordion-button" data-number="${totalSections}" onclick="toggleSection(${totalSections});">Sección ${totalSections}: </button>
     <div class="accordion-section" id="section-${totalSections}">
         <div class="section-title-functions">
-            <input type="text" value="" placeholder="Escribe el título...">
+            <input type="text" value="" placeholder="Escribe el título..." class="section-title-input">
             <button class="btn remove-section" onclick="eliminarSeccion('new');">Eliminar sección</button>
         </div>
         <textarea class='section-content' placeholder='Comienza a escribir...'></textarea>
     </div>`;
     // Insertar la nueva sección al inicio del contenedor de secciones
     $('#section-list').prepend(newSection);
+
+    // Instanciar el editor TinyMCE en el nuevo textarea
     tinymce.init
     ({
         selector: '.section-content',
@@ -331,7 +333,6 @@ function updateRemoveButtons()
     {
         $(this).closest('.accordion-section').prev('.accordion-button').remove(); // Eliminar el botón correspondiente
         $(this).closest('.accordion-section').remove(); // Eliminar la sección correspondiente
-
         // Actualizar los números de las secciones
         updateSectionNumbers();
     });
@@ -349,12 +350,11 @@ function updateSectionNumbers()
         $(this).text(`Sección ${newNumber}: ${titleText || ''}`);
     });
     updateRemoveButtons();
-    updateTitleInputs();
 }
 /* Termina función para actualizar los números de las secciones */
 
 /* Comienza función para actualizar el título en el botón al escribir en el input de título */
-function updateTitleInputs()
+function updateTitleInputs() 
 {
     $('.section-title-input').off('input').on('input', function () 
     {

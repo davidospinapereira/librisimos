@@ -370,7 +370,7 @@
                         "<button class='accordion-button' data-number='$numero_seccion' data-id='$id_seccion' onclick='toggleSection($numero_seccion);'>Sección $numero_seccion: $titulo_seccion</button>
                         <div class='accordion-section' id='section-$numero_seccion'>
                             <div class='section-title-functions'>
-                                <input type='text' value='$titulo_seccion'>
+                                <input type='text' value='$titulo_seccion' class='section-title-input'>
                                 <button class='btn remove-section' onclick='eliminarSeccion($id_seccion);'>Eliminar sección</button>
                             </div>
                             <textarea class='section-content' placeholder='Comienza a escribir...'>$contenido_seccion</textarea>
