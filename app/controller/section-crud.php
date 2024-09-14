@@ -357,7 +357,7 @@
                     $respuesta .= 
                     "<div class='section-intro'>
                         <h4>Secciones</h4>
-                        <button class= 'btn' id='add-section'>Añadir sección/capítulo</button>
+                        <button class= 'btn' onclick='agregarSeccion();'>Añadir sección/capítulo</button>
                     </div>
                     <div id='section-list'>";
                     while ($row = mysqli_fetch_assoc($sentencia_secciones))
@@ -367,11 +367,11 @@
                         $titulo_seccion = $row['titulo_seccion'];
                         $contenido_seccion = $row['contenido_seccion'];
                         $respuesta .= 
-                        "<button class='accordion-button' onclick='toggleSection($id_seccion);'>Sección $numero_seccion: $titulo_seccion</button>
-                        <div class='accordion-section' id='section-$id_seccion'>
+                        "<button class='accordion-button' data-number='$numero_seccion' data-id='$id_seccion' onclick='toggleSection($numero_seccion);'>Sección $numero_seccion: $titulo_seccion</button>
+                        <div class='accordion-section' id='section-$numero_seccion'>
                             <div class='section-title-functions'>
                                 <input type='text' value='$titulo_seccion'>
-                                <button class='btn remove-section'>Eliminar sección</button>
+                                <button class='btn remove-section' onclick='eliminarSeccion($id_seccion);'>Eliminar sección</button>
                             </div>
                             <textarea class='section-content' placeholder='Comienza a escribir...'>$contenido_seccion</textarea>
                         </div>";
@@ -404,15 +404,7 @@
         {            
             cerrar_conexion($conexion);
             return $respuesta;
-        }        
-        /* <button class='accordion-button' onclick='toggle('section-1');'>Sección 1: El título de la sección</button>
-                        <div class='accordion-section' id='section-1'>
-                            <div class='section-title-functions'>
-                                <input type='text' value='El título de la sección'>
-                                <button class='remove-section'>Eliminar sección</button>
-                            </div>
-                            <textarea class='section-content'>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Reiciendis tempora aperiam rem iure dolorem, eos eveniet hic doloribus facere impedit quae tempore molestias molestiae cumque numquam perferendis accusamus natus ab veritatis iusto. Maiores ea expedita architecto iure aspernatur illo sint, eum perferendis officiis repudiandae, voluptate deleniti quod consectetur itaque. Voluptates?</textarea>
-                        </div> */
+        }
     }
     /* Termina función que devuelve las secciones para la página de edición de libro */
     /* TERMINA CÓDIGO R (READ) */

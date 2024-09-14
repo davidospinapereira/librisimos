@@ -65,6 +65,12 @@
     margin-top: 1px;
 }
 
+#available-genres option:disabled,
+#available-authors option:disabled
+{
+    background-color: #d1d1d1;
+}
+
 #main-data #genre-list,
 #main-data #author-list
 {
@@ -243,7 +249,7 @@
 
 .accordion-button:hover
 {
-    background: #c9c9c9;
-    border-color: #c9c9c9;
+    background: #a7a7a7;
+    border-color: #a7a7a7;
 }
 /* Terminan estilos de acordeón para las secciones del libro */
