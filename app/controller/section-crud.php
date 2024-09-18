@@ -22,7 +22,7 @@
     
     if (isset($_POST['obtener_secciones_edit']))
     {
-        echo obtener_secciones_edit($_POST['book_id'], $json_file);
+        echo obtener_secciones_edit($_POST['book_id'], $_POST['book_status'], $json_file);
     }
     /* Termina invocación AJAX */
     
@@ -337,10 +337,11 @@
     /* Termina función que devuelve datos para leer otra sección dentro de la herramienta de lectura */
 
     /* Comienza función que devuelve las secciones para la página de edición de libro */
-    function obtener_secciones_edit($book_id, $json_file)
+    function obtener_secciones_edit($book_id, $book_status, $json_file)
     {
         // Debe devolver string con HTML
         $respuesta = "";
+        $html_status_response = "";
         // Primero, debemos generar la conexión
         $conexion = abrir_conexion($json_file);
         // Segundo, preparamos el SQL
@@ -353,6 +354,12 @@
             {
                 if (mysqli_num_rows($sentencia_secciones) > 0)
                 {
+                    // Si el status es publicado, no podemos permitir que se borren las secciones
+                    if ($book_status == 1)
+                    {
+                        $html_status_response = "disabled";
+                    }
+                    // Si no, que no haga nada
                     // Si hay secciones, empecemos a asignar valores
                     $respuesta .= 
                     "<div class='section-intro'>
@@ -371,7 +378,7 @@
                         <div class='accordion-section' id='section-$numero_seccion'>
                             <div class='section-title-functions'>
                                 <input type='text' value='$titulo_seccion' class='section-title-input'>
-                                <button class='btn remove-section' onclick='eliminarSeccion($id_seccion);'>Eliminar sección</button>
+                                <button class='btn remove-section' $html_status_response>Eliminar</button>
                             </div>
                             <textarea class='section-content' placeholder='Comienza a escribir...'>$contenido_seccion</textarea>
                         </div>";

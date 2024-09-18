@@ -31,16 +31,67 @@
 
 #main-data #book-name
 {
-    min-height: 45px;
     padding: 5px 7px;
     font-size: 21px;
     font-weight: 500;
     outline: none;
 }
 
-#main-data #id-book
+#main-data .book-name-status
 {
+    min-height: 45px;
+    display: inline-flex;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
     margin-bottom: 10px;
+}
+
+.book-name-status #book-id-text
+{
+    width: 60%;
+    text-align: left;
+}
+
+.book-name-status #book-status
+{
+    width: 40%;
+    text-align: right;
+}
+
+#book-status .status-tile
+{
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+.status-tile.published
+{
+    background: #b70000;
+}
+
+.status-tile.draft
+{
+    background: blue;
+}
+
+.status-tile.error
+{
+    background: black;
+}
+
+#book-id-text #id-book
+{
+    font-size: 15px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+#book-id-text #book-status
+{
     font-size: 15px;
     font-weight: 400;
     text-transform: uppercase;
@@ -125,10 +176,31 @@
     cursor: pointer;
 }
 
+.btn.publish-book
+{
+    background-color: green;
+    border-color: green;
+}
+
+.btn.publish-book:hover
+{
+    background-color: darkgreen;
+    border-color: darkgreen;
+}
+
 .btn:hover
 {
     background-color: darkred;
     border-color: darkred/* !important */;
+}
+
+.btn:disabled,
+.btn[disabled]
+{
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
 }
 /* Terminan estilos generales para botones normales */
 /* Terminan estilos de sección de datos principales y funciones */

@@ -56,6 +56,11 @@
     {
         echo json_encode(get_book_edit_data($_POST['book_id'], $json_file));
     }
+
+    if (isset($_POST['get_book_status']))
+    {
+        echo get_book_status($_POST['book_id'], $json_file);
+    }
     /* Termina invocación AJAX */
 
     /* Comienza la función que genera los datos de la tabla de continuar leyendo */
@@ -744,4 +749,36 @@
         }
     }
     /* Termina función que recupera los datos del libro para la página de edición del libro */
+
+    /* Comienza función que recupera sólo el id de status del libro */
+    function get_book_status($book_id, $json_file)
+    {
+        // Debe devolver número, ya sea como texto o como entero
+        $respuesta = 0;
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Primero, Generamos el SQL del libro
+        $sql_status = 
+        "SELECT `clave_estado_libro` FROM `libro` WHERE `id_libro` = $book_id";
+        // Sigue un try-catch
+        try 
+        {
+            if ($sentencia_status = mysqli_query($conexion, $sql_status))
+            {
+                // Si la respuesta trajo datos, sólo me traerá una fila, por lo que puedo pasar todos los datos
+                $resultado = mysqli_fetch_assoc($sentencia_status);
+                $respuesta = $resultado['clave_estado_libro'];
+            }
+        } 
+        catch (Exception $e) 
+        {
+            var_dump($e);
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función que recupera sólo el id de status del libro */
 ?>

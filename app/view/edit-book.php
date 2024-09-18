@@ -25,7 +25,10 @@
                 <div class="col w60" id="main-data">
                     <!-- Un input para el nombre del libro -->
                     <input type="text" id="book-name">
-                    <h4 id="id-book">ID de libro: 1</h4>
+                    <div class="book-name-status">
+                        <div id="book-id-text"><h4 id="id-book"></h4></div>
+                        <div id="book-status"></div>
+                    </div>
                     <!-- Un listado de géneros con un X al final de cada uno, al dar clic a la X se quita del listado -->
                     <div id="genres">
                         <div id="genre-list">
@@ -57,9 +60,7 @@
                 <!-- Termina la columna con los datos principales -->
                 <!-- Comienza la columna con los botones de función -->
                 <div class="col w20" id="functions">
-                    <button class="btn" id="update-book">Actualizar libro</button>
-                    <button class="btn" id="cancel-edit">Cancelar edición</button>
-                    <button class="btn" id="delete-book">Borrar libro</button>
+                    
                 </div>
                 <!-- Termina la columna con los botones de función -->
             </div>

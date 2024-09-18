@@ -1,29 +1,21 @@
 /* Comienza definición de variables */
 var book_id = $('#book-id').val();
 var user_id = $('#user-id').val();
+var book_status = 0;
+bookStatus(book_id, function(status) 
+{
+    book_status = status;
+    // Aquí puedes manejar lo que quieras hacer con el valor "status"
+});
 /* Termina definición de variables */
 
 /* Comienzan funciones automáticas */
 $(document).ready(function()
 {
-    // De profile-edit-scripts, tienes que cargar la imagen en su sitio
-    loadBookData(book_id);
-    loadSections(book_id);
-
-    /* Comienzan instancias de TinyMCE */
-    tinymce.init
-    ({
-        selector: '#description',
-        language: 'es',
-        branding: false,
-        menubar: false,
-        resize: false,
-        height: 200,
-        plugins: 'code lists',
-        toolbar: 'undo redo | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | code',
-        license_key: 'gpl'
-    });
-    /* Terminan instancias de TinyMCE */
+    // Si el estatus está en borrador, los botones cambian
+    loadBookData(book_id, book_status);
+    // Si el estatus está en publicado, no debo poder borrar secciones
+    loadSections(book_id, book_status);
 });
 /* Terminan funciones automáticas */
 
@@ -35,10 +27,55 @@ function toggleSection(section)
 }
 /* Terminan efectos para el acordeón */
 
-/* Comienza función que carga los datos del libro y los pone en su sitio */
-function loadBookData(book_id)
+/* Comienza función que retorna el status del libro para poder operar con él */
+function bookStatus(book_id, callback)
 {
-    // Nos vamos de una, tenemos que cargar AJAX
+    $.ajax
+    ({
+        type: 'POST',
+        url: './controller/book-crud.php',
+        data: 
+        {
+            get_book_status: true,
+            book_id
+        },
+        async: true, // Mantén esto como true, ya que las solicitudes AJAX son asíncronas
+        success: function(data) 
+        {
+            callback(Number(data)); // Llama al callback con el resultado
+        },
+        error: function(error) 
+        {
+            // Si hay un error, generamos un mensaje
+            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+            callback(0); // Devuelve 0 en caso de error
+        }
+    });
+}
+/* Termina función que retorna el status del libro para poder operar con él */
+
+/* Comienza función que carga los datos del libro y los pone en su sitio */
+function loadBookData(book_id, book_status)
+{
+    var book_status_text = '';
+    var book_publish_button = '';
+    if(book_status == 1)
+    {
+        // Si es 1 es publicado
+        book_status_text = '<span class="status-tile published">PUBLICADO</span>';
+    }
+    else if(book_status == 2)
+    {
+        // Si es 2 es borrador
+        book_status_text = '<span class="status-tile draft">BORRADOR</span>';
+        // Aquí agregamos el html de publicar, en verde
+        book_publish_button = '<button class="btn publish-book" id="publish-book">PUBLICAR</button>';
+    }
+    else
+    {
+        // Si es cualquier otra cosa
+        book_status_text = '<span class="status-tile error">ERROR</span>';
+    }
     // Los datos son sólo el ID del libro
     $.ajax
     ({
@@ -52,6 +89,7 @@ function loadBookData(book_id)
         async: true,
         success: function(data)
         {
+            // Modificación: Si el status del libro es borrador debo agregar 
             // Tenemos que poner cada cosa en su lugar, primero que nada trayendo el JSON
             results = JSON.parse(data);
             $('#book-name').val(results.nombre_libro);
@@ -64,9 +102,31 @@ function loadBookData(book_id)
                 $('#image').css('background-image', 'url("./' + results.url_caratula_libro + '")');
             }
             $('#id-book').html('ID de libro: ' + book_id);
+            $('#book-status').html(book_status_text);
             $('#genre-list').html(results.generos_html);
             $('#author-list').html(results.autores_html);
             $('#description').html(results.sinopsis_libro);
+            /* Comienza instancia de TinyMCE */
+            tinymce.init
+            ({
+                selector: '#description',
+                language: 'es',
+                branding: false,
+                menubar: false,
+                resize: false,
+                height: 200,
+                plugins: 'code lists',
+                toolbar: 'undo redo | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | code',
+                license_key: 'gpl'
+            });    
+            /* Termina instancia de TinyMCE */
+            // Cargando los botones
+            $('#functions').html(
+                book_publish_button + 
+                '<button class="btn" id="update-book">Actualizar libro</button><button class="btn" id="cancel-edit">Cancelar edición</button><button class="btn" id="delete-book">Borrar libro</button>'
+            );
+            // Luego, aquí dentro, tenemos que cargar las funciones de los botones
+            bookFunctions(book_id, book_status);
         },
         error: function(error)
         {
@@ -80,7 +140,7 @@ function loadBookData(book_id)
 /* Termina función que carga los datos del libro y los pone en su sitio */
 
 /* Comienza función que carga las secciones del libro y genera tantas secciones como sea necesario */
-function loadSections(book_id)
+function loadSections(book_id, book_status)
 {
     // Aquí vamos, recibimos un HTML que insertamos
     $.ajax
@@ -90,7 +150,8 @@ function loadSections(book_id)
         data:
         {
             obtener_secciones_edit: true,
-            book_id
+            book_id,
+            book_status
         },
         async: true,
         success: function(data)
@@ -299,7 +360,7 @@ function agregarSeccion()
     <div class="accordion-section" id="section-${totalSections}">
         <div class="section-title-functions">
             <input type="text" value="" placeholder="Escribe el título..." class="section-title-input">
-            <button class="btn remove-section" onclick="eliminarSeccion('new');">Eliminar sección</button>
+            <button class="btn remove-section">Eliminar</button>
         </div>
         <textarea class='section-content' placeholder='Comienza a escribir...'></textarea>
     </div>`;
@@ -326,18 +387,22 @@ function agregarSeccion()
 }
 /* Termina función para agregar secciones */
 
-/* Comienza función para eliminar una sección, con el apoyo de ChatGPT, hay que corregirla */
+/* Comienza función para eliminar una sección, con el apoyo de ChatGPT, hay que arreglarla para base de datos */
 function updateRemoveButtons() 
 {
     $('.remove-section').off('click').on('click', function () 
     {
+        // Si no existe un data de id es porque la sección es nueva, entonces no hay que hacer nada en BD
+        // Si sí existe un data de id es porque la sección existe en la base de datos. Tenemos que preguntar si está seguro
+        // Si está seguro entonces borramos de base de datos
+        // Si no está seguro, no haga nada
         $(this).closest('.accordion-section').prev('.accordion-button').remove(); // Eliminar el botón correspondiente
         $(this).closest('.accordion-section').remove(); // Eliminar la sección correspondiente
         // Actualizar los números de las secciones
         updateSectionNumbers();
     });
 }
-/* Termina función para eliminar una sección, con el apoyo de ChatGPT, hay que corregirla */
+/* Termina función para eliminar una sección, con el apoyo de ChatGPT */
 
 /* Comienza función para actualizar los números de las secciones */
 function updateSectionNumbers() 
@@ -364,3 +429,48 @@ function updateTitleInputs()
     });
 }
 /* Termina función para actualizar el título en el botón al escribir en el input de título */
+
+/* Comienza función que permite actualizar el libro */
+function bookFunctions(book_id, book_status)
+{
+    $('#publish-book').on('click', function()
+    {
+        alert('Botón de update book oprimido para el libro '+ book_id);
+        // Primero, preguntamos si el usuario está seguro.
+        // Si sí, actuamos
+        // Actualizamos los datos base del libro
+        // Recogemos las baldosas de 
+        // Si no, no hacemos nada
+    });
+
+    $('#update-book').on('click', function()
+    {
+        alert('Botón de update book oprimido para el libro '+ book_id);
+        // Primero, preguntamos si el usuario está seguro.
+        // Si sí, actuamos
+        // Actualizamos los datos base del libro
+        // Recogemos las baldosas de 
+        // Si no, no hacemos nada
+    });
+
+    $('#cancel-edit').on('click', function()
+    {
+        alert('Botón de cancel oprimido para el libro '+ book_id);
+        // Primero, preguntamos si el usuario está seguro.
+        // Si sí, actuamos
+        // Actualizamos los datos base del libro
+        // Recogemos las baldosas de 
+        // Si no, no hacemos nada
+    });
+
+    $('#delete-book').on('click', function()
+    {
+        alert('Botón de delete oprimido para el libro '+ book_id);
+        // Primero, preguntamos si el usuario está seguro.
+        // Si sí, actuamos
+        // Actualizamos los datos base del libro
+        // Recogemos las baldosas de 
+        // Si no, no hacemos nada
+    });
+}
+/* Termina función que permite actualizar el libro */
