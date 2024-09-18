@@ -176,13 +176,17 @@
     cursor: pointer;
 }
 
-.btn.publish-book
+.btn.publish-book,
+.btn.save-section,
+.btn.update-section
 {
     background-color: green;
     border-color: green;
 }
 
-.btn.publish-book:hover
+.btn.publish-book:hover,
+.btn.save-section:hover,
+.btn.update-section:hover
 {
     background-color: darkgreen;
     border-color: darkgreen;
@@ -197,10 +201,10 @@
 .btn:disabled,
 .btn[disabled]
 {
-    border: 1px solid #999999;
-    background-color: #cccccc;
-    color: #666666;
-    cursor: not-allowed;
+    border: 1px solid #999999!important;
+    background-color: #cccccc!important;
+    color: #666666!important;
+    cursor: not-allowed!important;
 }
 /* Terminan estilos generales para botones normales */
 /* Terminan estilos de sección de datos principales y funciones */

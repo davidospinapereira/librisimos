@@ -179,7 +179,7 @@ function loadSections(book_id, book_status)
             // Si hay un error, generemos un mensaje
             mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
             // Y luego añadimos un pequeño huevo de pascua...
-            $('#available-genres').append('<option value="XXX">ERROR - No use esto</option>');
+            $('#section-list').append('<h4><b>ERROR</b></h4><p>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador</p>');
         }
     });
 }
@@ -360,7 +360,10 @@ function agregarSeccion()
     <div class="accordion-section" id="section-${totalSections}">
         <div class="section-title-functions">
             <input type="text" value="" placeholder="Escribe el título..." class="section-title-input">
-            <button class="btn remove-section">Eliminar</button>
+            <div class="section-title-buttons">
+                <button class="btn save-section">Guardar</button>
+                <button class="btn remove-section">Eliminar</button>
+            </div>
         </div>
         <textarea class='section-content' placeholder='Comienza a escribir...'></textarea>
     </div>`;
@@ -392,13 +395,65 @@ function updateRemoveButtons()
 {
     $('.remove-section').off('click').on('click', function () 
     {
-        // Si no existe un data de id es porque la sección es nueva, entonces no hay que hacer nada en BD
-        // Si sí existe un data de id es porque la sección existe en la base de datos. Tenemos que preguntar si está seguro
-        // Si está seguro entonces borramos de base de datos
-        // Si no está seguro, no haga nada
-        $(this).closest('.accordion-section').prev('.accordion-button').remove(); // Eliminar el botón correspondiente
-        $(this).closest('.accordion-section').remove(); // Eliminar la sección correspondiente
-        // Actualizar los números de las secciones
+        var current_section_id = $(this).closest('.accordion-section').prev('.accordion-button').data('id');
+        if (typeof current_section_id === 'undefined')
+        {
+            // Si no existe un data de id es porque la sección es nueva, entonces no hay que hacer nada en BD
+            $(this).closest('.accordion-section').prev('.accordion-button').remove(); // Eliminar el botón correspondiente
+            $(this).closest('.accordion-section').remove(); // Eliminar la sección correspondiente
+        }
+        else
+        {
+            // Si sí existe un data de id es porque la sección existe en la base de datos. Tenemos que preguntar si está seguro
+            Swal.fire(
+            {
+                title: 'Eliminar sección guardada',
+                html: '<h4 style="color: black;">Este proceso es irreversible</h4><p style="color: black;">¿Está seguro?</p>',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: "Sí",
+                denyButtonText: "No"
+            }).then((result) => 
+            {
+                if (result.isConfirmed) 
+                {
+                    // Si está seguro entonces borramos de base de datos
+                    $.ajax
+                    ({
+                        type: 'POST',
+                        url: './controller/section-crud.php',
+                        data:
+                        {
+                            borrar_seccion_edit: true,
+                            current_section_id
+                        },
+                        async: true,
+                        success: function(data)
+                        {
+                            if (data == 'SUCCESS')
+                            {
+                                // Y si se borra, hacemos el borrado de la página
+                                $(this).closest('.accordion-section').prev('.accordion-button').remove(); // Eliminar el botón correspondiente
+                                $(this).closest('.accordion-section').remove(); // Eliminar la sección correspondiente
+                            }
+                            else
+                            {
+                                // Y si no se borra, capturamos el error dentro de un mensaje
+                                mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + data + '<br/>Por favor contacte al desarrollador');
+                            }
+                        },
+                        error: function(error)
+                        {
+                            // Si hay un error, generemos un mensaje
+                            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+                        }
+                    });
+                    
+                }
+                // Si no está seguro, no hacemos nada
+            });            
+        }
+        // Finalmente, sin importar qué suceda, actualizamos los números de las secciones
         updateSectionNumbers();
     });
 }
@@ -439,7 +494,9 @@ function bookFunctions(book_id, book_status)
         // Primero, preguntamos si el usuario está seguro.
         // Si sí, actuamos
         // Actualizamos los datos base del libro
-        // Recogemos las baldosas de 
+        // Actualizamos las baldosas, tenemos que recoger un array de las ID de las baldosas
+        // Actualizamos los autores, tenemos que recoger un array de las ID de las baldosas
+        // Generamos un AJAX único con todo lo lanzado 
         // Si no, no hacemos nada
     });
 

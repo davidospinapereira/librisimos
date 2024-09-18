@@ -24,6 +24,11 @@
     {
         echo obtener_secciones_edit($_POST['book_id'], $_POST['book_status'], $json_file);
     }
+    
+    if (isset($_POST['borrar_seccion_edit']))
+    {
+        echo borrar_seccion_edit($_POST['current_section_id'], $json_file);
+    }
     /* Termina invocación AJAX */
     
     /* COMIENZA CÓDIGO C (CREATE) */
@@ -378,7 +383,10 @@
                         <div class='accordion-section' id='section-$numero_seccion'>
                             <div class='section-title-functions'>
                                 <input type='text' value='$titulo_seccion' class='section-title-input'>
-                                <button class='btn remove-section' $html_status_response>Eliminar</button>
+                                <div class='section-title-buttons'>
+                                    <button class='btn update-section' disabled>Actualizar</button>
+                                    <button class='btn remove-section' $html_status_response>Eliminar</button>
+                                </div>
                             </div>
                             <textarea class='section-content' placeholder='Comienza a escribir...'>$contenido_seccion</textarea>
                         </div>";
@@ -420,5 +428,29 @@
     /* TERMINA CÓDIGO U (UPDATE) */
 
     /* COMIENZA CÓDIGO D (DELETE) */
+    function borrar_seccion_edit($current_section_id, $json_file)
+    {
+        // Debe devolver string con HTML
+        $respuesta = "";
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Segundo, preparamos el SQL
+        $sql_borrar_seccion = 
+        "DELETE FROM `seccion` WHERE `id_seccion` = $current_section_id";
+        try 
+        {
+            $sentencia = mysqli_query($conexion, $sql_borrar_seccion);
+            $respuesta = 'SUCCESS';
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = $e;
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
     /* TERMINA CÓDIGO D (DELETE) */
 ?>
