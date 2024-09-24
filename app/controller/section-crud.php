@@ -15,7 +15,7 @@
         echo leer_otra_seccion($_POST['section_number'], $_POST['book_id'], $_POST['user_id'], $json_file);
     }
 
-    if (isset($_POST['save_section']))
+    if (isset($_POST['guardar_seccion']))
     {
         echo guardar_seccion($_POST['titulo_seccion'], $_POST['contenido_seccion'], $_POST['id_libro'], $json_file);
     }
@@ -29,6 +29,11 @@
     {
         echo borrar_seccion_edit($_POST['current_section_id'], $json_file);
     }
+    
+    if (isset($_POST['update_section']))
+    {
+        echo update_section($_POST['section_id'], $_POST['section_title'], $_POST['section_content'], $json_file);
+    }
     /* Termina invocación AJAX */
     
     /* COMIENZA CÓDIGO C (CREATE) */
@@ -41,7 +46,7 @@
         try 
         {
             // Esto se hace en 2 sqls
-            // Primero, viene el SQL 1, que inserta el contenido de la sección:
+            // Primero, viene el SQL 1, que inserta el contenido de la sección, con el número de sección controlado por MySQL y no por el usuario:
             $sql1 = "INSERT INTO `seccion` (`titulo_seccion`, `contenido_seccion`, `numero_seccion`) VALUES ('$titulo_seccion', '$contenido_seccion', (SELECT IFNULL(MAX(s.`numero_seccion`), 0) + 1 FROM `seccion` AS s INNER JOIN `componer_seccion` AS cs ON cs.`id_seccion` = s.`id_seccion` WHERE cs.`id_libro` = $id_libro))";
             $sentencia = mysqli_prepare($conexion, $sql1);
             mysqli_stmt_execute($sentencia);
@@ -51,7 +56,8 @@
             mysqli_stmt_execute($sentencia);
             // Si todo está bien, confirma la transacción
             mysqli_commit($conexion);
-            $respuesta = "Sección insertada y asociada con éxito.";
+            // Código de respuesta
+            $respuesta = "SUCCESS";
         } 
         catch (Exception $e) 
         {
@@ -425,21 +431,19 @@
     /* TERMINA CÓDIGO R (READ) */
 
     /* COMIENZA CÓDIGO U (UPDATE) */
-    /* TERMINA CÓDIGO U (UPDATE) */
-
-    /* COMIENZA CÓDIGO D (DELETE) */
-    function borrar_seccion_edit($current_section_id, $json_file)
+    /* Comienza función que actualiza una sección */
+    function update_section($section_id, $section_title, $section_content, $json_file)
     {
-        // Debe devolver string con HTML
+        // Debe devolver string con código de respuesta
         $respuesta = "";
         // Primero, debemos generar la conexión
         $conexion = abrir_conexion($json_file);
         // Segundo, preparamos el SQL
-        $sql_borrar_seccion = 
-        "DELETE FROM `seccion` WHERE `id_seccion` = $current_section_id";
+        $sql_actualizar_seccion = 
+        "UPDATE `seccion` SET `titulo_seccion`='$section_title',`contenido_seccion`='$section_content' WHERE `id_seccion` = $section_id";
         try 
         {
-            $sentencia = mysqli_query($conexion, $sql_borrar_seccion);
+            $sentencia = mysqli_query($conexion, $sql_actualizar_seccion);
             $respuesta = 'SUCCESS';
         } 
         catch (Exception $e) 
@@ -452,5 +456,43 @@
             return $respuesta;
         }
     }
+    /* Termina función que actualiza una sección */
+    /* TERMINA CÓDIGO U (UPDATE) */
+
+    /* COMIENZA CÓDIGO D (DELETE) */
+    /* Comienza función que borra una sección */
+    function borrar_seccion_edit($current_section_id, $json_file)
+    {
+        // Debe devolver string con código de respuesta
+        $respuesta = "";
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Segundo, preparamos el SQL
+        $sql_borrar_seccion = 
+        "DELETE FROM `seccion` WHERE `id_seccion` = $current_section_id";
+        // Tenemos que borrar también de la tabla conexa entre libro y sección
+        $sql_borrar_componer_seccion = 
+        "DELETE FROM `componer_seccion` WHERE `id_seccion` = $current_section_id";
+        // Y tenemos que borrar visualizaciones
+        $sql_borrar_visualizaciones = 
+        "DELETE FROM `ver_seccion` WHERE `id_seccion` = $current_section_id";
+        try 
+        {
+            $sentencia = mysqli_query($conexion, $sql_borrar_seccion);
+            $sentencia = mysqli_query($conexion, $sql_borrar_componer_seccion);
+            $sentencia = mysqli_query($conexion, $sql_borrar_visualizaciones);
+            $respuesta = 'SUCCESS';
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = $e;
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función que borra una función */
     /* TERMINA CÓDIGO D (DELETE) */
 ?>

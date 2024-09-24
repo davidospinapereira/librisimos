@@ -210,6 +210,36 @@
 /* Terminan estilos de sección de datos principales y funciones */
 
 /* Comienzan estilos de sección de controles para secciones */
+#sections-spinner
+{
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 150px;
+    display: none;
+    z-index: 9;
+}
+
+#sections-spinner.active
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sections-spinner .loader
+{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid #F4F4F4;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
 .section-intro
 {
     display: inline-flex; 
@@ -329,3 +359,17 @@
     border-color: #a7a7a7;
 }
 /* Terminan estilos de acordeón para las secciones del libro */
+
+/* Comienzan animaciones de spinner */
+@keyframes rotation 
+{
+    0% 
+    {
+      transform: rotate(0deg);
+    }
+    100% 
+    {
+      transform: rotate(360deg);
+    }
+} 
+/* Terminan animaciones de spinner */

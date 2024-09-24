@@ -80,7 +80,9 @@
                         <button class= "btn" onclick="agregarSeccion();">Añadir sección/capítulo</button>
                     </div>
                     <div id="section-list">
-                        
+                        <div class="spinner" id="sections-spinner">
+                            <span class="loader"></span>
+                        </div>
                     </div>
                 </div>
             </div>
