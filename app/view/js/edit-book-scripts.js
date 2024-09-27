@@ -9,29 +9,6 @@ bookStatus(book_id, function(status)
 });
 /* Termina definición de variables */
 
-/* Comienzan funciones automáticas */
-$(document).ready(function()
-{
-    // Si el estatus está en borrador, los botones cambian
-    loadBookData(book_id, book_status);
-    // Activamos el spinner
-    $('#sections-spinner').addClass('active');
-    setTimeout(function () 
-    {
-        // Si el estatus está en publicado, no debo poder borrar secciones
-        loadSections(book_id, book_status);
-    }, 500);
-});
-/* Terminan funciones automáticas */
-
-/* Comienzan efectos para el acordeón */
-function toggleSection(section)
-{
-    var section = $('#section-' + section);
-    section.toggleClass('active');
-}
-/* Terminan efectos para el acordeón */
-
 /* Comienza función que retorna el status del libro para poder operar con él */
 function bookStatus(book_id, callback)
 {
@@ -59,253 +36,31 @@ function bookStatus(book_id, callback)
 }
 /* Termina función que retorna el status del libro para poder operar con él */
 
-/* Comienza función que carga los datos del libro y los pone en su sitio */
-function loadBookData(book_id, book_status)
+/* Comienzan funciones automáticas */
+$(document).ready(function()
 {
-    var book_status_text = '';
-    var book_publish_button = '';
-    if(book_status == 1)
-    {
-        // Si es 1 es publicado
-        book_status_text = '<span class="status-tile published">PUBLICADO</span>';
-    }
-    else if(book_status == 2)
-    {
-        // Si es 2 es borrador
-        book_status_text = '<span class="status-tile draft">BORRADOR</span>';
-        // Aquí agregamos el html de publicar, en verde
-        book_publish_button = '<button class="btn publish-book" id="publish-book">PUBLICAR</button>';
-    }
-    else
-    {
-        // Si es cualquier otra cosa
-        book_status_text = '<span class="status-tile error">ERROR</span>';
-    }
-    // Los datos son sólo el ID del libro
-    $.ajax
-    ({
-        type: 'POST',
-        url: './controller/book-crud.php',
-        data:
-        {
-            get_book_edit_data: true,
-            book_id
-        },
-        async: true,
-        success: function(data)
-        {
-            // Modificación: Si el status del libro es borrador debo agregar 
-            // Tenemos que poner cada cosa en su lugar, primero que nada trayendo el JSON
-            results = JSON.parse(data);
-            $('#book-name').val(results.nombre_libro);
-            if (results.url_caratula_libro == null || results.url_caratula_libro == '')
-            {
-                $('#image').css('background-image', 'url("./view/uploads/books/generic-book-cover.jpg")');
-            }
-            else
-            {
-                $('#image').css('background-image', 'url("./' + results.url_caratula_libro + '")');
-            }
-            $('#id-book').html('ID de libro: ' + book_id);
-            $('#book-status').html(book_status_text);
-            $('#genre-list').html(results.generos_html);
-            $('#author-list').html(results.autores_html);
-            $('#description').html(results.sinopsis_libro);
-            /* Comienza instancia de TinyMCE */
-            tinymce.init
-            ({
-                selector: '#description',
-                language: 'es',
-                branding: false,
-                menubar: false,
-                resize: false,
-                height: 200,
-                plugins: 'code lists',
-                toolbar: 'undo redo | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | code',
-                license_key: 'gpl'
-            });    
-            /* Termina instancia de TinyMCE */
-            // Cargando los botones
-            $('#functions').html(
-                book_publish_button + 
-                '<button class="btn" id="update-book">Actualizar libro</button><button class="btn" id="cancel-edit">Cancelar edición</button><button class="btn" id="delete-book">Borrar libro</button>'
-            );
-            // Luego, aquí dentro, tenemos que cargar las funciones de los botones
-            bookFunctions(book_id, book_status);
-        },
-        error: function(error)
-        {
-            // Si hay un error, generemos un mensaje
-            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
-        }
-    });    
-    loadGenres();
-    loadAuthors();
-}
-/* Termina función que carga los datos del libro y los pone en su sitio */
-
-/* Comienza función que carga las secciones del libro y genera tantas secciones como sea necesario */
-function loadSections(book_id, book_status)
-{
-    // Aquí vamos, recibimos un HTML que insertamos
-    $.ajax
-    ({
-        type: 'POST',
-        url: './controller/section-crud.php',
-        data:
-        {
-            obtener_secciones_edit: true,
-            book_id,
-            book_status
-        },
-        async: true,
-        success: function(data)
-        {
-            $('#book-sections-data').html('');
-            $('#book-sections-data').html(data);
-            // Instanciamos TinyMCE por este lado, sólo así me da
-            tinymce.init
-            ({
-                selector: '.section-content',
-                language: 'es',
-                branding: false,
-                menubar: false,
-                resize: false,
-                height: 350,
-                plugins: 'code lists',
-                toolbar: 'undo redo | styles | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | code',
-                license_key: 'gpl',
-                setup: function (editor) 
-                {
-                    // Evento que se activa cuando el contenido cambia (cuando el usuario escribe)
-                    editor.on('keyup', function () 
-                    {
-                        // Habilitar el botón de "Actualizar" cuando se modifique el contenido
-                        $(editor.getElement()).closest('.accordion-section').find('.update-section').prop('disabled', false);
-                    });
-
-                    // Puedes agregar el evento 'change' por si se hace algún cambio mayor, aunque 'keyup' es suficiente
-                    editor.on('change', function () 
-                    {
-                        $(editor.getElement()).closest('.accordion-section').find('.update-section').prop('disabled', false);
-                    });
-                }
-            });
-            // Obtenemos los datos de cada botón de actualizar y les aplicamos la función de actualizar...
-            // Actualizar la funcionalidad de botones de eliminación
-            updateRemoveButtons();
-            // Actualizar la funcionalidad de cambio de nombre en la escritura
-            updateTitleInputs();
-            // Actualizar la funcionalidad de actualización de secciones existentes
-            /* $('#section-' + totalSections + '-save').on('click', function()
-            {
-                var section_number = totalSections; // El número de sección lo crea el sistema y no el usuario
-                var section_title = $('#section-' + totalSections + '-title').val();
-                // Y si el usuario no escribió un título?
-                if (section_title == '' || section_title == null)
-                {
-                    // Pues el título será el número de la sección, esto se ve en muchos libros
-                    section_title = section_number;
-                }
-                // El contenido de la sección puede incluso ser vacío y deberá poder guardarse
-                var section_content = tinymce.get('section-' + totalSections + '-content').getContent();
-                saveNewSection(book_id, section_number, section_title, section_content);
-            }); */
-        },
-        error: function(error)
-        {
-            // Si hay un error, generemos un mensaje
-            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
-            // Y luego añadimos un pequeño huevo de pascua...
-            $('#section-list').append('<h4><b>ERROR</b></h4><p>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador</p>');
-        }
-    });
-}
-/* Termina función que carga las secciones del libro y genera tantas secciones como sea necesario */
-
-/* Comienza función que quita una baldosa */
-function quitarBaldosa(tipo, id)
-{
-    // Si tipo es 1, es género
-    if (tipo == 1)
-    {
-        $('#genero-' + id).remove();        
-    }
-    // Si no, es autor
-    else
-    {
-        $('#autor-' + id).remove();
-    }
-    // Sin importar cuál sea, hay que resetear los usados de ese tipo
-    resetUsed(tipo);
-}
-/* Termina función que quita una baldosa */
-
-/* Comienza función que carga en el select de géneros a todos los géneros */
-function loadGenres()
-{
-    // Esto lo llamamos por AJAX obtener_generos_edit
-    $.ajax
-    ({
-        type: 'POST',
-        url: './controller/genre-crud.php',
-        data:
-        {
-            obtener_generos_edit: true
-        },
-        async: true,
-        success: function(data)
-        {
-            // Si los datos llegan correctamente, añadimos al select lo que nos envíe el sistema
-            $('#available-genres').append(data);
-        },
-        error: function(error)
-        {
-            // Si hay un error, generemos un mensaje
-            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
-            // Y luego añadimos un pequeño huevo de pascua...
-            $('#available-genres').append('<option value="XXX">ERROR - No use esto</option>');
-        }
-    });
+    // Primero, la información del libro
+    loadBookData(book_id, book_status);
+    // Luego, los botones principales
+    loadMainButtons(book_id, book_status);
+    // Luego, ponemos en activo el spinner
+    $('#sections-spinner').addClass('active');
+    // Luego, jalamos las secciones existentes y las demoramos medio segundo como mínimo
     setTimeout(function()
     {
-        resetUsed(1);
+        loadSections(book_id, book_status);
     }, 500);
-}
-/* Termina función que carga en el select de géneros a todos los géneros */
+});
+/* Terminan funciones automáticas */
 
-/* Comienza función que carga en el select de géneros a todos los autores */
-function loadAuthors()
+/* Comienzan efectos visuales */
+/* Comienzan efectos para el acordeón */
+function toggleSection(section)
 {
-    // Esto lo llamamos por AJAX obtener_generos_edit
-    $.ajax
-    ({
-        type: 'POST',
-        url: './controller/author-crud.php',
-        data:
-        {
-            obtener_autores_edit: true
-        },
-        async: true,
-        success: function(data)
-        {
-            // Si los datos llegan correctamente, añadimos al select lo que nos envíe el sistema
-            $('#available-authors').append(data);
-        },
-        error: function(error)
-        {
-            // Si hay un error, generemos un mensaje
-            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
-            // Y luego añadimos un pequeño huevo de pascua...
-            $('#available-authors').append('<option value="XXX">ERROR - No use esto</option>');
-        }
-    });
-    setTimeout(function()
-    {
-        resetUsed(2);
-    }, 500);
+    var section = $('#section-' + section);
+    section.toggleClass('active');
 }
-/* Termina función que carga en el select de géneros a todos los autores */
+/* Terminan efectos para el acordeón */
 
 /* Comienza función genérica que resetea y deshabilita los options usados de géneros o autores */
 function resetUsed(tipo)
@@ -387,162 +142,25 @@ function agregarElementoLista(tipo, item)
 }
 /* Termina función genérica para agregar las opciones del select a los listados cuando se de clic en el botón de añadir */
 
-/* Comienza función para agregar secciones */
-function agregarSeccion() 
+/* Comienza función que quita una baldosa */
+function quitarBaldosa(tipo, id)
 {
-    // Obtener el número de la nueva sección basado en el total de secciones actuales
-    var totalSections = $('#section-list .accordion-button').length + 1;
-    // Crear el HTML de la nueva sección
-    var newSection = `
-    <button class="accordion-button" data-number="${totalSections}" onclick="toggleSection(${totalSections});">Sección ${totalSections}: </button>
-    <div class="accordion-section active" id="section-${totalSections}">
-        <div class="section-title-functions">
-            <input type="text" value="" placeholder="Escribe el título..." class="section-title-input" id="section-${totalSections}-title">
-            <div class="section-title-buttons">
-                <button class="btn save-section" id="section-${totalSections}-save" disabled>Guardar</button>
-                <button class="btn remove-section">Eliminar</button>
-            </div>
-        </div>
-        <textarea class='section-content' placeholder='Comienza a escribir...' id="section-${totalSections}-content"></textarea>
-    </div>`;
-    // Insertar la nueva sección al inicio del contenedor de secciones
-    $('#section-list').prepend(newSection);
-
-    // Instanciar el editor TinyMCE en el nuevo textarea
-    tinymce.init
-    ({
-        selector: '.section-content',
-        language: 'es',
-        branding: false,
-        menubar: false,
-        resize: false,
-        height: 350,
-        plugins: 'code lists',
-        toolbar: 'undo redo | styles | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | code',
-        license_key: 'gpl',
-        setup: function (editor)
-        {
-            // Evento que se activa cuando el contenido cambia (cuando el usuario escribe)
-            editor.on('keyup', function () 
-            {
-                // Habilitar el botón de "Actualizar" cuando se modifique el contenido
-                $(editor.getElement()).closest('.accordion-section').find('.save-section').prop('disabled', false);
-            });
-
-            // Puedes agregar el evento 'change' por si se hace algún cambio mayor, aunque 'keyup' es suficiente
-            editor.on('change', function () 
-            {
-                $(editor.getElement()).closest('.accordion-section').find('.save-section').prop('disabled', false);
-            });
-        }
-    });
-    // Actualizar la funcionalidad de los botones "Eliminar sección"
-    updateRemoveButtons();
-    // Actualizar la funcionalidad de cambio de nombre en la escritura
-    updateTitleInputs();
-    // Agregar la funcionalidad de guardado de la sección en BD
-    $('#section-' + totalSections + '-save').on('click', function()
+    // Si tipo es 1, es género
+    if (tipo == 1)
     {
-        var section_number = totalSections; // El número de sección lo crea el sistema y no el usuario
-        var section_title = $('#section-' + totalSections + '-title').val();
-        // Y si el usuario no escribió un título?
-        if (section_title == '' || section_title == null)
-        {
-            // Pues el título será el número de la sección, esto se ve en muchos libros
-            section_title = section_number;
-        }
-        // El contenido de la sección puede incluso ser vacío y deberá poder guardarse
-        var section_content = tinymce.get('section-' + totalSections + '-content').getContent();
-        saveNewSection(book_id, section_number, section_title, section_content);
-    });
-}
-/* Termina función para agregar secciones */
-
-/* Comienza función para eliminar una sección, con el apoyo de ChatGPT, hay que arreglarla para base de datos */
-function updateRemoveButtons() 
-{
-    $('.remove-section').off('click').on('click', function () 
+        $('#genero-' + id).remove();        
+    }
+    // Si no, es autor
+    else
     {
-        var current_section_id = $(this).closest('.accordion-section').prev('.accordion-button').data('id');
-        if (typeof current_section_id === 'undefined')
-        {
-            // Si no existe un data de id es porque la sección es nueva, entonces no hay que hacer nada en BD
-            $(this).closest('.accordion-section').prev('.accordion-button').remove(); // Eliminar el botón correspondiente
-            $(this).closest('.accordion-section').remove(); // Eliminar la sección correspondiente
-        }
-        else
-        {
-            // Si sí existe un data de id es porque la sección existe en la base de datos. Tenemos que preguntar si está seguro
-            Swal.fire(
-            {
-                title: 'Eliminar sección guardada',
-                html: '<h4 style="color: black;">Este proceso es irreversible</h4><p style="color: black;">¿Está seguro?</p>',
-                showDenyButton: true,
-                showCancelButton: false,
-                confirmButtonText: "Sí",
-                denyButtonText: "No"
-            }).then((result) => 
-            {
-                if (result.isConfirmed) 
-                {
-                    // Si está seguro entonces borramos de base de datos
-                    $.ajax
-                    ({
-                        type: 'POST',
-                        url: './controller/section-crud.php',
-                        data:
-                        {
-                            borrar_seccion_edit: true,
-                            current_section_id
-                        },
-                        async: true,
-                        success: function(data)
-                        {
-                            if (data == 'SUCCESS')
-                            {
-                                mensaje('success', '<b>ÉXITO</b><br/>Sección borrada exitosamente.');
-                                // Y si se borra, hacemos el borrado de la página
-                                $(this).closest('.accordion-section').prev('.accordion-button').remove(); // Eliminar el botón correspondiente
-                                $(this).closest('.accordion-section').remove(); // Eliminar la sección correspondiente
-                            }
-                            else
-                            {
-                                // Y si no se borra, capturamos el error dentro de un mensaje
-                                mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + data + '<br/>Por favor contacte al desarrollador');
-                            }
-                        },
-                        error: function(error)
-                        {
-                            // Si hay un error, generemos un mensaje
-                            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
-                        }
-                    });
-                    
-                }
-                // Si no está seguro, no hacemos nada
-            });            
-        }
-        // Finalmente, sin importar qué suceda, actualizamos los números de las secciones
-        updateSectionNumbers();
-    });
+        $('#autor-' + id).remove();
+    }
+    // Sin importar cuál sea, hay que resetear los usados de ese tipo
+    resetUsed(tipo);
 }
-/* Termina función para eliminar una sección, con el apoyo de ChatGPT */
+/* Termina función que quita una baldosa */
 
-/* Comienza función para actualizar los números de las secciones */
-function updateSectionNumbers() 
-{
-    $('#section-list .accordion-button').each(function (index) 
-    {
-        var newNumber = $('#section-list .accordion-button').length - index;
-        $(this).attr('data-number', newNumber);
-        var titleText = $(this).text().split(":")[1]; // Mantener el título si ya tiene uno
-        $(this).text(`Sección ${newNumber}: ${titleText || ''}`);
-    });
-    updateRemoveButtons();
-}
-/* Termina función para actualizar los números de las secciones */
-
-/* Comienza función para actualizar el título en el botón al escribir en el input de título */
+/* Comienza función que permite que se active el botón de actualizar cuando se cambie el título */
 function updateTitleInputs() 
 {
     $('.section-title-input').off('input').on('input', function () 
@@ -556,207 +174,261 @@ function updateTitleInputs()
         $(this).closest('.accordion-section').find('.save-section').prop('disabled', false);
     });
 }
-/* Termina función para actualizar el título en el botón al escribir en el input de título */
+/* Termina función que permite que se active el botón de actualizar cuando se cambie el título */
+/* Terminan efectos visuales */
 
-/* Comienza función para habilitar el botón de "Actualizar" cuando se realicen cambios en el contenido */
-function updateSectionContentInputs() 
+/* Comienzan funciones de llenado de datos */
+/* Comienza función que carga los datos base del libro */
+function loadBookData(book_id, book_status)
 {
-    tinymce.init({
-        selector: '.section-content',
-        language: 'es',
-        branding: false,
-        menubar: false,
-        resize: false,
-        height: 350,
-        plugins: 'code lists',
-        toolbar: 'undo redo | styles | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | code',
-        license_key: 'gpl',
-        setup: function (editor) 
+    var book_status_span = '';
+    // Si el status es 1 es publicado
+    if (book_status == 1)
+    {
+        book_status_span = '<span class="status-tile published">PUBLICADO</span>';
+    }
+    // Si el status es 2 es borrador
+    else if (book_status == 2)
+    {
+        book_status_span = '<span class="status-tile draft">BORRADOR</span>';
+    }
+    // Si el status es cualquier otra cosa es un error
+    else
+    {
+        book_status_span = '<span class="status-tile error">ERROR</span>';
+    }
+    $.ajax
+    ({
+        type: 'POST',
+        url: './controller/book-crud.php',
+        data:
         {
-            // Evento que se activa cuando el contenido cambia (cuando el usuario escribe)
-            editor.on('keyup', function () 
+            get_book_edit_data: true,
+            book_id
+        },
+        async: true,
+        success: function(data)
+        {
+            // Tenemos que poner cada cosa en su lugar, primero que nada trayendo el JSON
+            results = JSON.parse(data);
+            // Nombre del libro
+            $('#book-name').val(results.nombre_libro);
+            // Carátula del libro, con la opción de qué pasa si no tiene carátula registrada
+            if (results.url_caratula_libro == null || results.url_caratula_libro == '')
             {
-                // Habilitar el botón de "Actualizar" cuando se modifique el contenido
-                $(editor.getElement()).closest('.accordion-section').find('.update-section').prop('disabled', false);
-                $(editor.getElement()).closest('.accordion-section').find('.save-section').prop('disabled', false);
-            });
-
-            // Puedes agregar el evento 'change' por si se hace algún cambio mayor, aunque 'keyup' es suficiente
-            editor.on('change', function () 
+                $('#image').css('background-image', 'url("./view/uploads/books/generic-book-cover.jpg")');
+            }
+            else
             {
-                $(editor.getElement()).closest('.accordion-section').find('.update-section').prop('disabled', false);
-                $(editor.getElement()).closest('.accordion-section').find('.save-section').prop('disabled', false);
+                $('#image').css('background-image', 'url("./' + results.url_caratula_libro + '")');
+            }
+            // ID del libro
+            $('#id-book').html('ID de libro: ' + book_id);
+            // Status del libro
+            $('#book-status').html(book_status_span);
+            // Géneros del libro
+            $('#genre-list').html(results.generos_html);
+            // Autores del libro
+            $('#author-list').html(results.autores_html);
+            // Sinopsis del libro
+            $('#description').html(results.sinopsis_libro);
+            // Aplicando TinyMCE a la sinopsis del libro
+            tinymce.init
+            ({
+                selector: '#description',
+                language: 'es',
+                branding: false,
+                menubar: false,
+                resize: false,
+                height: 200,
+                plugins: 'code lists',
+                toolbar: 'undo redo | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | code',
+                license_key: 'gpl'
             });
+        },
+        error: function(error)
+        {
+            // Si hay un error, generemos un mensaje
+            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
         }
     });
+    // Cargamos los selects con los géneros
+    loadGenres();
+    // Cargamos los selects con los autores
+    loadAuthors();
 }
-/* Termina función para habilitar el botón de "Actualizar" cuando se realicen cambios en el contenido */
+/* Termina función que carga los datos base del libro */
 
-/* Comienzan funciones de control para los botones principales del libro */
-function bookFunctions(book_id, book_status)
+/* Comienza función que carga los botones principales */
+function loadMainButtons(book_id, book_status)
 {
-    $('#publish-book').on('click', function()
+    var publish_update_btn = '';
+    // Si el status es 1 está publicado
+    if (book_status = 1)
     {
-        alert('Botón de update book oprimido para el libro '+ book_id);
-        // Primero, preguntamos si el usuario está seguro.
-        // Si sí, actuamos
-        // Actualizamos los datos base del libro
-        // Actualizamos las baldosas, tenemos que recoger un array de las ID de las baldosas
-        // Actualizamos los autores, tenemos que recoger un array de las ID de las baldosas
-        // Generamos un AJAX único con todo lo lanzado 
-        // Si no, no hacemos nada
-    });
-
+        publish_update_btn = '<button class="btn" id="update-book">Actualizar libro</button>';
+    }
+    // Si el status es 2 está en borrador
+    else if (book_status = 2)
+    {
+        publish_update_btn = '<button class="btn publish-book" id="publish-book">PUBLICAR</button>';
+    }
+    // De cualquier otra manera hay un error, no debe poner nada más
+    var all_buttons = publish_update_btn + '<button class="btn" id="cancel-edit">Cancelar edición</button><button class="btn" id="delete-book">Borrar libro</button>';
+    $('#functions').html(all_buttons);
+    // Agregamos funciones para cada botón. Debe ser aquí dentro para que se inscriban correctamente
     $('#update-book').on('click', function()
     {
-        alert('Botón de update book oprimido para el libro '+ book_id);
-        // Primero, preguntamos si el usuario está seguro.
-        // Si sí, actuamos
-        // Actualizamos los datos base del libro
-        // Recogemos las baldosas de 
-        // Si no, no hacemos nada
-    });
-
+        mensaje('success', '<b>EXITO</b><br/>ID del libro: ' + book_id + '<br/>Status del libro: ' + book_status + '<br/>Botón presionado: ACTUALIZAR');
+    })
+    $('#publish-book').on('click', function()
+    {
+        mensaje('success', '<b>EXITO</b><br/>ID del libro: ' + book_id + '<br/>Status del libro: ' + book_status + '<br/>Botón presionado: PUBLICAR');
+    })
     $('#cancel-edit').on('click', function()
     {
-        alert('Botón de cancel oprimido para el libro '+ book_id);
-        // Primero, preguntamos si el usuario está seguro.
-        // Si sí, actuamos
-        // Actualizamos los datos base del libro
-        // Recogemos las baldosas de 
-        // Si no, no hacemos nada
-    });
-
+        mensaje('success', '<b>EXITO</b><br/>ID del libro: ' + book_id + '<br/>Status del libro: ' + book_status + '<br/>Botón presionado: CANCELAR');
+    })
     $('#delete-book').on('click', function()
     {
-        alert('Botón de delete oprimido para el libro '+ book_id);
-        // Primero, preguntamos si el usuario está seguro.
-        // Si sí, actuamos
-        // Actualizamos los datos base del libro
-        // Recogemos las baldosas de 
-        // Si no, no hacemos nada
-    });
+        mensaje('success', '<b>EXITO</b><br/>ID del libro: ' + book_id + '<br/>Status del libro: ' + book_status + '<br/>Botón presionado: BORRAR');
+    })
 }
-/* Terminan funciones de control para los botones principales del libro */
+/* Termina función que carga los botones principales */
 
-/* Comienza función para actualizar una sección */
-function updateSection(section_id, section_title, section_content)
+/* Comienza función que carga en el select de géneros a todos los autores */
+function loadAuthors()
 {
-    Swal.fire(
-    {
-        title: 'Eliminar sección guardada',
-        html: '<h4 style="color: black;">Este proceso es irreversible</h4><p style="color: black;">¿Está seguro?</p>',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonText: "Sí",
-        denyButtonText: "No"
-    }).then((result) => 
-    {
-        if (result.isConfirmed) 
-        {
-            // Si está seguro entonces borramos de base de datos
-            $.ajax
-            ({
-                type: 'POST',
-                url: './controller/section-crud.php',
-                data: 
-                {
-                    update_section: true,
-                    section_id,
-                    section_title,
-                    section_content
-                },
-                success: function(response) 
-                {
-                    if (response == 'SUCCESS') 
-                    {
-                        // Mostrar mensaje de éxito
-                        mensaje('success', '<b>ÉXITO</b><br/>Sección actualizada exitosamente.');
-                        // Y reiniciamos el listado de secciones
-                        // Reactivamos el spinner
-                        $('#section-list').html("");
-                        $('#section-list').html
-                        (
-                            "<div class='spinner active' id='sections-spinner'><span class='loader'></span></div>"
-                        );
-                        setTimeout(function () 
-                        {
-                            $('#section-list').html("");
-                            // Si el estatus está en publicado, no debo poder borrar secciones
-                            loadSections(book_id, book_status);
-                        }, 500);
-                    } 
-                    else 
-                    {
-                        // Mostrar mensaje de error
-                        mensaje('error', '<b>ERROR</b><br/>No se pudo actualizar la sección:<br/>' + response);
-                    }
-                },
-                error: function(error) 
-                {
-                    // Mostrar mensaje de error en caso de fallo de conexión
-                    mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
-                }
-            });
-        }
-        // Si no está seguro, no hacemos nada
-    });
-    
-}
-/* Termina función para actualizar una sección */
-
-/* Comienza función para registrar una nueva sección */
-function saveNewSection(book_id, section_title, section_content)
-{
-    Swal.fire
+    // Esto lo llamamos por AJAX obtener_generos_edit
+    $.ajax
     ({
-        title: 'Eliminar sección guardada',
-        html: '<h4 style="color: black;">Este proceso es irreversible</h4><p style="color: black;">¿Está seguro?</p>',
-        showDenyButton: true,
-        showCancelButton: false,
-        confirmButtonText: "Sí",
-        denyButtonText: "No"
-    }).then((result) => 
-    {
-        if (result.isConfirmed) 
+        type: 'POST',
+        url: './controller/author-crud.php',
+        data:
         {
-            // Si se dice que sí, activamos un AJAX
-            $.ajax
+            obtener_autores_edit: true
+        },
+        async: true,
+        success: function(data)
+        {
+            // Si los datos llegan correctamente, añadimos al select lo que nos envíe el sistema
+            $('#available-authors').append(data);
+        },
+        error: function(error)
+        {
+            // Si hay un error, generemos un mensaje
+            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+            // Y luego añadimos un pequeño huevo de pascua...
+            $('#available-authors').append('<option value="XXX">ERROR - No use esto</option>');
+        }
+    });
+    setTimeout(function()
+    {
+        resetUsed(2);
+    }, 500);
+}
+/* Termina función que carga en el select de géneros a todos los autores */
+
+/* Comienza función que carga en el select de géneros a todos los géneros */
+function loadGenres()
+{
+    // Esto lo llamamos por AJAX obtener_generos_edit
+    $.ajax
+    ({
+        type: 'POST',
+        url: './controller/genre-crud.php',
+        data:
+        {
+            obtener_generos_edit: true
+        },
+        async: true,
+        success: function(data)
+        {
+            // Si los datos llegan correctamente, añadimos al select lo que nos envíe el sistema
+            $('#available-genres').append(data);
+        },
+        error: function(error)
+        {
+            // Si hay un error, generemos un mensaje
+            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+            // Y luego añadimos un pequeño huevo de pascua...
+            $('#available-genres').append('<option value="XXX">ERROR - No use esto</option>');
+        }
+    });
+    setTimeout(function()
+    {
+        resetUsed(1);
+    }, 500);
+}
+/* Termina función que carga en el select de géneros a todos los géneros */
+
+/* Comienza función que carga las secciones existentes en su respectivo espacio */
+function loadSections(book_id, book_status)
+{
+    // Aquí vamos, recibimos un HTML que insertamos
+    $.ajax
+    ({
+        type: 'POST',
+        url: './controller/section-crud.php',
+        data:
+        {
+            obtener_secciones_edit: true,
+            book_id,
+            book_status
+        },
+        async: true,
+        success: function(data)
+        {
+            $('#book-sections-data').html('');
+            $('#book-sections-data').html(data);
+            // Instanciamos TinyMCE por este lado, sólo así me da
+            tinymce.init
             ({
-                type: 'POST',
-                url: './controller/section-crud.php',
-                // Debemos adaptar el creador de sección que tenemos en section-crud.php
-                data:
+                selector: '.section-content',
+                language: 'es',
+                branding: false,
+                menubar: false,
+                resize: false,
+                height: 350,
+                plugins: 'code lists',
+                toolbar: 'undo redo | styles | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | code',
+                license_key: 'gpl',
+                setup: function (editor) 
                 {
-                    guardar_seccion: true,
-                    titulo_seccion: section_title,
-                    contenido_seccion: section_content,
-                    id_libro: book_id
-                },
-                async: true,
-                success: function(data)
-                {
-                    if (data == 'SUCCESS')
+                    // Evento que se activa cuando el contenido cambia (cuando el usuario escribe)
+                    editor.on('keyup', function () 
                     {
-                        // Cuando tenga éxito, debemos generar un mensaje de éxito
-                        mensaje('success', '<b>ÉXITO</b><br/>Sección guardada exitosamente.');
-                        // Además, tenemos que recargar el listado de secciones... Y si hay varias secciones que el usuario quiere guardar y tiene listas? Cómo hacemos para que no pierda las otras?
-                    }
-                    else
+                        // Habilitar el botón de "Actualizar" cuando se modifique el contenido
+                        $(editor.getElement()).closest('.accordion-section').find('.update-section').prop('disabled', false);
+                        // Cuando se haga un cambio en el contenido debe desactivarse el botón de añadir secciones
+                        $('#add-section-btn').prop('disabled', true);
+                    });
+                    // Puedes agregar el evento 'change' por si se hace algún cambio mayor, aunque 'keyup' es suficiente
+                    editor.on('change', function () 
                     {
-                        // Cuando haya una falla, debemos generar un mensaje de error
-                        mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + data + '<br/>Por favor contacte al desarrollador');
-                    }
-                },
-                error: function(error)
-                {
-                    // Si hay un error, generemos un mensaje
-                    mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+                        $(editor.getElement()).closest('.accordion-section').find('.update-section').prop('disabled', false);
+                        $('#add-section-btn').prop('disabled', true);
+                    });
                 }
             });
-            
+            // Obtenemos los datos de cada botón de actualizar y les aplicamos la función de actualizar...
+            // Actualizar la funcionalidad de cambio de nombre en la escritura
+            updateTitleInputs();
+            // La función de remover secciones guardadas en la base de datos debe existir aquí porque puede ser un libro no publicado
+            updateRemoveButtons();
+            // Debemos actualizar después de esto la funcionalidad de actualizar secciones existentes.
+        },
+        error: function(error)
+        {
+            // Si hay un error, generemos un mensaje
+            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+            // Y luego añadimos un pequeño huevo de pascua...
+            $('#section-list').append('<h4><b>ERROR</b></h4><p>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador</p>');
         }
-        // Si no está seguro, no hacemos nada
-    }); 
+    });
 }
-/* Termina función para registrar una nueva sección */
+/* Termina función que carga las secciones existentes en su respectivo espacio */
+/* Terminan funciones de llenado de datos */
+
+/* Comienzan funciones de guardado de datos */
+/* Terminan funciones de guardado de datos */
