@@ -77,7 +77,7 @@
                 <div class="col w100" id="book-sections-data">
                     <div class='section-intro'>
                         <h4>Secciones</h4>
-                        <button class= "btn" onclick="agregarSeccion();">Añadir sección/capítulo</button>
+                        <button class= "btn" id="add-section-btn" onclick="agregarSeccion();">Añadir sección/capítulo</button>
                     </div>
                     <div id="section-list">
                         <div class="spinner" id="sections-spinner">

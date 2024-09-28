@@ -375,7 +375,7 @@
                     $respuesta .= 
                     "<div class='section-intro'>
                         <h4>Secciones</h4>
-                        <button class= 'btn' onclick='agregarSeccion();'>Añadir sección/capítulo</button>
+                        <button class= 'btn' id='add-section-btn' onclick='agregarSeccion();'>Añadir sección/capítulo</button>
                     </div>
                     <div id='section-list'>";
                     while ($row = mysqli_fetch_assoc($sentencia_secciones))

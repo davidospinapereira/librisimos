@@ -199,7 +199,9 @@
 }
 
 .btn:disabled,
-.btn[disabled]
+.btn[disabled],
+#add-section-btn:disabled,
+#add-section-btn[disabled]
 {
     border: 1px solid #999999!important;
     background-color: #cccccc!important;
