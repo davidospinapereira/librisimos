@@ -61,6 +61,11 @@
     {
         echo get_book_status($_POST['book_id'], $json_file);
     }
+
+    if (isset($_POST['update_book']))
+    {
+        echo update_book($_POST['id_libro'], $_POST['nombre_libro'], json_decode($_POST['generos_libro']), json_decode($_POST['autores_libro']), $_POST['sinopsis_libro'], $_POST['url_imagen_save'], $json_file);
+    }
     /* Termina invocación AJAX */
 
     /* Comienza la función que genera los datos de la tabla de continuar leyendo */
@@ -168,7 +173,14 @@
                     while ($row = mysqli_fetch_assoc($sentencia)) 
                     {
                         $id_libro = $row['id_libro'];
-                        $url_caratula_libro = $row['url_caratula_libro'];
+                        if ($row['url_caratula_libro'] != '' || $row['url_caratula_libro'] != NULL)
+                        {
+                            $url_caratula_libro = $row['url_caratula_libro'];
+                        }
+                        else
+                        {
+                            $url_caratula_libro = './view/uploads/books/generic-book-cover.jpg';
+                        }
                         $nombre_libro = $row['nombre_libro'];
                         $nombre_autor = $row['nombre_autor'];
                         $nombre_genero = $row['nombre_genero'];
@@ -781,4 +793,46 @@
         }
     }
     /* Termina función que recupera sólo el id de status del libro */
+
+    /* Comienza función que actualiza los datos base de un libro */
+    function update_book($id_libro, $nombre_libro, $generos_libro, $autores_libro, $sinopsis_libro, $url_imagen_save, $json_file)
+    {
+        $respuesta = '';
+        // Primero, abrimos la conexión
+        $conexion = abrir_conexion($json_file);
+        // SQL para los datos base del libro
+        $sql_datos_libro = "UPDATE `libro` SET `nombre_libro`='$nombre_libro',`url_caratula_libro`='$url_imagen_save',`sinopsis_libro`='$sinopsis_libro' WHERE `id_libro`=$id_libro";
+        try 
+        {
+            // Actualizamos el SQL base del libro 
+            $sentencia = mysqli_query($conexion, $sql_datos_libro);
+            // Géneros y autores vienen decodificados desde la invocación, no hace falta decodificar aquí
+            // Trabajamos con géneros
+            for ($i = 0; $i < count($generos_libro); $i++)
+            {
+                $id_genero = $generos_libro[i];
+                $sql_genero_libro = "INSERT IGNORE INTO `generos_libro` (`id_libro`, `id_genero`) VALUES ($id_libro, $id_genero)";
+                var_dump($sql_genero_libro);
+                $sentencia = mysqli_query($conexion, $sql_genero_libro);
+            }
+            // Trabajamos con autores
+            for ($i = 0; $i < count($autores_libro); $i++)
+            {
+                $id_autor = $autores_libro[i];
+                $sql_autor_libro = "INSERT IGNORE INTO `autores_libro` (`id_libro`, `id_autor`) VALUES ($id_libro, $id_autor)";
+                $sentencia = mysqli_query($conexion, $sql_autor_libro);
+            }
+            $respuesta = 'SUCCESS';
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = $e;
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función que actualiza los datos base de un libro */
 ?>

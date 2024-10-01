@@ -213,10 +213,10 @@ function actualizarPerfil()
                         // Si se dice que sí, comenzamos el proceso
                         // Primero, el código AJAX de ChatGPT para subir imágenes al servidor
                         var formData = new FormData();
-                        var file = $('#file-selector')[0].files[0];
-                        if(file)
+                        var user_file = $('#file-selector')[0].files[0];
+                        if(user_file)
                         {
-                            formData.append('file', file);
+                            formData.append('user_file', user_file);
                             $.ajax
                             ({
                                 url: './controller/picture-save.php', // Archivo PHP para manejar la subida de imagenes

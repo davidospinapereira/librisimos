@@ -1,6 +1,7 @@
 /* Comienza definición de variables */
 var book_id = $('#book-id').val();
 var user_id = $('#user-id').val();
+var book_cover_url = 'view/uploads/books/generic-book-cover.jpg';
 var book_status = 0;
 bookStatus(book_id, function(status) 
 {
@@ -221,6 +222,7 @@ function loadBookData(book_id, book_status)
             else
             {
                 $('#image').css('background-image', 'url("./' + results.url_caratula_libro + '")');
+                book_cover_url = results.url_caratula_libro;
             }
             // ID del libro
             $('#id-book').html('ID de libro: ' + book_id);
@@ -264,12 +266,12 @@ function loadMainButtons(book_id, book_status)
 {
     var publish_update_btn = '';
     // Si el status es 1 está publicado
-    if (book_status = 1)
+    if (book_status == 1)
     {
         publish_update_btn = '<button class="btn" id="update-book">Actualizar libro</button>';
     }
     // Si el status es 2 está en borrador
-    else if (book_status = 2)
+    else if (book_status == 2)
     {
         publish_update_btn = '<button class="btn publish-book" id="publish-book">PUBLICAR</button>';
     }
@@ -279,7 +281,7 @@ function loadMainButtons(book_id, book_status)
     // Agregamos funciones para cada botón. Debe ser aquí dentro para que se inscriban correctamente
     $('#update-book').on('click', function()
     {
-        mensaje('success', '<b>EXITO</b><br/>ID del libro: ' + book_id + '<br/>Status del libro: ' + book_status + '<br/>Botón presionado: ACTUALIZAR');
+        actualizarLibro(book_id);
     })
     $('#publish-book').on('click', function()
     {
@@ -431,4 +433,137 @@ function loadSections(book_id, book_status)
 /* Terminan funciones de llenado de datos */
 
 /* Comienzan funciones de guardado de datos */
+function actualizarLibro(book_id)
+{
+    Swal.fire
+    ({
+        title: 'Actualizar libro',
+        html: '<h4 style="color: black;">¡ESTE PROCESO ES IRREVERSIBLE!<br/>Si tiene cambios en alguna de las secciones, se perderá si no salva primero.<br/>¿Está seguro?</p>',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: "Sí",
+        denyButtonText: "No"
+    }).then((result) => 
+    {
+        if (result.isConfirmed) 
+        {
+            // Si se dice que sí, jalamos los datos de la página
+            // El nombre del libro
+            var nombreLibro = $('#book-name').val();
+            // Los géneros seleccionados
+            var generosLibro = [];
+            $('#genre-list span').each(function () 
+            {
+                // Obtener el ID del span (ej. genero-1 => 1)
+                var id = $(this).attr('id').split('-')[1];        
+                // Ponemos el id en una variable de array
+                generosLibro.push(id);
+            });
+            // Los autores seleccionados
+            var autoresLibro = [];
+            $('#author-list span').each(function () 
+            {
+                // Obtener el ID del span (ej. genero-1 => 1)
+                var id = $(this).attr('id').split('-')[1];        
+                // Ponemos el id en una variable de array
+                autoresLibro.push(id);
+            });
+            // El contenido de la sinopsis 
+            var sinopsisLibro = tinymce.get("description").getContent();
+            // La imagen de portada
+            //var formData = new FormData();
+            // Variable temporal para la ruta de la imagen
+            var url_imagen_save = '';
+            var book_file = $('#file-selector')[0].files[0];
+            if (book_file)
+            {
+                formData.append('book_file', book_file);
+                $.ajax
+                ({
+                    url: './controller/picture-save.php', // Archivo PHP para manejar la subida de imagenes
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) 
+                    {
+                        // El AJAX retorna la ruta de la imagen para poder usarla o unos códigos particulares, procésalos
+                        switch (data)
+                        {
+                            case 'WRONG_FORMAT':
+                                // No se supone que se llegue hasta aquí por los controles que le tengo al selector
+                                mensaje('error', '<b>ERROR</b><br/>El formato de la imagen debe ser JPG o PNG.<br/>Por favor seleccione otra imagen e inténtelo nuevamente.');
+                                break;
+                            case 'UPLOAD_ERROR':
+                                // Error en la subida de archivos
+                                mensaje('error', '<b>ERROR</b><br/>Hubo un error en la subida de archivos.<br/>Por favor seleccione otra imagen e inténtelo nuevamente.');
+                                break;
+                            case 'NO_FILE_RECEIVED':
+                                // Error en la subida de archivos
+                                mensaje('error', '<b>ERROR</b><br/>No se recibió un archivo.<br/>Por favor inténtelo nuevamente o contacte al desarrollador.');
+                                break;
+                            default:
+                                url_imagen_save = data;
+                                break;
+                        }
+                    },
+                    error: function(error) 
+                    {
+                        // Si hay un error, guardaré la ruta a la imagen por defecto
+                        mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa: <br/>' + error + '.<br/>Por favor contacte al desarrollador.');
+                        url_imagen_save = 'view/uploads/books/generic-book-cover.jpg';
+                    }
+                });
+            }
+            else
+            {
+                // Si no hay archivo entonces es lo que traía
+                url_imagen_save = book_cover_url;
+            }
+            // Prueba: Mostramos todo con console log
+            // Comenzamos AJAX sólo cuando se haya decidido cuál es la imagen de portada...
+            $.ajax
+            ({
+                url: './controller/book-crud.php',
+                type: 'POST',
+                data:
+                {
+                    update_book: true,
+                    id_libro: book_id,
+                    nombre_libro: nombreLibro,
+                    generos_libro: JSON.stringify(generosLibro),
+                    autores_libro: JSON.stringify(autoresLibro),
+                    sinopsis_libro: sinopsisLibro,
+                    url_imagen_save
+                },
+                async: true,
+                success: function(response)
+                {
+                    // Debe devolver un mensaje. Dependiendo del mensaje es lo que hay que hacer.
+                    if (response == 'SUCCESS')
+                    {
+                        // Si el mensaje es de éxito, se genera un mensaje de éxito
+                        mensaje('success', '<b>ÉXITO</b><br/>Libro actualizado satisfactoriamente.<br/>Será redirigido a la página del libro ahora.');
+                        // Y se redirige a la página de libro
+                        setTimeout(function()
+                        {
+                            window.location.href = "index.php?page=book-page&book-id=" + book_id;
+                        }, 5000);
+                    }
+                    else
+                    {
+                        // Si el mensaje es de error, se genera un mensaje y listo.
+                        mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa: <br/>' + response + '.<br/>Por favor contacte al desarrollador.');
+                    }
+                },
+                error: function(error)
+                {
+                    // Si hay un error, debe devolverlo como mensaje de error.
+                    mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa: <br/>' + error + '.<br/>Por favor contacte al desarrollador.');
+                }
+            });
+        }
+        // Si no está seguro, no hacemos nada
+    }); 
+}
 /* Terminan funciones de guardado de datos */

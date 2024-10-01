@@ -108,7 +108,6 @@ function gridLibros(genero, input, user_id)
     // Esto es muy parecido a llenarSelect
     if (input.val() == null)
     {
-        console.log("input nulo");
         entrada = "";
     }
     // Quiero hacerla multifuncional, por lo que tenemos que llamar a los términos de búsqueda desde ahora
