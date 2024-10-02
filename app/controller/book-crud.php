@@ -800,33 +800,37 @@
         $respuesta = '';
         // Primero, abrimos la conexión
         $conexion = abrir_conexion($json_file);
+        // Primero borramos los géneros
+        $sql_borrar_generos_libro = "DELETE FROM `generos_libro` WHERE `id_libro` = '$id_libro'";
+        // Después borramos los autores
+        $sql_borrar_autores_libro = "DELETE FROM `autores_libro` WHERE `id_libro` = '$id_libro'";
         // SQL para los datos base del libro
-        $sql_datos_libro = "UPDATE `libro` SET `nombre_libro`='$nombre_libro',`url_caratula_libro`='$url_imagen_save',`sinopsis_libro`='$sinopsis_libro' WHERE `id_libro`=$id_libro";
+        $sql_datos_libro = "UPDATE `libro` SET `nombre_libro`='$nombre_libro',`url_caratula_libro`='$url_imagen_save',`sinopsis_libro`='$sinopsis_libro' WHERE `id_libro` = '$id_libro'";
         try 
         {
-            // Actualizamos el SQL base del libro 
+            // Actualizamos el SQL base del libro
             $sentencia = mysqli_query($conexion, $sql_datos_libro);
+            // Borramos géneros
+            $sentencia = mysqli_query($conexion, $sql_borrar_generos_libro);
+            // Borramos autores
+            $sentencia = mysqli_query($conexion, $sql_borrar_autores_libro);
             // Géneros y autores vienen decodificados desde la invocación, no hace falta decodificar aquí
             // Trabajamos con géneros
-            for ($i = 0; $i < count($generos_libro); $i++)
+            foreach ($generos_libro as $key => $id_genero) 
             {
-                $id_genero = $generos_libro[i];
-                $sql_genero_libro = "INSERT IGNORE INTO `generos_libro` (`id_libro`, `id_genero`) VALUES ($id_libro, $id_genero)";
-                var_dump($sql_genero_libro);
+                $sql_genero_libro = "INSERT INTO `generos_libro` (`id_libro`, `id_genero`) VALUES ('$id_libro', '$id_genero')";
                 $sentencia = mysqli_query($conexion, $sql_genero_libro);
             }
-            // Trabajamos con autores
-            for ($i = 0; $i < count($autores_libro); $i++)
+            foreach ($autores_libro as $key => $id_autor) 
             {
-                $id_autor = $autores_libro[i];
-                $sql_autor_libro = "INSERT IGNORE INTO `autores_libro` (`id_libro`, `id_autor`) VALUES ($id_libro, $id_autor)";
+                $sql_autor_libro = "INSERT INTO `autores_libro` (`id_libro`, `id_autor`) VALUES ('$id_libro', '$id_autor')";
                 $sentencia = mysqli_query($conexion, $sql_autor_libro);
             }
             $respuesta = 'SUCCESS';
         } 
         catch (Exception $e) 
         {
-            $respuesta = $e;
+            $respuesta = $e->getMessage();
         }
         finally
         {
