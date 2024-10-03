@@ -50,7 +50,7 @@ $(document).ready(function()
     setTimeout(function()
     {
         loadSections(book_id, book_status);
-    }, 500);
+    }, 500);    
 });
 /* Terminan funciones automáticas */
 
@@ -176,6 +176,20 @@ function updateTitleInputs()
     });
 }
 /* Termina función que permite que se active el botón de actualizar cuando se cambie el título */
+
+/* Comienza función para actualizar los números de las secciones */
+function updateSectionNumbers() 
+{
+    $('#section-list .accordion-button').each(function (index) 
+    {
+        var newNumber = $('#section-list .accordion-button').length - index;
+        $(this).attr('data-number', newNumber);
+        var titleText = $(this).text().split(":")[1]; // Mantener el título si ya tiene uno
+        $(this).text(`Sección ${newNumber}: ${titleText || ''}`);
+    });
+    updateRemoveButtons();
+}
+/* Termina función para actualizar los números de las secciones */
 /* Terminan efectos visuales */
 
 /* Comienzan funciones de llenado de datos */
@@ -419,6 +433,7 @@ function loadSections(book_id, book_status)
             // La función de remover secciones guardadas en la base de datos debe existir aquí porque puede ser un libro no publicado
             updateRemoveButtons();
             // Debemos actualizar después de esto la funcionalidad de actualizar secciones existentes.
+            updateUpdateSections();
         },
         error: function(error)
         {
@@ -430,6 +445,79 @@ function loadSections(book_id, book_status)
     });
 }
 /* Termina función que carga las secciones existentes en su respectivo espacio */
+
+/* Comienza función para agregar secciones */
+function agregarSeccion() 
+{
+    // Primero que nada, tenemos que añadir el editor de sección
+    // Obtener el número de la nueva sección basado en el total de secciones actuales
+    var totalSections = $('#section-list .accordion-button').length + 1;
+    // Crear el HTML de la nueva sección
+    var newSection = `
+    <button class="accordion-button" data-number="${totalSections}" onclick="toggleSection(${totalSections});">Sección ${totalSections}: </button>
+    <div class="accordion-section active" id="section-${totalSections}">
+        <div class="section-title-functions">
+            <input type="text" value="" placeholder="Escribe el título..." class="section-title-input" id="section-${totalSections}-title">
+            <div class="section-title-buttons">
+                <button class="btn save-section" id="section-${totalSections}-save" disabled>Guardar</button>
+                <button class="btn remove-section">Eliminar</button>
+            </div>
+        </div>
+        <textarea class='section-content' placeholder='Comienza a escribir...' id="section-${totalSections}-content"></textarea>
+    </div>`;
+    // Insertar la nueva sección al inicio del contenedor de secciones
+    $('#section-list').prepend(newSection);
+    // Instanciar el editor TinyMCE en el nuevo textarea
+    tinymce.init
+    ({
+        selector: `.section-content`,
+        language: 'es',
+        branding: false,
+        menubar: false,
+        resize: false,
+        height: 350,
+        plugins: 'code lists',
+        toolbar: 'undo redo | styles | bold italic underline | cut copy paste | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | code',
+        license_key: 'gpl',
+        setup: function (editor)
+        {
+            // Evento que se activa cuando el contenido cambia (cuando el usuario escribe)
+            editor.on('keyup', function () 
+            {
+                // Habilitar el botón de "Actualizar" cuando se modifique el contenido
+                $(editor.getElement()).closest('.accordion-section').find('.save-section').prop('disabled', false);
+            });
+
+            // Puedes agregar el evento 'change' por si se hace algún cambio mayor, aunque 'keyup' es suficiente
+            editor.on('change', function () 
+            {
+                $(editor.getElement()).closest('.accordion-section').find('.save-section').prop('disabled', false);
+            });
+        }
+    });
+    // Luego, tenemos que deshabilitar el botón de agregar una nueva sección
+    $('#add-section-btn').prop('disabled', true);
+    // Después, la función de guardar sección
+    $('#section-' + totalSections + '-save').on('click', function()
+    {
+        var section_title = $('#section-' + totalSections + '-title').val();
+        // Y si el usuario no escribió un título?
+        if (section_title == '' || section_title == null)
+        {
+            // Pues el título será el número de la sección, esto se ve en muchos libros
+            section_title = section_number;
+        }
+        // El contenido de la sección puede incluso ser vacío y deberá poder guardarse
+        var section_content = tinymce.get('section-' + totalSections + '-content').getContent();
+        saveNewSection(book_id, section_title, section_content);
+    });
+    // Finalmente, las funciones adicionales
+    // Actualizar la funcionalidad de los botones "Eliminar sección"
+    updateRemoveButtons();
+    // Actualizar la funcionalidad de cambio de nombre en la escritura
+    updateTitleInputs();
+}
+/* Termina función para agregar secciones */
 /* Terminan funciones de llenado de datos */
 
 /* Comienzan funciones de guardado de datos */
@@ -481,7 +569,6 @@ function actualizarLibro(book_id)
                 //var formData = new FormData();
                 // Variable temporal para la ruta de la imagen
                 var url_imagen_save = await rutaImagen('#file-selector', book_cover_url);
-                console.log(url_imagen_save);
                 // Comenzamos AJAX sólo cuando se haya decidido cuál es la imagen de portada...
                 $.ajax
                 ({
@@ -580,4 +667,219 @@ function rutaImagen(selector_id, book_cover_url)
     }
     return respuesta;
 }
+
+function saveNewSection(book_id, section_title, section_content)
+{
+    // Preguntamos si se está seguro
+    Swal.fire
+    ({
+        title: 'Guardar sección',
+        html: '<h4 style="color: black;">Este proceso es irreversible</h4><p style="color: black;">¿Está seguro?</p>',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: "Sí",
+        denyButtonText: "No"
+    }).then((result) => 
+    {
+        if (result.isConfirmed) 
+        {
+            // Mandamos AJAX si se está seguro
+            $.ajax
+            ({
+                type: 'POST',
+                url: './controller/section-crud.php',
+                data:
+                {
+                    guardar_seccion: true,
+                    titulo_seccion: section_title,
+                    contenido_seccion: section_content,
+                    id_libro: book_id
+                },
+                async: true,
+                success: function(data)
+                {
+                    if (data == 'SUCCESS')
+                    {
+                        // Si es exitoso el guardado, debe mandar mensaje de éxito
+                        mensaje('success', '<b>ÉXITO</b><br/>Sección guardada exitosamente.');
+                    }
+                    else
+                    {
+                        // Si es cualquier otra cosa, debe mandarla como mensaje
+                        mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + data + '<br/>Por favor contacte al desarrollador');
+                    }
+                },
+                error: function(error)
+                {
+                    mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+                }
+            });
+        }
+        // Si no está seguro, no hacemos nada
+    });
+    // Sin importar cuál sea el mensaje, se recarga el spinner
+    // Primero, quitamos el contenido de las secciones
+    $('#section-list').html('');
+    // Luego, agregamos el loader, activo de una vez
+    $('#section-list').html('<div class="spinner active" id="sections-spinner"><span class="loader"></span></div>');
+    // Luego cargamos el listado de secciones
+    setTimeout(function()
+    {
+        loadSections(book_id, book_status);
+    }, 500);
+    // Finalmente, actualizamos los números de las secciones
+    updateSectionNumbers();
+}
+
+/* Comienza función para actualizar secciones existentes */
+function updateUpdateSections()
+{
+    $('.update-section').off('click').on('click', function() 
+    {
+        Swal.fire(
+        {
+            title: 'Actualizar sección',
+            html: '<h4 style="color: black;">Este proceso es irreversible</h4><p style="color: black;">¿Está seguro?</p>',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => 
+        {
+            if (result.isConfirmed) 
+            {
+                // Obtener el ID de la sección
+                var section_id = $(this).closest('.accordion-section').prev('.accordion-button').data('id');
+                
+                // Obtener el título de la sección
+                var section_title = $(this).closest('.accordion-section').find('.section-title-input').val();
+                
+                // Obtener el contenido de TinyMCE
+                var editor_id = $(this).closest('.accordion-section').find('textarea').attr('id');
+                var section_content = tinymce.get(editor_id).getContent();
+                
+                // Verificar si se han ingresado datos
+                if (section_title.trim() === '' || section_content.trim() === '') 
+                    {
+                    mensaje('error', '<b>ERROR</b><br/>Por favor, completa el título y el contenido de la sección antes de actualizar.');
+                    return;
+                }
+
+                // Llamada AJAX para actualizar la sección
+                $.ajax
+                ({
+                    type: 'POST',
+                    url: './controller/section-crud.php', // Ruta al archivo PHP que procesa la actualización
+                    data: 
+                    {
+                        update_section: true,
+                        section_id: section_id,
+                        section_title: section_title,
+                        section_content: section_content
+                    },
+                    success: function(data) 
+                    {
+                        if (data === 'SUCCESS') 
+                        {
+                            // Deshabilitar el botón de "Actualizar" después de que se complete la actualización
+                            mensaje('success', '<b>ÉXITO</b><br/>Sección actualizada exitosamente.');
+                            $(this).prop('disabled', true); // Deshabilitar el botón
+                            $('#add-section-btn').prop('disabled', false); // Rehabilitamos el botón de añadir sección
+                        } 
+                        else 
+                        {
+                            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + data + '<br/>Por favor contacte al desarrollador');
+                        }
+                    }.bind(this), // Asegurarse de que "this" se refiera al botón dentro de la función success
+                    error: function(error) 
+                    {
+                        mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+                    }
+                });
+            }
+            // Si no está seguro, no hacemos nada
+        });
+    });
+}
+/* Termina función para actualizar secciones existentes */
 /* Terminan funciones de guardado de datos */
+
+/* Comienzan funciones de borrado de datos */
+function updateRemoveButtons()
+{
+    // Esta función sólo aplicará en libros en borrador o en secciones nuevas
+    $('.remove-section').off('click').on('click', function () 
+    {
+        var current_section_id = $(this).closest('.accordion-section').prev('.accordion-button').data('id');
+        // Destruir la instancia de TinyMCE antes de eliminar la sección
+        var editor_id = $(this).closest('.accordion-section').find('textarea').attr('id');
+        if (tinymce.get(editor_id)) 
+        {
+            tinymce.get(editor_id).remove();
+        }
+        if (typeof current_section_id != 'undefined')
+        {
+            // Si el id es diferente de undefine es porque existe un data de id, por lo tanto la sección existe en la base de datos. Tenemos que preguntar si está seguro
+            Swal.fire(
+            {
+                title: 'Eliminar sección guardada',
+                html: '<h4 style="color: black;">Este proceso es irreversible</h4><p style="color: black;">¿Está seguro?</p>',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: "Sí",
+                denyButtonText: "No"
+            }).then((result) => 
+            {
+                if (result.isConfirmed) 
+                {
+                    // Si está seguro entonces borramos de base de datos
+                    $.ajax
+                    ({
+                        type: 'POST',
+                        url: './controller/section-crud.php',
+                        data:
+                        {
+                            borrar_seccion_edit: true,
+                            current_section_id
+                        },
+                        async: true,
+                        success: function(data)
+                        {
+                            if (data == 'SUCCESS')
+                            {
+                                mensaje('success', '<b>ÉXITO</b><br/>Sección borrada exitosamente.');
+                                // Y si se borra, hacemos el borrado de la página
+                                /* $(this).closest('.accordion-section').prev('.accordion-button').remove(); // Eliminar el botón correspondiente
+                                $(this).closest('.accordion-section').remove(); // Eliminar la sección correspondiente */
+                            }
+                            else
+                            {
+                                // Y si no se borra, capturamos el error dentro de un mensaje
+                                mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + data + '<br/>Por favor contacte al desarrollador');
+                            }
+                        },
+                        error: function(error)
+                        {
+                            // Si hay un error, generemos un mensaje
+                            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+                        }
+                    });
+                }
+                // Si no está seguro, no hacemos nada
+            });
+        }
+        // Si no, no importa, igual haremos lo mismo. 
+        // Primero, quitamos el contenido de las secciones
+        $('#section-list').html('');
+        // Luego, agregamos el loader, activo de una vez
+        $('#section-list').html('<div class="spinner active" id="sections-spinner"><span class="loader"></span></div>');
+        // Luego cargamos el listado de secciones
+        setTimeout(function()
+        {
+            loadSections(book_id, book_status);
+        }, 500);
+        // Finalmente, actualizamos los números de las secciones
+        updateSectionNumbers();
+    });
+}
+/* Terminan funciones de borrado de datos */
