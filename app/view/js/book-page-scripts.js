@@ -46,6 +46,10 @@ function llenarDatos(book_id)
             if (respuesta.codigo == 'SUCCESS')
             {
                 // Si el código es éxito, sé que vendrá con todos los demás datos
+                if (respuesta.url_caratula_libro == '' || respuesta.url_caratula_libro == 'undefined' || respuesta.url_caratula_libro == null)
+                {
+                    respuesta.url_caratula_libro = 'view/uploads/books/generic-book-cover.jpg';
+                }
                 $('#image').html('<img src="./' + respuesta.url_caratula_libro + '" alt="Carátula del libro" class="book-cover" id="book-cover">');
                 $('#title').html(respuesta.nombre_libro);
                 $('#genres').html(respuesta.generos_html);

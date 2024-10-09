@@ -353,6 +353,7 @@
         // Debe devolver string con HTML
         $respuesta = "";
         $html_status_response = "";
+        $respuesta_status = "";
         // Primero, debemos generar la conexión
         $conexion = abrir_conexion($json_file);
         // Segundo, preparamos el SQL
@@ -402,8 +403,17 @@
                 else
                 {
                     // Si no hay secciones o no hay respuesta, entonces que nos muestre un mensaje
+                    // Pero, si el status del libro es 1, debe mostrar el botón de agregar sección
+                    if ($book_status == 1)
+                    {
+                        $respuesta_status = 
+                        "<div class='section-intro'>
+                            <h4>Secciones</h4>
+                            <button class= 'btn' id='add-section-btn' onclick='agregarSeccion();'>Añadir sección/capítulo</button>
+                        </div>";
+                    }
                     $respuesta .= 
-                    "<div class='section-error'>
+                    "$respuesta_status<div id='section-list'></div><div class='section-error'>
                         <h4>No hay secciones inscritas</h4>
                         <p>Este libro no tiene ninguna sección inscrita. Por favor da clic en \"Añadir sección/capítulo\" para insertar la primera.</p>
                         <p>Si esto es un error, por favor contacta al desarrollador.</p>

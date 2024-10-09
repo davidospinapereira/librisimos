@@ -66,6 +66,11 @@
     {
         echo update_book($_POST['id_libro'], $_POST['nombre_libro'], json_decode($_POST['generos_libro']), json_decode($_POST['autores_libro']), $_POST['sinopsis_libro'], $_POST['url_imagen_save'], $json_file);
     }
+
+    if (isset($_POST['publish_book']))
+    {
+        echo publish_book($_POST['id_libro'], $_POST['nombre_libro'], json_decode($_POST['generos_libro']), json_decode($_POST['autores_libro']), $_POST['sinopsis_libro'], $_POST['url_imagen_save'], $json_file);
+    }
     /* Termina invocación AJAX */
 
     /* Comienza la función que genera los datos de la tabla de continuar leyendo */
@@ -106,7 +111,7 @@
                         <td data-cell='genero'>".$row['nombre_genero']."</td>
                         <td data-cell='seccion'>".$row['numero_seccion']." - " . $row['titulo_seccion']. "</td>
                         <td data-cell='acciones' class='acciones'>
-                            <span class='button continue' onclick='activarHerramienta(" . $row['id_seccion'] . ")'><div class='tooltip'>Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
+                            <span class='button continue' onclick='activarHerramienta(" . $row['id_seccion'] . ", ". $user_id . ")'><div class='tooltip'>Continuar leyendo</div><i class='bx bx-book-reader'></i></span>
                             <span class='button quit' onclick='dejarDeLeer(" . $row['id_libro'] . ", " . $user_id . ")'><div class='tooltip'>Dejar de leer</div><i class='bx bx-x' ></i></span>
                         </td>
                     </tr>
@@ -839,4 +844,52 @@
         }
     }
     /* Termina función que actualiza los datos base de un libro */
+
+    /* Comienza función para publicar un libro */
+    function publish_book($id_libro, $nombre_libro, $generos_libro, $autores_libro, $sinopsis_libro, $url_imagen_save, $json_file)
+    {
+        // Generos y autores ya fueron decodificados en la invocación, no hace falta re-decodificar
+        // Esta función es muy similar a la de actualizar
+        $respuesta = '';
+        // Primero, abrimos la conexión
+        $conexion = abrir_conexion($json_file);
+        // Primero borramos los géneros
+        $sql_borrar_generos_libro = "DELETE FROM `generos_libro` WHERE `id_libro` = '$id_libro'";
+        // Después borramos los autores
+        $sql_borrar_autores_libro = "DELETE FROM `autores_libro` WHERE `id_libro` = '$id_libro'";
+        // SQL para los datos base del libro
+        $sql_datos_libro = "UPDATE `libro` SET `nombre_libro` = '$nombre_libro', `url_caratula_libro` = '$url_imagen_save', `sinopsis_libro`='$sinopsis_libro', `clave_estado_libro` = 1 WHERE `id_libro` = '$id_libro'";
+        try 
+        {
+            // Actualizamos el SQL base del libro
+            $sentencia = mysqli_query($conexion, $sql_datos_libro);
+            // Borramos géneros
+            $sentencia = mysqli_query($conexion, $sql_borrar_generos_libro);
+            // Borramos autores
+            $sentencia = mysqli_query($conexion, $sql_borrar_autores_libro);
+            // Géneros y autores vienen decodificados desde la invocación, no hace falta decodificar aquí
+            // Trabajamos con géneros
+            foreach ($generos_libro as $key => $id_genero) 
+            {
+                $sql_genero_libro = "INSERT INTO `generos_libro` (`id_libro`, `id_genero`) VALUES ('$id_libro', '$id_genero')";
+                $sentencia = mysqli_query($conexion, $sql_genero_libro);
+            }
+            foreach ($autores_libro as $key => $id_autor) 
+            {
+                $sql_autor_libro = "INSERT INTO `autores_libro` (`id_libro`, `id_autor`) VALUES ('$id_libro', '$id_autor')";
+                $sentencia = mysqli_query($conexion, $sql_autor_libro);
+            }
+            $respuesta = 'SUCCESS';
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = $e->getMessage();
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función para publicar un libro */
 ?>

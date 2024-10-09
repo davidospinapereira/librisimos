@@ -1,6 +1,7 @@
 /* Comienza definición de variables */
 var book_id = $('#book-id').val();
 var user_id = $('#user-id').val();
+var picsetter = $('#image');
 var book_cover_url = 'view/uploads/books/generic-book-cover.jpg';
 var book_status = 0;
 bookStatus(book_id, function(status) 
@@ -55,6 +56,18 @@ $(document).ready(function()
 /* Terminan funciones automáticas */
 
 /* Comienzan efectos visuales */
+/* Comienza código de vista previa provisto por ChatGPT */
+jQuery('#file-selector').change(function(e) 
+{
+    var reader = new FileReader();
+    reader.onload = function(event) 
+    {
+        picsetter.css('background-image', 'url(' + event.target.result + ')');
+    }
+    reader.readAsDataURL(e.target.files[0]);
+});
+/* Termina código de vista previa provisto por ChatGPT */
+
 /* Comienzan efectos para el acordeón */
 function toggleSection(section)
 {
@@ -287,7 +300,7 @@ function loadMainButtons(book_id, book_status)
     // Si el status es 2 está en borrador
     else if (book_status == 2)
     {
-        publish_update_btn = '<button class="btn publish-book" id="publish-book">PUBLICAR</button>';
+        publish_update_btn = '<button class="btn save-draft" id="save-draft">Guardar Borrador</button><button class="btn publish-book" id="publish-book">PUBLICAR</button>';
     }
     // De cualquier otra manera hay un error, no debe poner nada más
     var all_buttons = publish_update_btn + '<button class="btn" id="cancel-edit">Cancelar edición</button><button class="btn" id="delete-book">Borrar libro</button>';
@@ -297,9 +310,13 @@ function loadMainButtons(book_id, book_status)
     {
         actualizarLibro(book_id);
     })
+    $('#save-draft').on('click', function()
+    {
+        actualizarLibro(book_id);
+    })
     $('#publish-book').on('click', function()
     {
-        mensaje('success', '<b>EXITO</b><br/>ID del libro: ' + book_id + '<br/>Status del libro: ' + book_status + '<br/>Botón presionado: PUBLICAR');
+        publicarLibro(book_id);
     })
     $('#cancel-edit').on('click', function()
     {
@@ -511,6 +528,8 @@ function agregarSeccion()
         var section_content = tinymce.get('section-' + totalSections + '-content').getContent();
         saveNewSection(book_id, section_title, section_content);
     });
+    // Adicionalmente, si existe un div llamado "section-error", tenemos que eliminarlo
+    $('.section-error').remove();
     // Finalmente, las funciones adicionales
     // Actualizar la funcionalidad de los botones "Eliminar sección"
     updateRemoveButtons();
@@ -521,6 +540,101 @@ function agregarSeccion()
 /* Terminan funciones de llenado de datos */
 
 /* Comienzan funciones de guardado de datos */
+/* Comienza función para publicar el libro en sus datos base */
+function publicarLibro(book_id)
+{
+    // Los géneros seleccionados
+    var generosLibro = [];
+    $('#genre-list span').each(function () 
+    {
+        // Obtener el ID del span (ej. genero-1 => 1)
+        var id = $(this).attr('id').split('-')[1];        
+        // Ponemos el id en una variable de array
+        generosLibro.push(id);
+    });
+    // Los autores seleccionados
+    var autoresLibro = [];
+    $('#author-list span').each(function () 
+    {
+        // Obtener el ID del span (ej. genero-1 => 1)
+        var id = $(this).attr('id').split('-')[1];        
+        // Ponemos el id en una variable de array
+        autoresLibro.push(id);
+    });
+    if(generosLibro.length == 0 || autoresLibro.length == 0)
+    {
+        mensaje('error', '<b>ERROR</b><br/>No puede quedar el libro sin géneros ni sin autores.');
+    }
+    else
+    {
+        Swal.fire
+        ({
+            title: 'Publicar libro',
+            html: '<h4 style="color: black;">¡ESTE PROCESO ES IRREVERSIBLE!<br/>El libro publicado será visible para todos los usuarios.<br/>¿Está seguro?</p>',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then(async (result) => 
+        {
+            if (result.isConfirmed) 
+            {
+                // Si se dice que sí, jalamos los datos de la página
+                // El nombre del libro
+                var nombreLibro = $('#book-name').val();                
+                // El contenido de la sinopsis 
+                var sinopsisLibro = tinymce.get("description").getContent();
+                // Esperamos a que la función de rutaImagen se complete
+                var url_imagen_save = await rutaImagen('#file-selector', book_cover_url);
+                // Ahora realizamos la actualización del libro
+                $.ajax
+                ({
+                    url: './controller/book-crud.php',
+                    type: 'POST',
+                    data:
+                    {
+                        publish_book: true,
+                        id_libro: book_id,
+                        nombre_libro: nombreLibro,
+                        generos_libro: JSON.stringify(generosLibro),
+                        autores_libro: JSON.stringify(autoresLibro),
+                        sinopsis_libro: sinopsisLibro,
+                        url_imagen_save: url_imagen_save // Usamos la ruta que retornó la función asincrónica
+                    },
+                    async: true,
+                    success: function(response)
+                    {
+                        // Debe devolver un mensaje. Dependiendo del mensaje es lo que hay que hacer.
+                        if (response == 'SUCCESS')
+                        {
+                            // Si el mensaje es de éxito, se genera un mensaje de éxito
+                            mensaje('success', '<b>ÉXITO</b><br/>Libro publicado satisfactoriamente.<br/>Será redirigido a la página del libro ahora.');
+                            // Y se redirige a la página de libro
+                            setTimeout(function()
+                            {
+                                window.location.href = "index.php?page=book-page&book-id=" + book_id;
+                            }, 5000);
+                        }
+                        else
+                        {
+                            // Si el mensaje es de error, se genera un mensaje y listo.
+                            mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa: <br/>' + response + '.<br/>Por favor contacte al desarrollador.');
+                        }
+                    },
+                    error: function(error)
+                    {
+                        // Si hay un error, debe devolverlo como mensaje de error.
+                        mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa: <br/>' + error + '.<br/>Por favor contacte al desarrollador.');
+                    }
+                });
+            }
+            // Si no está seguro, no hacemos nada
+        });
+    }
+}
+/* Termina función para publicar el libro en sus datos base */
+
+/* Comienza función para actualizar el libro en sus datos base */
 function actualizarLibro(book_id)
 {
     // Los géneros seleccionados
@@ -561,15 +675,12 @@ function actualizarLibro(book_id)
             {
                 // Si se dice que sí, jalamos los datos de la página
                 // El nombre del libro
-                var nombreLibro = $('#book-name').val();
-                
+                var nombreLibro = $('#book-name').val();                
                 // El contenido de la sinopsis 
                 var sinopsisLibro = tinymce.get("description").getContent();
-                // La imagen de portada
-                //var formData = new FormData();
-                // Variable temporal para la ruta de la imagen
+                // Esperamos a que la función de rutaImagen se complete
                 var url_imagen_save = await rutaImagen('#file-selector', book_cover_url);
-                // Comenzamos AJAX sólo cuando se haya decidido cuál es la imagen de portada...
+                // Ahora realizamos la actualización del libro
                 $.ajax
                 ({
                     url: './controller/book-crud.php',
@@ -582,7 +693,7 @@ function actualizarLibro(book_id)
                         generos_libro: JSON.stringify(generosLibro),
                         autores_libro: JSON.stringify(autoresLibro),
                         sinopsis_libro: sinopsisLibro,
-                        url_imagen_save
+                        url_imagen_save: url_imagen_save // Usamos la ruta que retornó la función asincrónica
                     },
                     async: true,
                     success: function(response)
@@ -615,59 +726,61 @@ function actualizarLibro(book_id)
         });
     }
 }
+/* Termina función para actualizar el libro en sus datos base */
 
-function rutaImagen(selector_id, book_cover_url)
+/* Comienza función asincrónica para guardar la ruta de la imagen */
+function rutaImagen(selector_id, book_cover_url) 
 {
-    respuesta = '';
-    var book_file = $(selector_id)[0].files[0];
-    if (book_file)
+    return new Promise((resolve, reject) => 
     {
-        formData.append('book_file', book_file);
-        $.ajax
-        ({
-            url: './controller/picture-save.php', // Archivo PHP para manejar la subida de imagenes
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(data) 
-            {
-                // El AJAX retorna la ruta de la imagen para poder usarla o unos códigos particulares, procésalos
-                switch (data)
+        var book_file = $(selector_id)[0].files[0];
+        var formData = new FormData();
+        if (book_file) 
+        {
+            formData.append('book_file', book_file);
+            $.ajax({
+                url: './controller/picture-save.php', // Archivo PHP para manejar la subida de imagenes
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) 
                 {
-                    case 'WRONG_FORMAT':
-                        // No se supone que se llegue hasta aquí por los controles que le tengo al selector
-                        mensaje('error', '<b>ERROR</b><br/>El formato de la imagen debe ser JPG o PNG.<br/>Por favor seleccione otra imagen e inténtelo nuevamente.');
-                        break;
-                    case 'UPLOAD_ERROR':
-                        // Error en la subida de archivos
-                        mensaje('error', '<b>ERROR</b><br/>Hubo un error en la subida de archivos.<br/>Por favor seleccione otra imagen e inténtelo nuevamente.');
-                        break;
-                    case 'NO_FILE_RECEIVED':
-                        // Error en la subida de archivos
-                        mensaje('error', '<b>ERROR</b><br/>No se recibió un archivo.<br/>Por favor inténtelo nuevamente o contacte al desarrollador.');
-                        break;
-                    default:
-                        respuesta = data;
-                        break;
+                    // El AJAX retorna la ruta de la imagen o algunos códigos de error, los procesamos
+                    switch (data) {
+                        case 'WRONG_FORMAT':
+                            mensaje('error', '<b>ERROR</b><br/>El formato de la imagen debe ser JPG o PNG.<br/>Por favor seleccione otra imagen e inténtelo nuevamente.');
+                            reject('Error: Formato incorrecto');
+                            break;
+                        case 'UPLOAD_ERROR':
+                            mensaje('error', '<b>ERROR</b><br/>Hubo un error en la subida de archivos.<br/>Por favor seleccione otra imagen e inténtelo nuevamente.');
+                            reject('Error: Fallo en la subida');
+                            break;
+                        case 'NO_FILE_RECEIVED':
+                            mensaje('error', '<b>ERROR</b><br/>No se recibió un archivo.<br/>Por favor inténtelo nuevamente.');
+                            reject('Error: No se recibió archivo');
+                            break;
+                        default:
+                            resolve(data); // Resuelve con la ruta de la imagen
+                    }
+                },
+                error: function(error) 
+                {
+                    mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa:<br/>' + error + '.<br/>Por favor contacte al desarrollador.');
+                    resolve(book_cover_url); // Si hay un error, devolvemos la ruta predeterminada
                 }
-            },
-            error: function(error) 
-            {
-                // Si hay un error, guardaré la ruta a la imagen por defecto
-                mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa: <br/>' + error + '.<br/>Por favor contacte al desarrollador.');
-                respuesta = 'view/uploads/books/generic-book-cover.jpg';
-            }
-        });
-    }
-    else
-    {
-        // Si no hay archivo entonces es lo que traía
-        respuesta = book_cover_url;
-    }
-    return respuesta;
+            });
+        } 
+        else 
+        {
+            // Si no hay archivo, usamos la ruta existente
+            resolve(book_cover_url);
+        }
+    });
 }
+/* Termina función asincrónica para guardar la ruta de la imagen */
 
+/* Comienza función para guardar una sección nueva */
 function saveNewSection(book_id, section_title, section_content)
 {
     // Preguntamos si se está seguro
@@ -730,6 +843,7 @@ function saveNewSection(book_id, section_title, section_content)
     // Finalmente, actualizamos los números de las secciones
     updateSectionNumbers();
 }
+/* Termina función para guardar una sección nueva */
 
 /* Comienza función para actualizar secciones existentes */
 function updateUpdateSections()
@@ -802,6 +916,7 @@ function updateUpdateSections()
     });
 }
 /* Termina función para actualizar secciones existentes */
+
 /* Terminan funciones de guardado de datos */
 
 /* Comienzan funciones de borrado de datos */
@@ -848,9 +963,6 @@ function updateRemoveButtons()
                             if (data == 'SUCCESS')
                             {
                                 mensaje('success', '<b>ÉXITO</b><br/>Sección borrada exitosamente.');
-                                // Y si se borra, hacemos el borrado de la página
-                                /* $(this).closest('.accordion-section').prev('.accordion-button').remove(); // Eliminar el botón correspondiente
-                                $(this).closest('.accordion-section').remove(); // Eliminar la sección correspondiente */
                             }
                             else
                             {

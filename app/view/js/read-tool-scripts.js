@@ -41,6 +41,7 @@ function activarHerramienta(section_id, user_id)
         },
         success: function(data)
         {
+            //console.log(data);
             // Tenemos que decodificar el JSON resultante
             var results = JSON.parse(data);
             if (results.codigo = 'SUCCESS')

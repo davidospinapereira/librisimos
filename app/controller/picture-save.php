@@ -1,8 +1,10 @@
 <?php
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['user_file'])) 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+{
+    // Procesar archivo para usuario
+    if (isset($_FILES['user_file'])) 
     {
         $file = $_FILES['user_file'];
-        // Verificar si se ha subido un archivo sin errores
         if ($file['error'] === UPLOAD_ERR_OK) 
         {
             // Ajustar la ruta para salir de la carpeta "controller" e ir a "view/uploads/users/"
@@ -15,8 +17,8 @@
             }
 
             $imageType = exif_imagetype($file['tmp_name']);
-        
-         // Verificar si el archivo es una imagen JPEG o PNG
+
+            // Verificar si el archivo es una imagen JPEG o PNG
             if ($imageType == IMAGETYPE_JPEG || $imageType == IMAGETYPE_PNG) 
             {
                 list($width, $height) = getimagesize($file['tmp_name']);
@@ -70,26 +72,22 @@
             {
                 // Formato de archivo equivocado
                 echo 'WRONG_FORMAT';
+                exit();
             }
         } 
         else 
         {
             // Error al subir el archivo
             echo 'UPLOAD_ERROR';
+            exit();
         }
-    } 
-    else 
-    {
-        // No se recibió ningún archivo
-        echo 'NO_FILE_RECEIVED';
     }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['book_file'])) 
+    // Procesar archivo para libros
+    if (isset($_FILES['book_file'])) 
     {
         $file = $_FILES['book_file'];
-        // Verificar si se ha subido un archivo sin errores
-        if ($file['error'] === UPLOAD_ERR_OK) 
-        {
+        if ($file['error'] === UPLOAD_ERR_OK) {
             // Ajustar la ruta para salir de la carpeta "controller" e ir a "view/uploads/books/"
             $uploadDir = __DIR__ . '/../view/uploads/books/';
 
@@ -100,8 +98,8 @@
             }
 
             $imageType = exif_imagetype($file['tmp_name']);
-        
-         // Verificar si el archivo es una imagen JPEG o PNG
+
+            // Verificar si el archivo es una imagen JPEG o PNG
             if ($imageType == IMAGETYPE_JPEG || $imageType == IMAGETYPE_PNG) 
             {
                 list($width, $height) = getimagesize($file['tmp_name']);
@@ -155,17 +153,22 @@
             {
                 // Formato de archivo equivocado
                 echo 'WRONG_FORMAT';
+                exit();
             }
         } 
         else 
         {
             // Error al subir el archivo
             echo 'UPLOAD_ERROR';
+            exit();
         }
-    } 
-    else 
-    {
-        // No se recibió ningún archivo
-        echo 'NO_FILE_RECEIVED';
     }
+
+    // Si no se recibió ningún archivo
+    if (!isset($_FILES['user_file']) && !isset($_FILES['book_file'])) 
+    {
+        echo 'NO_FILE_RECEIVED';
+        exit();
+    }
+}
 ?>
