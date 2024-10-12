@@ -71,6 +71,11 @@
     {
         echo publish_book($_POST['id_libro'], $_POST['nombre_libro'], json_decode($_POST['generos_libro']), json_decode($_POST['autores_libro']), $_POST['sinopsis_libro'], $_POST['url_imagen_save'], $json_file);
     }
+
+    if (isset($_POST['borrar_libro']))
+    {
+        echo borrar_libro($_POST['id_libro'], $json_file);
+    }
     /* Termina invocación AJAX */
 
     /* Comienza la función que genera los datos de la tabla de continuar leyendo */
@@ -892,4 +897,45 @@
         }
     }
     /* Termina función para publicar un libro */
+
+    /* Comienza función para borrar un libro completamente */
+    function borrar_libro($id_libro, $json_file)
+    {
+        // Generos y autores ya fueron decodificados en la invocación, no hace falta re-decodificar
+        // Esta función es muy similar a la de actualizar
+        $respuesta = '';
+        // Abrimos la conexión
+        $conexion = abrir_conexion($json_file);
+        try 
+        {
+            // Primero borramos las relaciones en componer_seccion (esto evita el error de la clave foránea)
+            $sql_borrar_componer_seccion_libro = "DELETE FROM `componer_seccion` WHERE `id_libro` = '$id_libro'";
+            $sentencia = mysqli_query($conexion, $sql_borrar_componer_seccion_libro);
+            // Luego borramos las visualizaciones
+            $sql_borrar_visualizaciones_libro = "DELETE vs FROM `ver_seccion` vs JOIN `seccion` s ON vs.`id_seccion` = s.`id_seccion` JOIN `componer_seccion` cs ON s.`id_seccion` = cs.`id_seccion` WHERE cs.`id_libro` = '$id_libro'";
+            // Luego borramos las secciones
+            $sql_borrar_secciones_libro = "DELETE s FROM `seccion` s JOIN `componer_seccion` cs ON s.`id_seccion` = cs.`id_seccion` WHERE cs.`id_libro` = '$id_libro'";
+            $sentencia = mysqli_query($conexion, $sql_borrar_secciones_libro);
+            // Borramos los géneros relacionados con el libro
+            $sql_borrar_generos_libro = "DELETE FROM `generos_libro` WHERE `id_libro` = '$id_libro'";
+            $sentencia = mysqli_query($conexion, $sql_borrar_generos_libro);
+            // Borramos las relaciones con los autores
+            $sql_borrar_autores_libro = "DELETE FROM `autores_libro` WHERE `id_libro` = '$id_libro'";
+            $sentencia = mysqli_query($conexion, $sql_borrar_autores_libro);
+            // Finalmente, borramos el libro
+            $sql_borrar_libro = "DELETE FROM `libro` WHERE `id_libro` = '$id_libro'";
+            $sentencia = mysqli_query($conexion, $sql_borrar_libro);
+            $respuesta = 'SUCCESS';
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = $e->getMessage();
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función para borrar un libro completamente */
 ?>

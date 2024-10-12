@@ -320,11 +320,11 @@ function loadMainButtons(book_id, book_status)
     })
     $('#cancel-edit').on('click', function()
     {
-        mensaje('success', '<b>EXITO</b><br/>ID del libro: ' + book_id + '<br/>Status del libro: ' + book_status + '<br/>Botón presionado: CANCELAR');
+        cancelarEdicion(book_id);
     })
     $('#delete-book').on('click', function()
     {
-        mensaje('success', '<b>EXITO</b><br/>ID del libro: ' + book_id + '<br/>Status del libro: ' + book_status + '<br/>Botón presionado: BORRAR');
+        borrarLibro(book_id);
     })
 }
 /* Termina función que carga los botones principales */
@@ -916,7 +916,6 @@ function updateUpdateSections()
     });
 }
 /* Termina función para actualizar secciones existentes */
-
 /* Terminan funciones de guardado de datos */
 
 /* Comienzan funciones de borrado de datos */
@@ -994,4 +993,83 @@ function updateRemoveButtons()
         updateSectionNumbers();
     });
 }
+
+/* Comienza función para cancelar la edición del libro */
+function cancelarEdicion(book_id)
+{
+    Swal.fire(
+    {
+        title: 'Cancelar edición',
+        html: '<h4 style="color: black;">Este proceso es irreversible</h4><p style="color: black;">Si cancela sin guardar, todo su progreso se perderá.<br/>¿Está seguro?</p>',
+        showDenyButton: true,
+        showCancelButton: false,
+        confirmButtonText: "Sí",
+        denyButtonText: "No"
+    }).then((result) => 
+    {
+        if (result.isConfirmed) 
+        {
+            window.location.href = "index.php?page=book-page&book-id=" + book_id;
+        }
+    });
+}
+/* Termina función para cancelar la edición del libro */
+
+/* Comienza función para eliminar un libro */
+function borrarLibro(book_id)
+{
+    // Ejecutamos pregunta
+    Swal.fire(
+        {
+            title: 'Borrar libro',
+            html: '<h4 style="color: black;">Este proceso es irreversible</h4><p style="color: black;">El libro, sus secciones guardadas y visualizaciones serán eliminados.<br/>¿Está seguro?</p>',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Sí",
+            denyButtonText: "No"
+        }).then((result) => 
+        {
+            // Si la respuesta es afirmativa, llamamos a AJAX
+            if (result.isConfirmed) 
+            {
+                // Sólo hace falta enviar el control y el ID del libro
+                $.ajax
+                ({
+                    type: 'POST',
+                    url: './controller/book-crud.php',
+                    data:
+                    {
+                        borrar_libro: true,
+                        id_libro: book_id
+                    },
+                    async: true,
+                    success: function(data)
+                    {
+                        if (data == 'SUCCESS')
+                        {
+                            // Si es exitoso, creamos mensaje
+                            mensaje('success', '<b>ÉXITO</b><br/>Libro borrado exitosamente.<br/>Será redirigido a la página principal.');
+                            setTimeout(function()
+                            {
+                                window.location.href = "index.php?page=main";
+                            }, 5000);
+                        }
+                        else
+                        {
+                            // Y si no se borra, capturamos el error dentro de un mensaje
+                            mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + data + '<br/>Por favor contacte al desarrollador');
+                        }
+                    },
+                    error: function(error)
+                    {
+                        // Si hay un error, generemos un mensaje
+                        mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
+                    }
+                });
+            }
+            // Y mandamos a la página principal
+            // Si no, sólo mandamos mensaje
+        });
+}
+/* Termina función para eliminar un libro */
 /* Terminan funciones de borrado de datos */
