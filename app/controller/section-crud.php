@@ -415,8 +415,7 @@
                     $respuesta .= 
                     "$respuesta_status<div id='section-list'></div><div class='section-error'>
                         <h4>No hay secciones inscritas</h4>
-                        <p>Este libro no tiene ninguna sección inscrita. Por favor da clic en \"Añadir sección/capítulo\" para insertar la primera.</p>
-                        <p>Si esto es un error, por favor contacta al desarrollador.</p>
+                        <p>Este libro no tiene ninguna sección inscrita. Por favor publica el libro y da clic en \"Añadir sección/capítulo\" para insertar la primera. Si esto es un error, por favor contacta al desarrollador.</p>
                     </div>";
                 }
             }

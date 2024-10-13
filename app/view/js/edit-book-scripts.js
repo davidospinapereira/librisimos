@@ -309,23 +309,23 @@ function loadMainButtons(book_id, book_status)
     $('#update-book').on('click', function()
     {
         actualizarLibro(book_id);
-    })
+    });
     $('#save-draft').on('click', function()
     {
         actualizarLibro(book_id);
-    })
+    });
     $('#publish-book').on('click', function()
     {
         publicarLibro(book_id);
-    })
+    });
     $('#cancel-edit').on('click', function()
     {
         cancelarEdicion(book_id);
-    })
+    });
     $('#delete-book').on('click', function()
     {
         borrarLibro(book_id);
-    })
+    });
 }
 /* Termina función que carga los botones principales */
 
@@ -637,6 +637,8 @@ function publicarLibro(book_id)
 /* Comienza función para actualizar el libro en sus datos base */
 function actualizarLibro(book_id)
 {
+    // El nombre del libro
+    var nombreLibro = $('#book-name').val(); 
     // Los géneros seleccionados
     var generosLibro = [];
     $('#genre-list span').each(function () 
@@ -655,9 +657,9 @@ function actualizarLibro(book_id)
         // Ponemos el id en una variable de array
         autoresLibro.push(id);
     });
-    if(generosLibro.length == 0 || autoresLibro.length == 0)
+    if(generosLibro.length == 0 || autoresLibro.length == 0 || nombreLibro == '')
     {
-        mensaje('error', '<b>ERROR</b><br/>No puede quedar el libro sin géneros ni sin autores.');
+        mensaje('error', '<b>ERROR</b><br/>No puede quedar el libro sin título, géneros o autores.');
     }
     else
     {
@@ -673,9 +675,7 @@ function actualizarLibro(book_id)
         {
             if (result.isConfirmed) 
             {
-                // Si se dice que sí, jalamos los datos de la página
-                // El nombre del libro
-                var nombreLibro = $('#book-name').val();                
+                // Si se dice que sí, jalamos los datos de la página               
                 // El contenido de la sinopsis 
                 var sinopsisLibro = tinymce.get("description").getContent();
                 // Esperamos a que la función de rutaImagen se complete

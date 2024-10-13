@@ -76,6 +76,11 @@
     {
         echo borrar_libro($_POST['id_libro'], $json_file);
     }
+
+    if (isset($_POST['nuevo_libro']))
+    {
+        echo nuevo_libro($_POST['nombre_libro'], json_decode($_POST['generos_libro']), json_decode($_POST['autores_libro']), $_POST['sinopsis_libro'], $_POST['url_imagen_libro'], $json_file);
+    }
     /* Termina invocación AJAX */
 
     /* Comienza la función que genera los datos de la tabla de continuar leyendo */
@@ -938,4 +943,85 @@
         }
     }
     /* Termina función para borrar un libro completamente */
+
+    /* Comienza función para guardar un libro nuevo */
+    function nuevo_libro($nombre_libro, $generos_libro, $autores_libro, $sinopsis_libro, $url_imagen_libro, $json_file)
+    {
+        // Esta función es muy similar a la de actualizar libro
+        $respuesta = '';
+        // Primero, abrimos la conexión
+        $conexion = abrir_conexion($json_file);
+        // Invocamos la función auxiliar para guardar el libro y obtener su ID
+        $id_libro = guardar_libro($nombre_libro, $sinopsis_libro, $url_imagen_libro, $json_file);
+        try 
+        {
+            if (is_numeric($id_libro)) 
+            {
+                // Operamos con el ID del libro y los géneros y autores si se insertó el libro correctamente
+                // Trabajamos con géneros
+                foreach ($generos_libro as $key => $id_genero) 
+                {
+                    $sql_genero_libro = "INSERT INTO `generos_libro` (`id_libro`, `id_genero`) VALUES ('$id_libro', '$id_genero')";
+                    $sentencia = mysqli_query($conexion, $sql_genero_libro);
+                }
+                // Trabajamos con autores
+                foreach ($autores_libro as $key => $id_autor) 
+                {
+                    $sql_autor_libro = "INSERT INTO `autores_libro` (`id_libro`, `id_autor`) VALUES ('$id_libro', '$id_autor')";
+                    $sentencia = mysqli_query($conexion, $sql_autor_libro);
+                }
+                $respuesta = 'SUCCESS';
+            } 
+            else 
+            {
+                // Mostrar mensaje de error si no se insertó el libro correctamente
+                $respuesta = $id_libro;
+            }
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = $e->getMessage();
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función para guardar un libro nuevo */
+
+    /* Comienza función auxiliar para guardar un libro sin géneros ni autores y retornar el ID del libro guardado */
+    function guardar_libro($nombre_libro, $sinopsis_libro, $url_imagen, $json_file)
+    {
+        $conexion = abrir_conexion($json_file);
+        $respuesta = '';
+        try 
+        {
+            // Primero, insertamos los datos del libro en la tabla 'libro', se guarda con 0 visualizaciones y como borrador
+            $sql_datos_libro = "INSERT INTO `libro` (`nombre_libro`, `url_caratula_libro`, `sinopsis_libro`, `lecturas_libro`, `clave_estado_libro`) VALUES ('$nombre_libro', '$url_imagen', '$sinopsis_libro', 0, 2)";
+            // Ejecutamos la consulta de inserción
+            if (mysqli_query($conexion, $sql_datos_libro)) 
+            {
+                // Obtener el ID del libro recién insertado
+                $id_libro = mysqli_insert_id($conexion);
+                $respuesta = $id_libro; // Retorna el ID del libro para ser utilizado posteriormente
+            } 
+            else 
+            {
+                // Si hay error en la inserción
+                $respuesta = 'ERROR: ' . mysqli_error($conexion);
+            }
+
+        } 
+        catch (Exception $e) 
+        {
+            $respuesta = $e->getMessage();
+        } 
+        finally 
+        {
+            cerrar_conexion($conexion);
+            return $respuesta; // Retorna el ID del libro o un mensaje de error
+        }
+    }
+    /* Termina función auxiliar para guardar un libro sin géneros ni autores y retornar el ID del libro guardado */
 ?>
