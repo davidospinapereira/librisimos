@@ -1,0 +1,213 @@
+/* Comienzan estilos para el intro */
+#intro
+{
+    flex-direction: column;
+}
+
+#intro h4
+{
+    font-size: 39px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+#intro h6
+{
+    font-size: 19px;
+    font-weight: 400;
+}
+/* Terminan estilos para el intro */
+
+/* Comienzan estilos de sección de datos principales y funciones */
+#book-info
+{
+    padding-top: 30px;
+    padding-bottom: 30px;
+    align-items: flex-start;
+}
+
+/* Comienzan estilos para el selector de imagen */
+#book-info #image
+{
+    height: 270px;
+    margin-right: 20px;
+    background-position: center;
+    background-size: cover;
+    justify-content: end;
+    background-repeat: no-repeat;
+}
+
+#image #selector-archivo
+{
+    height: 40px;
+}
+/* Terminan estilos para el selector de imagen */
+
+/* Comienzan estilos para inputs, selects y listados */
+#book-info #main-data
+{
+    gap: 15px;
+}
+
+#main-data #author-name
+{
+    padding: 5px 7px;
+    font-size: 21px;
+    font-weight: 500;
+    outline: none;
+}
+
+#main-data .author-status
+{
+    min-height: 45px;
+    display: inline-flex;
+    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.author-status #book-id-text
+{
+    width: 60%;
+    text-align: left;
+}
+
+.author-status #author-status
+{
+    width: 40%;
+    text-align: right;
+}
+
+#author-status .status-tile
+{
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: blue;
+}
+
+#book-id-text #id-book
+{
+    font-size: 15px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+#book-id-text #book-status
+{
+    font-size: 15px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+#genre-select
+{
+    display: inline-flex;
+    align-items: center;
+}
+
+#available-genres,
+#available-authors
+{
+    min-height: 45px;
+    width: 300px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 14px;
+    outline: none;
+    margin-right: 10px;
+    margin-top: 1px;
+}
+
+#available-genres option:disabled,
+#available-authors option:disabled
+{
+    background-color: #d1d1d1;
+}
+
+#main-data #genre-list,
+#main-data #author-list
+{
+    min-height: 45px;
+}
+
+#genre-list span,
+#author-list span
+{
+    font-size: 12px;
+    padding: 5px 10px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 3px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+#author-list span
+{
+    background-color: #646464;
+}
+
+#genre-list span .icon-close,
+#author-list span .icon-close
+{
+    font-size: 15px;
+    margin-left: 3px;
+    cursor: pointer;
+}
+
+#functions
+{
+    gap: 15px;
+}
+/* Terminan estilos para inputs, selects y listados */
+
+/* Comienzan estilos generales para botones normales */
+.btn
+{
+    color: #ffffff;
+    text-decoration: none;
+    /* width: 300px; */
+    min-height: 45px;
+    padding: 7px 15px;
+    background-color: red;
+    border: 1px solid red/* !important */;
+    border-radius: 3px;
+    transition: 0.3s ease-in-out;
+    outline: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+#save-author
+{
+    background-color: green;
+    border-color: green;
+    font-size: 17px;
+}
+
+#save-author:hover
+{
+    background-color: darkgreen;
+    border-color: darkgreen;
+}
+
+.btn:hover
+{
+    background-color: darkred;
+    border-color: darkred/* !important */;
+}
+
+.btn:disabled,
+.btn[disabled]
+{
+    border: 1px solid #999999!important;
+    background-color: #cccccc!important;
+    color: #666666!important;
+    cursor: not-allowed!important;
+}
+/* Terminan estilos generales para botones normales */

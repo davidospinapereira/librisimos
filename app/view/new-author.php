@@ -1,6 +1,7 @@
 <?php
     // Aquí no carga nada por ahora
 ?>
+<!-- Esta página es una copia casi exacta de nuevo libro -->
 <section class="contenido" id="inicio">
     <div class="fila" id="intro">
         <h4 class="intro-title">Nuevo Autor</h4>
@@ -17,23 +18,23 @@
         <!-- Comienza la columna con los datos principales -->
         <div class="col w60" id="main-data">
             <!-- Un input para el nombre del libro -->
-            <input type="text" id="book-name" placeholder="Escribe un título">
-            <div class="book-name-status">
+            <input type="text" id="author-name" placeholder="Escribe un nombre">
+            <div class="author-status">
                 <div id="book-id-text"><h4 id="id-book"></h4></div>
-                <div id="book-status"><span class="status-tile">NUEVO</span></div>
+                <div id="author-status"><span class="status-tile">NUEVO</span></div>
             </div>
         </div>
         <!-- Termina la columna con los datos principales -->
         <!-- Comienza la columna con los botones de función -->
         <div class="col w20" id="functions">
-            <button class="btn" id="save-book">Guardar Autor</button>
+            <button class="btn" id="save-author">Guardar Autor</button>
             <button class="btn" id="cancel-edit">Cancelar edición</button>
         </div>
         <!-- Termina la columna con los botones de función -->
     </div>
     <!-- Termina la sección de datos principales y funciones -->
     <!-- Comienza la sección de descripción del libro -->
-    <div class="fila" id="book-description">
+    <div class="fila" id="author-description">
         <div class="col w100">
             <textarea id="description" placeholder="Comienza a escribir..."></textarea>
         </div>
