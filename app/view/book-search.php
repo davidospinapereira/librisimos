@@ -21,7 +21,7 @@
                     </select>
                 </div>
                 <div class="col w70" id="filter-search">
-                    <input type="search" placeholder="Título, valor o palabras clave..." class="search-filter" id="filter-input">
+                    <input type="search" placeholder="Título, autor o palabras clave..." class="search-filter" id="filter-input">
                 </div>
             </div>
             <!-- Comienza la sección de contenido -->

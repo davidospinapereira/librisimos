@@ -45,6 +45,8 @@ function llenarDatos(book_id)
             // Y luego de decodificados, debo ponerlos en su sitio
             if (respuesta.codigo == 'SUCCESS')
             {
+                // Colocamos el nombre de la página desde aquí:
+                $(document).prop('title', 'Libro: ' + respuesta.nombre_libro + ' - Librísimos');
                 // Si el código es éxito, sé que vendrá con todos los demás datos
                 if (respuesta.url_caratula_libro == '' || respuesta.url_caratula_libro == 'undefined' || respuesta.url_caratula_libro == null)
                 {
@@ -57,6 +59,8 @@ function llenarDatos(book_id)
             }
             else
             {
+                // Colocamos el nombre de la página desde aquí:
+                $(document).prop('title', 'Error en página de libro - Librísimos');
                 // Si el código no es de éxito es de error, sé que vendrá con sólo un campo
                 if (respuesta.error == 'NO_DATA_GENERATED')
                 {

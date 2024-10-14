@@ -9,6 +9,8 @@ var user_id = $('#user_id');
 /* Comienza carga de elementos al cargar la página */
 $(document).ready(function()
 {
+    // Colocamos el nombre de la página desde aquí:
+    $(document).prop('title', 'Mis libros - Librísimos');
     // Primero, llenamos el select con todos los géneros que existen
     llenarSelect();
     // Segundo, activamos el área de loading

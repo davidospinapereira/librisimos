@@ -121,9 +121,9 @@
                 ?>
             </div>
             <div class="fila">
-                <!-- Comienzan funciones rápidas, cambian dependiendo del tipo de usuario -->
+                <!-- Comienzan funciones disponibles, cambian dependiendo del tipo de usuario -->
                 <div class="col w100" id="functions">
-                    <h3>Funciones rápidas</h3>
+                    <h3>Funciones disponibles</h3>
                     <div id="listado-funciones">
                         <?php
                         // Esto solo sucede si el tipo de usuario es diferente a suscriptor
@@ -131,9 +131,10 @@
                         {
                             ?>
                             <a href="index.php?page=new-book" class="btn">Nuevo libro</a>
+                            <a href="index.php?page=new-author" class="btn">Nuevo autor</a>
+                            <a href="index.php?page=genre-list" class="btn">Editar géneros</a>
                             <a href="index.php?page=new-user" class="btn">Nuevo usuario</a>
-                            <a href="index.php?page=book-search" class="btn">Editar libros</a>
-                            <a href="index.php?page=user-search" class="btn">Editar usuarios</a>
+                            <a href="index.php?page=user-list" class="btn">Editar usuarios</a>
                             <?php
                         }
                         ?>

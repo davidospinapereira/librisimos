@@ -41,6 +41,8 @@ function bookStatus(book_id, callback)
 /* Comienzan funciones automáticas */
 $(document).ready(function()
 {
+    // Colocamos el nombre de la página desde aquí:
+    $(document).prop('title', 'Editar libro - Librísimos');
     // Primero, la información del libro
     loadBookData(book_id, book_status);
     // Luego, los botones principales

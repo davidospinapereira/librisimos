@@ -4,6 +4,8 @@ var book_cover_url = 'view/uploads/books/generic-book-cover.jpg';
 /* Comienzan funciones automáticas */
 $(document).ready(function()
 {
+    // Colocamos el nombre de la página desde aquí:
+    $(document).prop('title', 'Nuevo libro - Librísimos');
     // Primero, la carga de la imagen dummy de perfil
     picsetter.css('background-image', 'url("./view/uploads/books/generic-book-cover.jpg")');
     // Cargamos los selects con los géneros

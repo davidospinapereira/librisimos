@@ -11,8 +11,8 @@
         // Esta solo sale si el usuario es admin o superadmin (1-SUPERADMIN, 2-ADMIN, 3-USUARIO)
         if ($perfil['id_tipo'] < 3)
         {
-            $pag_usuarios = ($page == 'users-list') ? '#' : 'index.php?page=users-list';
-            $link_usuarios = ($page == 'users-list') ? '<a href="' . $pag_usuarios . '" class="nav-active">Usuarios</a>' : '<a href="' . $pag_usuarios . '">Usuarios</a>';
+            $pag_usuarios = ($page == 'user-search') ? '#' : 'index.php?page=user-search';
+            $link_usuarios = ($page == 'user-search') ? '<a href="' . $pag_usuarios . '" class="nav-active">Usuarios</a>' : '<a href="' . $pag_usuarios . '">Usuarios</a>';
         }
         else
         {
