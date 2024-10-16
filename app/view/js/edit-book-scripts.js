@@ -412,7 +412,7 @@ function loadSections(book_id, book_status)
             book_status
         },
         async: true,
-        success: function(data)
+        success: async function(data)
         {
             $('#book-sections-data').html('');
             $('#book-sections-data').html(data);
@@ -448,11 +448,11 @@ function loadSections(book_id, book_status)
             });
             // Obtenemos los datos de cada botón de actualizar y les aplicamos la función de actualizar...
             // Actualizar la funcionalidad de cambio de nombre en la escritura
-            updateTitleInputs();
+            await updateTitleInputs();
             // La función de remover secciones guardadas en la base de datos debe existir aquí porque puede ser un libro no publicado
-            updateRemoveButtons();
+            await updateRemoveButtons();
             // Debemos actualizar después de esto la funcionalidad de actualizar secciones existentes.
-            updateUpdateSections();
+            await updateUpdateSections();
         },
         error: function(error)
         {
@@ -783,7 +783,7 @@ function rutaImagen(selector_id, book_cover_url)
 /* Termina función asincrónica para guardar la ruta de la imagen */
 
 /* Comienza función para guardar una sección nueva */
-function saveNewSection(book_id, section_title, section_content)
+function saveNewSection(book_id, section_title, section_content) 
 {
     // Preguntamos si se está seguro
     Swal.fire
@@ -795,7 +795,7 @@ function saveNewSection(book_id, section_title, section_content)
         confirmButtonText: "Sí",
         denyButtonText: "No"
     }).then((result) => 
-    {
+        {
         if (result.isConfirmed) 
         {
             // Mandamos AJAX si se está seguro
@@ -803,7 +803,7 @@ function saveNewSection(book_id, section_title, section_content)
             ({
                 type: 'POST',
                 url: './controller/section-crud.php',
-                data:
+                data: 
                 {
                     guardar_seccion: true,
                     titulo_seccion: section_title,
@@ -811,20 +811,30 @@ function saveNewSection(book_id, section_title, section_content)
                     id_libro: book_id
                 },
                 async: true,
-                success: function(data)
+                success: function(data) 
                 {
-                    if (data == 'SUCCESS')
+                    if (data == 'SUCCESS') 
                     {
                         // Si es exitoso el guardado, debe mandar mensaje de éxito
                         mensaje('success', '<b>ÉXITO</b><br/>Sección guardada exitosamente.');
-                    }
-                    else
+                        
+                        // Ahora que se ha confirmado y guardado, recargamos las secciones
+                        $('#section-list').html('');
+                        $('#section-list').html('<div class="spinner active" id="sections-spinner"><span class="loader"></span></div>');
+                        setTimeout(function() {
+                            loadSections(book_id, book_status);
+                        }, 500);
+
+                        // Finalmente, actualizamos los números de las secciones
+                        updateSectionNumbers();
+                    } 
+                    else 
                     {
                         // Si es cualquier otra cosa, debe mandarla como mensaje
                         mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + data + '<br/>Por favor contacte al desarrollador');
                     }
                 },
-                error: function(error)
+                error: function(error) 
                 {
                     mensaje('error', '<b>ERROR</b><br/>Hay un error en el programa:<br/>' + error + '<br/>Por favor contacte al desarrollador');
                 }
@@ -832,18 +842,6 @@ function saveNewSection(book_id, section_title, section_content)
         }
         // Si no está seguro, no hacemos nada
     });
-    // Sin importar cuál sea el mensaje, se recarga el spinner
-    // Primero, quitamos el contenido de las secciones
-    $('#section-list').html('');
-    // Luego, agregamos el loader, activo de una vez
-    $('#section-list').html('<div class="spinner active" id="sections-spinner"><span class="loader"></span></div>');
-    // Luego cargamos el listado de secciones
-    setTimeout(function()
-    {
-        loadSections(book_id, book_status);
-    }, 500);
-    // Finalmente, actualizamos los números de las secciones
-    updateSectionNumbers();
 }
 /* Termina función para guardar una sección nueva */
 
