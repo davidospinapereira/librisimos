@@ -948,7 +948,7 @@
     function nuevo_libro($nombre_libro, $generos_libro, $autores_libro, $sinopsis_libro, $url_imagen_libro, $json_file)
     {
         // Esta función es muy similar a la de actualizar libro
-        $respuesta = '';
+        $respuesta = array();
         // Primero, abrimos la conexión
         $conexion = abrir_conexion($json_file);
         // Invocamos la función auxiliar para guardar el libro y obtener su ID
@@ -970,22 +970,29 @@
                     $sql_autor_libro = "INSERT INTO `autores_libro` (`id_libro`, `id_autor`) VALUES ('$id_libro', '$id_autor')";
                     $sentencia = mysqli_query($conexion, $sql_autor_libro);
                 }
-                $respuesta = 'SUCCESS';
+                $respuesta = [
+                    "mensaje" => "SUCCESS",
+                    "book_id" => $id_libro
+                ];
             } 
             else 
             {
                 // Mostrar mensaje de error si no se insertó el libro correctamente
-                $respuesta = $id_libro;
+                $respuesta = [
+                    "mensaje" => $id_libro
+                ];
             }
         } 
         catch (Exception $e) 
         {
-            $respuesta = $e->getMessage();
+            $respuesta = [
+                "mensaje" => $e->getMessage()
+            ];
         }
         finally
         {
             cerrar_conexion($conexion);
-            return $respuesta;
+            return json_encode($respuesta);
         }
     }
     /* Termina función para guardar un libro nuevo */

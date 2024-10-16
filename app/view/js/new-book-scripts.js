@@ -373,21 +373,22 @@ function guardarLibro(nombreLibro, sinopsisLibro, url_imagen_save, generosLibro,
                 async: true,
                 success: function(response)
                 {
+                    var respuesta = JSON.parse(response);
                     // Debe devolver un mensaje. Dependiendo del mensaje es lo que hay que hacer.
-                    if (response == 'SUCCESS')
+                    if (respuesta.mensaje == 'SUCCESS')
                     {
                         // Si el mensaje es de éxito, se genera un mensaje de éxito
                         mensaje('success', '<b>ÉXITO</b><br/>Libro actualizado satisfactoriamente.<br/>Será redirigido a la página del libro ahora.');
                         // Y se redirige a la página de libro
                         setTimeout(function()
                         {
-                            window.location.href = "index.php?page=book-page&book-id=" + book_id;
+                            window.location.href = "index.php?page=edit-book&book-id=" + respuesta.book_id;
                         }, 5000);
                     }
                     else
                     {
                         // Si el mensaje es de error, se genera un mensaje y listo.
-                        mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa: <br/>' + response + '.<br/>Por favor contacte al desarrollador.');
+                        mensaje('error', '<b>ERROR</b><br/>Hubo un error en el programa: <br/>' + respuesta.mensaje + '.<br/>Por favor contacte al desarrollador.');
                     }
                 },
                 error: function(error)
