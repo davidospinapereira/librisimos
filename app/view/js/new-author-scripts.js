@@ -160,7 +160,6 @@ function guardarAutor(nombreAutor, descripcionAutor, url_imagen_save)
                 async: true,
                 success: function(response)
                 {
-                    console.log(response);
                     var respuesta = JSON.parse(response);
                     // Debe devolver un mensaje. Dependiendo del mensaje es lo que hay que hacer.
                     if (respuesta.mensaje == 'SUCCESS')

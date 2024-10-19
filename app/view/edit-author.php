@@ -26,7 +26,7 @@
             <!-- Un input para el nombre del libro -->
             <input type="text" id="author-name" placeholder="Escribe un nombre">
             <div class="author-status">
-                <div id="book-id-text"><h4 id="id-book"></h4></div>
+                <div id="book-id-text"><h4 id="id-book">ID de autor: 2</h4></div>
                 <div id="author-status"><span class="status-tile">GUARDADO</span></div>
             </div>
         </div>
@@ -48,6 +48,5 @@
     <!-- Termina la sección de descripción del libro -->
     <!-- Comienzan Inputs ocultos, para poder pasarle variables al JS -->
     <input type="hidden" value="<?php echo $author_id;?>" id="author-id">
-    <input type="hidden" value="<?php echo $user_id;?>" id="user-id">
     <!-- Terminan Inputs ocultos -->
 </section>
