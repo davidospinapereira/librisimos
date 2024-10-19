@@ -39,20 +39,20 @@ function bookStatus(book_id, callback)
 /* Termina función que retorna el status del libro para poder operar con él */
 
 /* Comienzan funciones automáticas */
-$(document).ready(function()
+$(document).ready(async function()
 {
     // Colocamos el nombre de la página desde aquí:
     $(document).prop('title', 'Editar libro - Librísimos');
     // Primero, la información del libro
-    loadBookData(book_id, book_status);
+    await loadBookData(book_id, book_status);
     // Luego, los botones principales
-    loadMainButtons(book_id, book_status);
+    await loadMainButtons(book_id, book_status);
     // Luego, ponemos en activo el spinner
     $('#sections-spinner').addClass('active');
     // Luego, jalamos las secciones existentes y las demoramos medio segundo como mínimo
-    setTimeout(function()
+    setTimeout(async function()
     {
-        loadSections(book_id, book_status);
+        await loadSections(book_id, book_status);
     }, 500);    
 });
 /* Terminan funciones automáticas */

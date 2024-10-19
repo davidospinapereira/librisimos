@@ -18,6 +18,10 @@
     {
         echo actualizar_autor($_POST['id_autor'], $_POST['nombre_autor'], $_POST['descripcion_autor'], $_POST['url_imagen_autor'], $json_file);
     }
+    if(isset($_POST['cargar_botones']))
+    {
+        echo cargar_botones($_POST['id_autor'], $_POST['id_usuario'], $json_file);
+    }
     /* Terminan invocaciones AJAX */
 
     /* Comienza función que obtiene autores para la página de edición de libro */
@@ -198,4 +202,42 @@
         }
     }
     /* Termina función para actualizar los datos de un autor */
+
+    /* Comienza función para colocar los botones de función en la página de autor */
+    function cargar_botones($id_autor, $id_usuario, $json_file)
+    {
+        // Debe devolver String
+        $respuesta = '';
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Luego preparamos un statement
+        $sql_tipo_usuario = 
+        "SELECT tu.`id_tipo_usuario` FROM `tipo_usuario` tu INNER JOIN `usuario` u ON (u.`id_tipo_usuario` = tu.`id_tipo_usuario`) WHERE u.`id_usuario` = $id_usuario";
+        try 
+        {
+            if ($sentencia_tipo = mysqli_query($conexion, $sql_tipo_usuario))
+            {
+                $respuesta .= "<div class='col w100'>";
+                // Sólo debe haber un valor encontrado
+                $row = mysqli_fetch_assoc($sentencia_tipo);
+                if ($row['id_tipo_usuario'] < 3)
+                {
+                    $respuesta .= " <button class='control' onclick='editarAutor($id_autor)';'>Editar Autor</button>";
+                    /* window.location.href='index.php?page=edit-page&book-id=$book_id'; */
+                }
+                $respuesta .= "</div>";
+            }
+        }        
+        catch (Exception $e) 
+        {
+            // Si hay un error, que me lo muestre
+            $respuesta .= "<div class='col w100'>Error en el programa:<br/> $e->getMessage()</div>";
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función para colocar los botones de función en la página de autor */
 ?>

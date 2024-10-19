@@ -277,10 +277,3 @@ function editarLibro(book_id)
     window.location.href='index.php?page=edit-book&book-id=' + book_id;
 }
 /* Termina función para editar libro, exclusiva para administradores */
-
-/* Comienza función para borrar libro, exclusiva para administradores */
-function borrarLibro(book_id)
-{
-    alert('Función de borrar libro activada, libro: ' + book_id);
-}
-/* Termina función para borrar libro, exclusiva para administradores */

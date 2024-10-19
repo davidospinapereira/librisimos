@@ -81,6 +81,11 @@
     {
         echo nuevo_libro($_POST['nombre_libro'], json_decode($_POST['generos_libro']), json_decode($_POST['autores_libro']), $_POST['sinopsis_libro'], $_POST['url_imagen_libro'], $json_file);
     }
+    
+    if(isset($_POST['get_author_books']))
+    {
+        echo get_author_books($_POST['author_id'], $json_file);
+    }
     /* Termina invocación AJAX */
 
     /* Comienza la función que genera los datos de la tabla de continuar leyendo */
@@ -360,7 +365,7 @@
                         // Añadimos el autor y el ID que nos llega al array
                         $id_autor = $row['id_autor'];
                         $nombre_autor = $row['nombre_autor'];
-                        $autores[] = "<a href='index.php?page=author&author-id=$id_autor'>$nombre_autor</a>";
+                        $autores[] = "<a href='index.php?page=author-page&author-id=$id_autor'>$nombre_autor</a>";
                     }
                     // Cuando terminamos de jalar todos los autores, convertimos el array en un string con el separador
                     $respuesta = implode(' - ', $autores);
@@ -463,7 +468,7 @@
         $conexion = abrir_conexion($json_file);
         // Luego preparamos un statement
         $sql = 
-        "SELECT l.`id_libro`, l.`nombre_libro`, l.`sinopsis_libro`, a.`nombre_autor`, l.`url_caratula_libro`, g.`nombre_genero`, g.`color_genero`, COUNT(DISTINCT(cs.`id_seccion`)) AS cantidad_secciones FROM libro l JOIN generos_libro gl ON l.`id_libro` = gl.`id_libro` JOIN genero g ON gl.`id_genero` = g.`id_genero` JOIN autores_libro al ON l.`id_libro` = al.`id_libro` JOIN autor a ON al.`id_autor` = a.`id_autor` JOIN componer_seccion cs ON l.`id_libro` = cs.`id_libro` WHERE (g.`id_genero` IN (SELECT `id_genero` FROM `generos_libro` WHERE `id_libro` = 2) OR l.`id_libro` IN ( SELECT `id_libro` FROM `autores_libro` WHERE `id_autor` IN (SELECT `id_autor` FROM `autores_libro` WHERE `id_libro` = $book_id))) AND l.`id_libro` != $book_id GROUP BY l.`id_libro` ORDER BY l.`lecturas_libro` DESC LIMIT 4";
+        "SELECT l.`id_libro`, l.`nombre_libro`, l.`sinopsis_libro`, a.`nombre_autor`, l.`url_caratula_libro`, g.`nombre_genero`, g.`color_genero`, COUNT(DISTINCT(cs.`id_seccion`)) AS cantidad_secciones FROM libro l JOIN generos_libro gl ON l.`id_libro` = gl.`id_libro` JOIN genero g ON gl.`id_genero` = g.`id_genero` JOIN autores_libro al ON l.`id_libro` = al.`id_libro` JOIN autor a ON al.`id_autor` = a.`id_autor` JOIN componer_seccion cs ON l.`id_libro` = cs.`id_libro` WHERE (g.`id_genero` IN (SELECT `id_genero` FROM `generos_libro` WHERE `id_libro` = $book_id) OR l.`id_libro` IN ( SELECT `id_libro` FROM `autores_libro` WHERE `id_autor` IN (SELECT `id_autor` FROM `autores_libro` WHERE `id_libro` = $book_id))) AND l.`id_libro` != $book_id GROUP BY l.`id_libro` ORDER BY l.`lecturas_libro` DESC LIMIT 4";
         // Ejecutamos la sentencia
         if ($sentencia = mysqli_query($conexion, $sql))
         {
@@ -546,17 +551,17 @@
                     $row = mysqli_fetch_assoc($sentencia_tipo);
                     if ($row['id_tipo_usuario'] < 3)
                     {
-                        $respuesta .= " <button class='control' onclick='editarLibro($book_id)';'>Editar libro</button> <button class='control' id='delete-book' onclick='borrarLibro($book_id);'>BORRAR LIBRO</button>";
+                        $respuesta .= " <button class='control' onclick='editarLibro($book_id)';'>Editar libro</button>";
                         /* window.location.href='index.php?page=edit-page&book-id=$book_id'; */
                     }
                 }
                 $respuesta .= "</div>";
             }
-        } 
+        }
         catch (Exception $e) 
         {
             // Si hay un error, que me lo muestre
-            $respuesta .= "<div class='col w100'>Error en el programa:<br/> $e</div>";
+            $respuesta .= "<div class='col w100'>Error en el programa:<br/> $e->getMessage()</div>";
         }
         finally
         {
@@ -1031,4 +1036,66 @@
         }
     }
     /* Termina función auxiliar para guardar un libro sin géneros ni autores y retornar el ID del libro guardado */
+
+    /* Comienza función para obtener libros de un autor específico */
+    function get_author_books($author_id, $json_file)
+    {
+        // Debe devolver String
+        $respuesta = '';
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Luego preparamos un statement
+        $sql_libros_autor = 
+        "SELECT l.`id_libro`, l.`nombre_libro`, l.`sinopsis_libro`, l.`url_caratula_libro`, a.`nombre_autor`, g.`nombre_genero`, g.`color_genero`, COUNT(DISTINCT(cs.`id_seccion`)) AS cantidad_secciones FROM libro l JOIN autores_libro al ON l.`id_libro` = al.`id_libro` JOIN autor a ON al.`id_autor` = a.`id_autor` JOIN generos_libro gl ON l.`id_libro` = gl.`id_libro` JOIN genero g ON gl.`id_genero` = g.`id_genero` JOIN componer_seccion cs ON l.`id_libro` = cs.`id_libro` WHERE a.`id_autor` = $author_id GROUP BY l.`id_libro`, l.`nombre_libro`, l.`sinopsis_libro`, a.`nombre_autor`, g.`nombre_genero`, g.`color_genero` ORDER BY l.`nombre_libro` DESC";
+        // Ejecutamos la sentencia
+        if ($sentencia = mysqli_query($conexion, $sql_libros_autor))
+        {
+            $respuesta .= 
+            "
+                <!-- Comienza grid de tarjetas -->
+            ";
+            /* obtener array asociativo */
+            while ($row = mysqli_fetch_assoc($sentencia)) 
+            {
+                $id_libro = $row['id_libro'];
+                $nombre_libro = $row['nombre_libro'];
+                $sinopsis_libro = substr($row['sinopsis_libro'], 0, 45) . "...";
+                $nombre_autor = $row['nombre_autor'];
+                $nombre_genero = $row['nombre_genero'];
+                $color_genero = $row['color_genero'];
+                $url_caratula_libro = $row['url_caratula_libro'];
+                $cantidad_secciones = $row['cantidad_secciones'];
+                // Aquí debo meter la lógica para que, en vez de decir "Continuar leyendo", diga "Leer", y ya me compliqué la vida
+                $respuesta .= 
+                "
+                    <div class='card'>
+                        <a href='index.php?page=book-page&book-id=$id_libro'>
+                            <div class='poster'>
+                                <img src='./$url_caratula_libro'>
+                            </div>
+                            <div class='details'>
+                                <h3>$nombre_autor</h3>
+                                <h2>$nombre_libro</h2>
+                                <div class='genres'>
+                                    <span style='background-color: #$color_genero'>$nombre_genero</span>
+                                </div>
+                                <div class='sections'>
+                                    <span>$cantidad_secciones secciones/capítulos</span>
+                                </div>
+                                <div class='sinopsis'>
+                                    $sinopsis_libro
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                ";
+            }
+            $respuesta .= 
+            "<!-- Termina grid de tarjetas -->";
+        }
+        // Finalmente, cerramos la conexión
+        cerrar_conexion($conexion);
+        return $respuesta;
+    }
+    /* Termina función para obtener libros de un autor específico */
 ?>
