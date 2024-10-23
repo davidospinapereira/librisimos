@@ -41,9 +41,9 @@ function activarHerramienta(section_id, user_id)
         },
         success: function(data)
         {
-            //console.log(data);
             // Tenemos que decodificar el JSON resultante
             var results = JSON.parse(data);
+            var book_id = results.book_id;
             if (results.codigo = 'SUCCESS')
             {
                 // Aquí debemos sacar los datos, organizarlos en la herramienta de lectura
@@ -62,36 +62,38 @@ function activarHerramienta(section_id, user_id)
                     case 'FIRST':
                         // Si la sección es la primera, no puede haber sección anterior
                         $('#read-tool-previous').prop('disabled', true);
-                        $('#read-tool-next').on('click', function()
-                        {
-                            leerSeccionDesdeReader(parseInt(results.section_number) + 1, parseInt(results.book_id), parseInt(user_id))
-                        });
+                        $('#read-tool-previous').attr('data-n-section', parseInt(results.section_number));
+                        $('#read-tool-next').attr('data-n-section', parseInt(results.section_number) + 1);
                         break;
                     case 'MIDDLE':
-                        $('#read-tool-previous').on('click', function()
-                        {
-                            leerSeccionDesdeReader(parseInt(results.section_number) - 1, parseInt(results.book_id), parseInt(user_id))
-                        });
-                        $('#read-tool-next').on('click', function()
-                        {
-                            leerSeccionDesdeReader(parseInt(results.section_number) + 1, parseInt(results.book_id), parseInt(user_id))
-                        });
+                        $('#read-tool-previous').attr('data-n-section', parseInt(results.section_number) - 1);
+                        $('#read-tool-next').attr('data-n-section', parseInt(results.section_number) + 1);
                         break;
                     case 'LAST':
                         // Si la sección es la última, debe haber sección anterior
-                        $('#read-tool-previous').on('click', function()
-                        {
-                            leerSeccionDesdeReader(parseInt(results.section_number) - 1, parseInt(results.book_id), parseInt(user_id))
-                        });
+                        $('#read-tool-previous').attr('data-n-section', parseInt(results.section_number) - 1);
+                        $('#read-tool-next').attr('data-n-section', parseInt(results.section_number));
                         // Si la sección es la última, no puede haber sección siguiente
                         $('#read-tool-next').prop('disabled', true);
                         break;
                     default:
                         // Si la sección es única o si hay un error, no puede haber sección siguiente ni anterior
-                        $('#read-tool-previous').prop('disabled', true);
+                        $('#read-tool-previous').attr('data-n-section', parseInt(results.section_number));
+                        $('#read-tool-next').attr('data-n-section', parseInt(results.section_number));
+                        $('#read-tool-previous').prop('disabled', true);                    
                         $('#read-tool-next').prop('disabled', true);
                         break;
                 }
+                $('#read-tool-previous').on('click', function()
+                {
+                    //leerSeccionDesdeReader(parseInt(results.section_number) + 1, book_id, user_id);
+                    leerSeccionDesdeReader($('#read-tool-previous').attr('data-n-section'), book_id, user_id);
+                });
+                $('#read-tool-next').on('click', function()
+                {
+                    //leerSeccionDesdeReader(parseInt(results.section_number) + 1, book_id, user_id);
+                    leerSeccionDesdeReader($('#read-tool-next').attr('data-n-section'), book_id, user_id);
+                });
             }
             else
             {
@@ -160,36 +162,38 @@ function leerSeccionDesdeReader(section_number, book_id, user_id)
                 case 'FIRST':
                     // Si la sección es la primera, no puede haber sección anterior
                     $('#read-tool-previous').prop('disabled', true);
-                    $('#read-tool-next').on('click', function()
-                    {
-                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, book_id, user_id);
-                    });
+                    $('#read-tool-previous').attr('data-n-section', parseInt(results.section_number));
+                    $('#read-tool-next').attr('data-n-section', parseInt(results.section_number) + 1);
                     break;
                 case 'MIDDLE':
-                    $('#read-tool-previous').on('click', function()
-                    {
-                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, book_id, user_id);
-                    });
-                    $('#read-tool-next').on('click', function()
-                    {
-                        leerSeccionDesdeReader(parseInt(results.section_number) + 1, book_id, user_id);
-                    });
+                    $('#read-tool-previous').attr('data-n-section', parseInt(results.section_number) - 1);
+                    $('#read-tool-next').attr('data-n-section', parseInt(results.section_number) + 1);
                     break;
                 case 'LAST':
                     // Si la sección es la última, debe haber sección anterior
-                    $('#read-tool-previous').on('click', function () 
-                    {
-                        leerSeccionDesdeReader(parseInt(results.section_number) - 1, book_id, user_id);
-                    });
+                    $('#read-tool-previous').attr('data-n-section', parseInt(results.section_number) - 1);
+                    $('#read-tool-next').attr('data-n-section', parseInt(results.section_number));
                     // Si la sección es la última, no puede haber sección siguiente
                     $('#read-tool-next').prop('disabled', true);
                     break;
                 default:
                     // Si la sección es única o si hay un error, no puede haber sección siguiente ni anterior
-                    $('#read-tool-previous').prop('disabled', true);
+                    $('#read-tool-previous').attr('data-n-section', parseInt(results.section_number));
+                    $('#read-tool-next').attr('data-n-section', parseInt(results.section_number));
+                    $('#read-tool-previous').prop('disabled', true);                    
                     $('#read-tool-next').prop('disabled', true);
                     break;
             }
+            /* $('#read-tool-previous').on('click', function()
+            {
+                //leerSeccionDesdeReader(parseInt(results.section_number) + 1, book_id, user_id);
+                leerSeccionDesdeReader($('#read-tool-previous').attr('data-n-section'), book_id, user_id);
+            });
+            $('#read-tool-next').on('click', function()
+            {
+                //leerSeccionDesdeReader(parseInt(results.section_number) + 1, book_id, user_id);
+                leerSeccionDesdeReader($('#read-tool-next').attr('data-n-section'), book_id, user_id);
+            }); */
         },
         error: function(error)
         {
