@@ -140,6 +140,7 @@
                         ?>
                         <!-- Y esto sucede para todos los usuarios -->
                         <a href="index.php?page=book-search" class="btn">Buscar libros</a>
+                        <a href="index.php?page=author-search" class="btn">Buscar autores</a>
                     </div>
                 </div>
                 <!-- Terminan funciones rápidas -->

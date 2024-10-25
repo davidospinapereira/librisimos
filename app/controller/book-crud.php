@@ -172,7 +172,7 @@
     /* Comienza la función que genera las tarjetas en la página de biblioteca */
     function book_grid_general($id_genero, $termino_busqueda, $json_file)
     {
-        // Debe devolver booleano
+        // Debe devolver código HTML en un string
         $respuesta = '';
         // Primero, debemos generar la conexión
         $conexion = abrir_conexion($json_file);
@@ -242,6 +242,7 @@
         } 
         catch (Exception $e) 
         {
+            $error = $e->getMessage();
             $respuesta = "<div class='col w100' id='nothing-found'><h2>¡ERROR! Hay un error en el programa</h2><h4>$error</h4><h4>Por favor consulte al administrador.</h4></div>";
         }
         finally

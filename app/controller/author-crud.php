@@ -22,6 +22,10 @@
     {
         echo cargar_botones($_POST['id_autor'], $_POST['id_usuario'], $json_file);
     }
+    if(isset($_POST['author_grid']))
+    {
+        echo author_grid($_POST['input'], $json_file);
+    }
     /* Terminan invocaciones AJAX */
 
     /* Comienza función que obtiene autores para la página de edición de libro */
@@ -240,4 +244,95 @@
         }
     }
     /* Termina función para colocar los botones de función en la página de autor */
+
+    /* Comienza función que retorna un grid de autores en la página de búsqueda de autor */
+    function author_grid($termino_busqueda, $json_file)
+    {
+        // Debe devolver código HTML en un string
+        $respuesta = '';
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Convertimos el término de búsqueda en entidades HTML para que no haya errores con tildes con los textos con tildes y acentos.
+        $termino_busqueda = html_entity_decode($termino_busqueda, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        // Luego preparamos un statement
+        $sql_grid_autores = 
+        "SELECT a.`id_autor`, a.`nombre_autor`, a.`url_imagen_autor`, a.`informacion_autor`, COUNT(DISTINCT l.`id_libro`) AS `cantidad_libros` FROM `autor` a LEFT JOIN `autores_libro` al ON a.`id_autor` = al.`id_autor` LEFT JOIN `libro` l ON al.`id_libro` = l.`id_libro` WHERE (LOWER(a.`nombre_autor`) COLLATE utf8_general_ci LIKE '%$termino_busqueda%' OR LOWER(a.`informacion_autor`) COLLATE utf8_general_ci LIKE '%$termino_busqueda%') GROUP BY a.`id_autor`";
+        // Ejecutamos la sentencia
+        try 
+        {
+            // Si hay respuesta, que la genere
+            if ($sentencia = mysqli_query($conexion, $sql_grid_autores))
+            {
+                $respuesta .= "<div class='col w100' id='cards-grid'>";
+                if (mysqli_num_rows($sentencia) > 0) 
+                {
+                    while ($row = mysqli_fetch_assoc($sentencia)) 
+                    {
+                        $id_autor = $row['id_autor'];
+                        if ($row['url_imagen_autor'] != '' || $row['url_imagen_autor'] != NULL)
+                        {
+                            $url_imagen_autor = $row['url_imagen_autor'];
+                        }
+                        else
+                        {
+                            $url_imagen_autor = './view/uploads/authors/generic-author-avatar.png';
+                        }
+                        $nombre_autor = $row['nombre_autor'];
+                        $cantidad_libros = $row['cantidad_libros'];
+                        $texto_libros = '';
+                        // Texto variable dependiendo de la cantidad de libros registrados
+                        if ($cantidad_libros == 0 || $cantidad_libros == '0')
+                        {
+                            $texto_libros = '(No hay libros registrados)';
+                        }
+                        else if ($cantidad_libros == 1 || $cantidad_libros == '1')
+                        {
+                            $texto_libros = '1 libro registrado';
+                        }
+                        else
+                        {
+                            $texto_libros = $cantidad_libros . ' libros registrados';
+                        }
+                        $informacion_autor = substr($row['informacion_autor'], 0, 45) . "...";
+                        $respuesta .= 
+                        "
+                        <div class='card'>
+                            <a href='index.php?page=author-page&author-id=$id_autor'>
+                                <div class='poster'>
+                                    <img src='./$url_imagen_autor'>
+                                </div>
+                                <div class='details'>
+                                    <h2>$nombre_autor</h2>
+                                    <div class='sections'>
+                                        <span>$texto_libros</span>
+                                    </div>
+                                    <div class='sinopsis'>
+                                        <p>$informacion_autor</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        ";
+                    }
+                    $respuesta .= "</div>";
+                }
+                // Si no, que mande la sección de nada encontrado
+                else
+                {
+                    $respuesta = '<div class="col w100" id="nothing-found"><h2>¡OOPS! Su búsqueda no arrojó ningún resultado</h2><h4>Por favor cambie los parámetros de búsqueda.</h4></div>';
+                }
+            }
+        } 
+        catch (Exception $e) 
+        {
+            $error = $e->getMessage();
+            $respuesta = "<div class='col w100' id='nothing-found'><h2>¡ERROR! Hay un error en el programa</h2><h4>$error</h4><h4>Por favor consulte al administrador.</h4></div>";
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función que retorna un grid de autores en la página de búsqueda de autor */
 ?>

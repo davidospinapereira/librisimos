@@ -3,10 +3,12 @@
     {
         /* Comienza generación de enlaces del menú principal */
         $pag_inicio = ($page == 'main') ? '#' : 'index.php?page=main';
-        $pag_busqueda = ($page == 'book-search') ? '#' : 'index.php?page=book-search';
+        $pag_busqueda_libros = ($page == 'book-search') ? '#' : 'index.php?page=book-search';
+        $pag_busqueda_autores = ($page == 'author-search') ? '#' : 'index.php?page=author-search';
         $pag_mis_libros = ($page == 'my-books') ? '#' : 'index.php?page=my-books';
         $link_inicio = ($page == 'main') ? '<a href="' . $pag_inicio . '" class="nav-active">Inicio</a>' : '<a href="' . $pag_inicio . '">Inicio</a>';
-        $link_busqueda = ($page == 'book-search') ? '<a href="' . $pag_busqueda . '" class="nav-active">Biblioteca</a>' : '<a href="' . $pag_busqueda . '">Biblioteca</a>';
+        $link_libros = ($page == 'book-search') ? '<a href="' . $pag_busqueda_ibros . '" class="nav-active">Buscar Libros</a>' : '<a href="' . $pag_busqueda_libros . '">Buscar Libros</a>';
+        $link_autores = ($page == 'author-search') ? '<a href="' . $pag_busqueda_autores . '" class="nav-active">Buscar Autores</a>' : '<a href="' . $pag_busqueda_autores . '">Buscar Autores</a>';
         $link_mis_libros = ($page == 'my-books') ? '<a href="' . $pag_mis_libros . '" class="nav-active">Mis libros</a>' : '<a href="' . $pag_mis_libros . '">Mis libros</a>';
         // Esta solo sale si el usuario es admin o superadmin (1-SUPERADMIN, 2-ADMIN, 3-USUARIO)
         if ($perfil['id_tipo'] < 3)
@@ -81,7 +83,8 @@
             <!-- Menú de navegación a la derecha, en enlaces formateados -->
             <nav class="navbar">
                 ' . $link_inicio . '
-                ' . $link_busqueda . '
+                ' . $link_libros . '
+                ' . $link_autores . '
                 ' . $link_mis_libros . '
                 <!-- Este sale sólo si el usuario es admin o súper admin -->
                 ' . $link_usuarios . '
