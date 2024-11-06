@@ -83,7 +83,6 @@ function gridAutores(input)
         async: true,
         success: function(data)
         {
-            console.log(data);
             var contenido = '<!-- Comienza segmento de spinner --><div class="col w100" id="loading"><div class="spinner" id="cards-spinner"><span class="loader"></span></div></div><!-- Termina segmento de spinner -->' + data;
             // Si los datos llegan correctamente, añadimos al select lo que nos envíe el sistema
             content.html(contenido);

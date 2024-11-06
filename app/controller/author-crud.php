@@ -293,7 +293,7 @@
                         {
                             $texto_libros = $cantidad_libros . ' libros registrados';
                         }
-                        $informacion_autor = substr($row['informacion_autor'], 0, 45) . "...";
+                        $informacion_autor = strip_tags(substr($row['informacion_autor'], 0, 45) . "...");
                         $respuesta .= 
                         "
                         <div class='card'>

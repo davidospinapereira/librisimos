@@ -206,7 +206,7 @@
                         $nombre_genero = $row['nombre_genero'];
                         $color_genero = $row['color_genero'];
                         $cantidad_secciones = $row['cantidad_secciones'];
-                        $sinopsis_libro = substr($row['sinopsis_libro'], 0, 45) . "...";
+                        $sinopsis_libro = strip_tags(substr($row['sinopsis_libro'], 0, 45) . "...");
                         $respuesta .= 
                         "
                         <div class='card'>
