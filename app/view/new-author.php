@@ -1,5 +1,11 @@
 <?php
-    // Aquí no carga nada por ahora
+    $id_tipo = $perfil['id_tipo'];
+    // Si un usuario suscriptor trata de acceder a esta cuenta fraudulentamente, devuelva a main
+    if ($id_tipo > 2)
+    {
+        header('Location: index.php?page=main');
+        exit();
+    }
 ?>
 <!-- Esta página es una copia casi exacta de nuevo libro -->
 <section class="contenido" id="inicio">
