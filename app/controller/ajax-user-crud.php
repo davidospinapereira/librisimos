@@ -29,6 +29,16 @@
     {
         echo delete_profile($_POST['user_id'], $json_file);
     }
+
+    if (isset($_POST['obtener_usuarios_listado']))
+    {
+        echo obtener_usuarios_listado($_POST['termino_busqueda'], $json_file);
+    }
+
+    if (isset($_POST['obtener_tipo_usuario']))
+    {
+        echo obtener_tipo_usuario($_POST['id_usuario'], $json_file);
+    }
     /* Terminan llamados AJAX */
 
     /* Comienza función para chequear contraseña */
@@ -228,4 +238,108 @@
         }
     }
     /* Termina función para eliminar perfil */
+
+    /* Comienza función para recuperar el listado de usuarios en la página de gestión de usuarios */
+    function obtener_usuarios_listado($termino_busqueda, $json_file)
+    {
+        // Debe devolver string
+        $respuesta = '';
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Luego preparamos un statement
+        $sql_usuarios = 
+        "SELECT u.`id_usuario`, CONCAT(u.`nombres_usuario`, ' ', u.`apellidos_usuario`) AS `nombre_completo`, u.`login_usuario`, COUNT(DISTINCT l.`id_libro`) AS `libros_leidos` FROM `usuario` u LEFT JOIN `ver_seccion` vs ON u.`id_usuario` = vs.`id_usuario` LEFT JOIN `seccion` s ON vs.`id_seccion` = s.`id_seccion` LEFT JOIN `componer_seccion` cs ON s.`id_seccion` = cs.`id_seccion` LEFT JOIN `libro` l ON cs.`id_libro` = l.`id_libro` WHERE u.`nombres_usuario` LIKE '%$termino_busqueda%' OR u.`apellidos_usuario` LIKE '%$termino_busqueda%' OR u.`login_usuario` LIKE '%$termino_busqueda%' GROUP BY u.`id_usuario`";
+        try 
+        {
+            // Si hay respuesta, que la genere
+            if ($sentencia = mysqli_query($conexion, $sql_usuarios))
+            {
+                $respuesta .= 
+                '
+                    <!-- Encabezado de la tabla -->
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre completo</th>
+                            <th>Login de usuario</th>
+                            <th>Libros leídos</th>
+                            <th>Acciones</th>
+                        </tr>
+                        <!-- Contenido de la tabla -->
+                ';
+                while ($row = mysqli_fetch_assoc($sentencia)) 
+                {
+                    $id_usuario = $row['id_usuario'];
+                    $nombre_completo = $row['nombre_completo'];
+                    $login_usuario = $row['login_usuario'];
+                    $libros_leidos = $row['libros_leidos'];
+                    // Control: El súper administrador no puede borrarse a sí mismo
+                    $respuesta .= 
+                    '
+                        <tr>
+                            <td data-cell="id" class="id-cell">' . $id_usuario . '</td>
+                            <td data-cell="nombre" class="name-cell">' . $nombre_completo . '</td>
+                            <td data-cell="login" class="login-cell">' . $login_usuario . '</td>
+                            <td data-cell="leidos" class="read-cell">' . $libros_leidos . '</td>
+                            <td data-cell="acciones" class="acciones">
+                                <span class="button continue" onclick="editarUsuario(' . $id_usuario . ');"><div class="tooltip">Editar usuario</div><i class="bx bx-book-reader"></i></span>
+                                <!-- Los administradores no pueden eliminar usuarios, sólo el súper administrador -->
+                                <span class="button quit" onclick="borrarUsuario(' . $id_usuario . ')"><div class="tooltip">Eliminar usuario</div><i class="bx bx-x"></i></span>
+                                <!-- El súper administrador no puede eliminarse a sí mismo, recuerda poner ese control en el PHP -->
+                            </td>
+                        </tr>
+                    ';
+                }
+                $respuesta .= '</tbody>';
+            }
+            // Si no, que ponga un huevito de pascua
+            else
+            {
+                $respuesta = "<div class='col w100' id='nothing-found'><h2>¡OOPS! No se puede recuperar el listado de usuarios.</h2><h4>Por favor contacte al administrador.</h4></div>";
+            }
+        } 
+        catch (Exception $e) 
+        {
+            $error = $e->getMessage();
+            $respuesta = "<div class='col w100' id='nothing-found'><h2>¡ERROR! Hay un error en el programa</h2><h4>$error</h4><h4>Por favor consulte al administrador.</h4></div>";
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función para recuperar el listado de usuarios en la página de gestión de usuarios */
+
+    /* Comienza función que recupera el tipo de usuario para la página de administración de usuarios */
+    function obtener_tipo_usuario($id_usuario, $json_file)
+    {
+        // Debe devolver un número
+        $respuesta = '';
+        // Primero, debemos generar la conexión
+        $conexion = abrir_conexion($json_file);
+        // Luego preparamos un statement
+        $sql_tipo = "SELECT `id_tipo_usuario` FROM `usuario` WHERE `id_usuario` = $id_usuario";
+        try
+        {
+            if ($sentencia = mysqli_query($conexion, $sql_tipo))
+            {
+                while ($row = mysqli_fetch_assoc($sentencia))
+                {
+                    $respuesta = $row['id_tipo_usuario'];
+                }
+            }
+        }
+        catch (Exception $e) 
+        {
+            $error = $e->getMessage();
+            $respuesta = $error;
+        }
+        finally
+        {
+            cerrar_conexion($conexion);
+            return $respuesta;
+        }
+    }
+    /* Termina función que recupera el tipo de usuario para la página de administración de usuarios */
 ?>

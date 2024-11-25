@@ -134,7 +134,7 @@
                             <a href="index.php?page=new-author" class="btn">Nuevo autor</a>
                             <a href="index.php?page=genre-list" class="btn">Editar géneros</a>
                             <a href="index.php?page=new-user" class="btn">Nuevo usuario</a>
-                            <a href="index.php?page=user-list" class="btn">Editar usuarios</a>
+                            <a href="index.php?page=user-search" class="btn">Editar usuarios</a>
                             <?php
                         }
                         ?>
@@ -143,7 +143,7 @@
                         <a href="index.php?page=author-search" class="btn">Buscar autores</a>
                     </div>
                 </div>
-                <!-- Terminan funciones rápidas -->
+                <!-- Terminan funciones disponibles -->
             </div>
             <!-- Comienza la sección de continuar leyendo -->
             <div class="fila">

@@ -151,18 +151,19 @@
                     $id_genero = $row['id_genero'];
                     $nombre_genero = $row['nombre_genero'];
                     $color_genero = $row['color_genero'];
+                    // Control de contenido: Si hay libros registrados en este género, el género no se podrá borrar
                     $sql_conteo = "SELECT COUNT(`id_libro`) FROM `generos_libro` WHERE `id_genero` = $id_genero";
                     $sentencia_conteo = mysqli_query($conexion, $sql_conteo);
                     $row_conteo = mysqli_fetch_assoc($sentencia_conteo);
                     $conteo = $row_conteo['COUNT(`id_libro`)'];
                     $funcion_eliminar = $conteo == 0 ? 'eliminarGenero(' . $id_genero . ')' : 'mensaje(\'error\', \'<b>ERROR</b><br/>Este género tiene ' . $conteo . ' libros a su nombre.<br/>Debe cambiar los libros de género antes de borrar este género.\')';
+                    // Con el control y lo necesario, generamos la respuesta
                     $respuesta .= 
                     '
                         <tr>
                             <td data-cell="nombre" class="nombre-genero">' . $nombre_genero . ' </td>
                             <td data-cell="color" class="color-genero"><span class="tile" style="background-color: #' . $color_genero . '">#' . $color_genero . '</span></td>
                             <td data-cell="acciones" class="acciones">
-                                <span class="button continue" onclick="editarGenero(' . $id_genero . ', \'' . $nombre_genero . '\', \'' . $color_genero . '\')"><div class="tooltip">Editar</div><i class="bx bx-book-reader"></i></span>
                                 <span class="button quit" onclick="' . $funcion_eliminar . '"><div class="tooltip">Eliminar</div><i class="bx bx-x"></i></span>
                             </td>
                         </tr>

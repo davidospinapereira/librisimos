@@ -7,6 +7,8 @@ var colorValue = $("#color-value");
 /* Comienzan funciones de carga automática */
 $(document).ready(function () 
 {
+    /* Cambiamos el título desde aquí */
+    $(document).prop('title', 'Administrador de géneros - Librísimos');
     /* Cargamos listado */
     cargarListado();
     /* Control para el botón de agregar género */
