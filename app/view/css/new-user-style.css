@@ -1,0 +1,125 @@
+/* Comienzan estilos de editor de perfil */
+#presentacion-fotos
+{
+    margin-bottom: 40px;
+}
+
+#presentacion-fotos #foto
+{
+    height: 250px;
+    margin-right: 20px;
+    background-position: center;
+    background-size: cover;
+    justify-content: end;
+}
+
+#presentacion-fotos #foto #selector-archivo
+{
+    height: 40px;
+    cursor: pointer;
+    border-radius: 0;
+    border: 1px solid rgb(148, 148, 148);
+}
+
+#presentacion-fotos #main-data h6
+{
+    font-size: 19px;
+    font-weight: 400;
+}
+
+#presentacion-fotos #main-data h3 span
+{
+    font-size: 39px;
+    font-weight: 600;
+}
+
+#presentacion-fotos #main-data h5
+{
+    font-size: 17px;
+    font-weight: 400;
+}
+
+#presentacion-fotos #main-data .btn
+{
+    margin-top: 15px;
+    text-decoration: none;
+    color: white;
+    background-color: darkred;
+    width: 100px;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 3px;
+    border: 1px solid darkred;
+    transition: 0.3s ease-in-out;
+}
+
+#presentacion-fotos #main-data .btn:hover
+{
+    background-color: red;
+    border-color: red;
+}
+
+#formulario
+{
+    gap: 30px;
+}
+
+#formulario .col
+{
+    justify-content: start;
+    color: #f4f4f4;
+}
+
+.col .form-group
+{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.col .form-group .label,
+.col p 
+{
+    font-size: 15px;
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.col .form-group .input
+{
+    height: 35px;
+    padding: 5px 7px;
+    border-radius: 0;
+    outline: none;
+}
+
+.form-group .input.danger
+{
+    border-color: red;
+}
+
+.col button
+{
+    background-color: darkred;
+    color: #f4f4f4;
+    border: 1px solid darkred;
+    border-radius: 3px;
+    height: 35px;
+    padding: 5px 7px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.col button:hover
+{
+    color: #ffffff;
+    background-color: red;
+}
+
+#selector-archivo
+{
+    margin-bottom: 0;
+}
+/* Terminan estilos de editor de perfil */

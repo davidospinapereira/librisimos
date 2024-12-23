@@ -17,7 +17,7 @@
         <!-- Inicialización de responsividad -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- Título de la página en específico -->
-        <title>Administrador - Librísimos</title>
+        <title>Registro - Librísimos</title>
         <!-- Archivos CSS -->
         <!-- CSS de estilos generales -->
         <link rel="stylesheet" href="./view/css/general-style.css">
@@ -45,14 +45,13 @@
         </header>
         <!-- Termina Header -->
         <!-- Comienza contenido -->
-<section class="contenido" id="inicio">
+        <section class="contenido" id="inicio">
             <div class="fila" id="presentacion-fotos">
                 <div class="col w20" id="foto">
                     <input type="file" name="file-selector" id="file-selector" accept="image/png, image/jpeg" style="display: none;">
                     <button onclick="$('#file-selector').click();" id="selector-archivo">Seleccionar foto</button>
                 </div>
                 <div class="col w80" id="main-data">
-                    <h6>ID: <span>1</span></h6>
                     <h3><span style="text-transform: uppercase;">USUARIO NUEVO</span></h3>
                     <h5>REGISTRO</h5>
                     <a href="#formulario" class="btn">Editar</a>

@@ -99,7 +99,7 @@ function editarUsuario(idUsuario)
                 else
                 {
                     // Si no, redirigimos a la página de editar usuario específico
-                    window.location.href = 'index.php?page=new-user&user-id=' + idUsuario;
+                    window.location.href = 'index.php?page=edit-user&user-id=' + idUsuario;
                 }
             }
             else
